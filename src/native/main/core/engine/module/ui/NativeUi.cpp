@@ -59,11 +59,17 @@ void NativeUi::render(ScreenContext& ctx){
             opens[i]->elements[a]->render(ctx);
 }
 
-bool NativeUi::touch(int type, float x, float y){
+bool NativeUi::touch(int type, float x, float y, int i1, bool b1, bool b2, bool b3){
     JNIEnv* env;
 	ATTACH_JAVA(env, JNI_VERSION_1_6){
         for(int i = 0;i < opens.size();i++){
-            jboolean v = env->CallBooleanMethod(opens[i]->self, NativeUi::touchUi, (jint) type, (jfloat) x, (jfloat) y);
+            jboolean v = env->CallBooleanMethod(
+                opens[i]->self, NativeUi::touchUi, 
+                (jint) type, (jfloat) x, (jfloat) y, (jint) i1,
+                b1 ? JNI_TRUE : JNI_FALSE,
+                b2 ? JNI_TRUE : JNI_FALSE,
+                b3 ? JNI_TRUE : JNI_FALSE
+            );
             if(v == JNI_TRUE)
                 return true;
         }
@@ -102,7 +108,7 @@ void NativeUi::init(){
     JNIEnv* env;
 	ATTACH_JAVA(env, JNI_VERSION_1_6){
         NativeUi::JavaNativeUi = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/engine/ui/NativeUi")));
-        NativeUi::touchUi = env->GetMethodID(NativeUi::JavaNativeUi, "nativeTouch", "(IFF)Z");
+        NativeUi::touchUi = env->GetMethodID(NativeUi::JavaNativeUi, "nativeTouch", "(IFFIZZZ)Z");
 
         NativeUi::JavaElement = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/engine/ui/types/Element")));
         NativeUi::getTypeElement = env->GetMethodID(NativeUi::JavaElement, "getType", "()Ljava/lang/String;");
@@ -144,7 +150,7 @@ void NativeUi::init(){
             SYMBOL("mcpe", "_ZN17TouchPointResults10addPointerEi10TouchStateffbbb"), 
             LAMBDA((HookManager::CallbackController* controller, void* self, int i1, int type, float x, float y, bool b1, bool b2, bool b3), {
                 float scale = GlobalContext::getMinecraftClient()->getGuiData()->getGuiScale();
-                if(NativeUi::touch(type, x/scale, y/scale))
+                if(NativeUi::touch(type, x/scale, y/scale, i1, b1, b2, b3))
                     controller->replace();
             }, ), HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER
         );

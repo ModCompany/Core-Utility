@@ -46,7 +46,7 @@ class NativeUi {
         static jmethodID getTextureMeshElement, getMeshElement, touchUi, getTypeElement, getMaterialElement, getXElement, getYElement, getWidthElement, getHeigthElement, getTextureElement, getTextureHeigthElement, getTextureWidthElement, getSizeElement, getTextElement, getFontTypeElement, getShadowOffsetElement, isShadowElement;
         static void init();
         static void render(ScreenContext&);
-        static bool touch(int type, float x, float y);
+        static bool touch(int type, float x, float y, int i1, bool b1, bool b2, bool b3);
         static void open(NativeUi*);
         static void close(NativeUi*);
 

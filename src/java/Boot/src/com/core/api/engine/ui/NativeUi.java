@@ -16,7 +16,7 @@ public class NativeUi {
         public void onOpen(NativeUi ui);
         public void onClose(NativeUi ui);
         public void update(NativeUi ui, float value);
-        public boolean touch(NativeUi ui, int type, float x, float y);
+        public boolean touch(NativeUi ui, int type, float x, float y, int i1, boolean b1, boolean b2, boolean b3);
     }
     long ptr;
     public Element[] elements;
@@ -48,7 +48,6 @@ public class NativeUi {
 
     public NativeUi close(){
         close(ptr);
-        animator.cancel();
         if(listener != null)
             listener.onClose(this);
         return this;
@@ -83,12 +82,12 @@ public class NativeUi {
         if(listener != null)
             listener.update(this, value);
     }
-    public boolean nativeTouch(int type, float x, float y){
+    public boolean nativeTouch(int type, float x, float y, int i1, boolean b1, boolean b2, boolean b3){
         if(listener != null)
-            return (boolean) listener.touch(this, type, x, y);
+            return (boolean) listener.touch(this, type, x, y, i1, b1, b2, b3);
         return true;
     }
-    private float time;
+    private long time;
     private void upt(){
         try {
             animator = ValueAnimator.ofFloat(0, 1);
@@ -99,12 +98,14 @@ public class NativeUi {
                 @Override
                 public void onAnimationUpdate(ValueAnimator arg0) {
                     try {
-                        update(((float) arg0.getAnimatedValue()) - self.time);
-                        self.time = (float) arg0.getAnimatedValue();
+                        long time = System.currentTimeMillis();
+                        update((time - self.time) / 1000.0f);
+                        self.time = time;
                     }catch(Exception e) {
                         Logger.error(e.getLocalizedMessage());
                         DialogHelper.openFormattedDialog(e.getLocalizedMessage(), "Ui-Error");
-                        arg0.cancel();
+                        if(!self.isOpen())
+                            arg0.cancel();
                     }
                 }
             });
@@ -114,7 +115,7 @@ public class NativeUi {
                 @Override
                 public void onAnimationEnd(Animator arg0) {}
                 @Override
-                public void onAnimationRepeat(Animator arg0) {self.time = 0;}
+                public void onAnimationRepeat(Animator arg0) {}
                 @Override
                 public void onAnimationStart(Animator arg0) {}
             });;
@@ -122,6 +123,7 @@ public class NativeUi {
             handler.post(new Runnable(){
                 @Override
                 public void run() {
+                    self.time = System.currentTimeMillis();
                     animator.start();
                 }
             });
