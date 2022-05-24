@@ -15,8 +15,6 @@ enum ContainerCategory {
     
 };
 
-std::unordered_map<ContainerEnumName, stl::string> ContainerCollectionNameMap;
-
 class Container {
     public:
 
