@@ -12,18 +12,29 @@
 
 #include <core/OverridedName.h>
 
-void OverridedName::addNameForId(int id, std::string name){
-	names[id] = name;
+OverridedName::OverridedData::OverridedData(int id, std::string name){
+
+}
+void OverridedName::addNameForId(int id, int data, std::string name){
+	if(OverridedName::isExist(id)){
+		auto it = items.find(id);
+		it->second.name[data] = name;
+	}else{
+		items.insert(std::pair<int, OverridedName::OverridedData>(id,OverridedName::OverridedData(data,name)));
+	}
+
 };
 
-stl::string OverridedName::getNameForId(int id){
-	return to_stl(names[id]);
+stl::string OverridedName::getNameForId(int id, int data){
+	auto it = items.find(id);
+	return to_stl(it->second.name[data]);
+	
 };
 
 bool OverridedName::isExist(int id){
-	if(names.count(id) > 0){
+	if(items.count(id) > 0){
 		return true;
 	}else return false;
 };
 
-std::map<int, std::string> OverridedName::names;
+std::map<int, OverridedName::OverridedData> OverridedName::items;

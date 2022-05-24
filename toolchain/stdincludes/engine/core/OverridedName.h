@@ -1,11 +1,17 @@
 #pragma once
 
+
 class OverridedName {
 	public:
-	static std::map<int, std::string> names;
-	static void addNameForId(int id, std::string name);
-	static stl::string getNameForId(int id);
-	static bool isExist(int id);
+	class OverridedData {
+		public:
+		std::map<int, std::string> name;
+		OverridedData(int, std::string);
+	};
+	static std::map<int, OverridedName::OverridedData> items;
+	static void addNameForId(int, int, std::string);
+	static stl::string getNameForId(int, int);
+	static bool isExist(int);
 };
 
 

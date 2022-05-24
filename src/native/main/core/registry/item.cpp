@@ -299,7 +299,7 @@ template<class A,class ...B> void ItemWrapper::ItemWrappedFactory<A,B...>::regis
 
 stl::string getName(Item* item,ItemStackBase const& stack){
 	int id = IdConversion::dynamicToStatic(stack.getId(), IdConversion::ITEM);
-	return OverridedName::getNameForId(id);
+	return OverridedName::getNameForId(id,stack.getAuxValue());
 };
 
 int getAttackDamage(Item* item){
@@ -307,11 +307,11 @@ int getAttackDamage(Item* item){
 	return 40;
 }
 
-export(void, Item_overrideName, int id, jstring name){
+export(void, Item_overrideName, int id,int data, jstring name){
 	Item* item = ItemRegistry::getItemById(IdConversion::staticToDynamic(id, IdConversion::ITEM));
 	if(item){
 		const char* a = env->GetStringUTFChars(name, NULL);
-        OverridedName::addNameForId(id, a);
+        OverridedName::addNameForId(id,data, a);
 		env->ReleaseStringUTFChars(name, a);
 		VtableHelper helper (item);
 		helper.resize();

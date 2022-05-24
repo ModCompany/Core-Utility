@@ -86,6 +86,7 @@ class ItemStackBase {
 	public:
 	Item* item;
 	int getId() const;
+	int getAuxValue() const;
 };
 class ItemStack : public ItemStackBase {
     public:

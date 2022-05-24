@@ -69,3 +69,4 @@ Callback.addCallback("LevelCreated",function(){
 Callback.addCallback("OnEnchant",function(){
     Game.message("onEnchant");
 });
+
