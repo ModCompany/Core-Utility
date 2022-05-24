@@ -159,3 +159,4 @@ JS_EXPORT(Boss, reg, "V()", (JNIEnv* env){
 
 	manager->add("Test", value);
 });
+

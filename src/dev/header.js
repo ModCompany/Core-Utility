@@ -61,12 +61,20 @@ Item.registerUseFunctionForID(264, function(coords,item,block){
 });*/
 var Test = WRAP_JAVA("com.core.api.level.registry.FeatureRegistry");
 
-
+var govno = WRAP_NATIVE("Govno");
 Callback.addCallback("LevelCreated",function(){
-
+    govno.debug();
 });
 
 Callback.addCallback("OnEnchant",function(){
     Game.message("onEnchant");
 });
+var debug = 0;
 
+Callback.addCallback("ItemUseLocal",function(){
+    Game.tipMessage("debug : " + debug);
+    govno.setDebug(debug);
+    debug++;
+});
+
+Callback.addCallback("ItemUse")
