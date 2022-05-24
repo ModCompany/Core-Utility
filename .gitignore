@@ -9,3 +9,6 @@ output
 
 *.log
 *.icmod
+toolchain/*.sh
+toolchain/python
+toolchain/adb
