@@ -13,7 +13,7 @@
 #include <core/OverridedName.h>
 
 OverridedName::OverridedData::OverridedData(int id, std::string name){
-
+	this->name[id] = name;
 }
 void OverridedName::addNameForId(int id, int data, std::string name){
 	if(OverridedName::isExist(id)){

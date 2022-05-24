@@ -3,7 +3,6 @@ package com.core.api;
 import java.util.HashMap;
 
 import com.zhekasmirnov.horizon.runtime.logger.Logger;
-import com.zhekasmirnov.innercore.
 import com.core.api.level.area.TickingAreasManager;
 
 class Boot {
