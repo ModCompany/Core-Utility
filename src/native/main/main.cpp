@@ -21,7 +21,7 @@
 
 typedef int content_id_t;
 
-#include "registry/sound.h"
+#include "core/registry/sound.h"
 #include "shared_headers/JavaClass.h"
 
 class CoreUtility : public Module {

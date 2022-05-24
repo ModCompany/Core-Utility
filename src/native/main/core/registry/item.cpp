@@ -19,9 +19,9 @@
 #include <innercore/legacy_item_registry.h>
 #include <innercore/id_conversion_map.h>
 
-#include "../shared_headers/JavaClass.h"
-#include "../shared_headers/VtableHelper.h"
-#include "../shared_headers/OverridedName.h"
+#include "../../shared_headers/JavaClass.h"
+#include "../../shared_headers/VtableHelper.h"
+#include "../../shared_headers/OverridedName.h"
 
 typedef int content_id_t;
 
