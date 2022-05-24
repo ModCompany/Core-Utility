@@ -10,7 +10,7 @@
 
 #include <innercore/common.h>
 
-#include "shared_headers/VtableHelper.h"
+#include "../shared_headers/VtableHelper.h"
 
 VtableHelper::VtableHelper(void* a){
 	original = a;
@@ -43,3 +43,7 @@ void* VtableHelper::getAdreess(const char* table, const char* symbol){
 	return SYMBOL(table, symbol);
 };
 
+template<typename A> A VtableHelper::call(const char* table, const char* symbol){
+	auto a = (A(*)(void*)) SYMBOL(table, symbol);
+	return a(this->original);
+};

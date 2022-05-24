@@ -19,17 +19,6 @@ class JavaClass {
     static const char* release(JNIEnv* env,jstring);
 };
 
-class JniConverter {
-    public:
-    class JavaObject {
-        public:
-
-    };
-
-    class JavaClass {
-        public:
-    };
-};
 
 class JavaHelper {
     public:

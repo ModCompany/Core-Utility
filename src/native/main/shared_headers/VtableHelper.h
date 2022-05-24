@@ -5,13 +5,16 @@ class VtableHelper {
 	void** vtable;
 	void* original;
 
-	VtableHelper(void* a);
+	VtableHelper(void*);
 	void resize();
-	void patch(const char* table, const char* symbol, void* func);
+	void patch(const char*, const char*, void*);
 
     public:
-	void* getAdreess(const char* table, const char* symbol);
+
+	template<typename A> A call(const char*, const char*);
     void* getTop();
     void** get();
+	public:
 
+	static void* getAdreess(const char*, const char*);
 };
