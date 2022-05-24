@@ -53,6 +53,8 @@ public:
 };
 
 namespace GlobalContext {
+	BlockSource* getRegion();
+
 	// get AppPlatform instance
 	AppPlatform* getAppPlatform();
 	// get AppLifecycleContext instance

@@ -1,4 +1,3 @@
-
 var ChunkPos = WRAP_JAVA("com.core.api.level.ChunkPos");
 
 var NativeItem = {

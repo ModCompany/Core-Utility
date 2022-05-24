@@ -13,3 +13,4 @@ toolchain/*.sh
 toolchain/python
 toolchain/adb
 toolchain/*.bat
+make.json

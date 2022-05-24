@@ -11,6 +11,8 @@ class Dimension;
 class Actor;
 class BlockPos;
 class FeatureRegistry;
+class BlockSource;
+class Vec3;
 
 class Level {
     public:
@@ -27,6 +29,8 @@ class Level {
     int getCurrentServerTick() const;
     int getCurrentTick() const;
     int getChunkTickRange() const;
+
+    void spawnEntity(BlockSource*, Vec3* pos, Actor* actor);
 };
 
 class ServerLevel : public Level {

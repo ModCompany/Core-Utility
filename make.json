@@ -19,27 +19,10 @@
             "nativejs"
         ],
         "excludeFromRelease": [],
-        "pushTo": "storage/emulated/0/games/horizon/packs/Inner_Core/innercore/mods/toolchain_mod",
+        "pushTo": "storage/emulated/0/games/horizon/packs/innercore-test-b113-performance-beta-v2/innercore/mods/CoreEngine",
         "ndkPath": null
     },
-    "resources": [
-        {
-            "path": "src/assets/res",
-            "type": "resource_directory"
-        },
-        {
-            "path": "src/assets/gui",
-            "type": "gui"
-        },
-        {
-            "path": "src/assets/resource_packs/*",
-            "type": "minecraft_resource_pack"
-        },
-        {
-            "path": "src/assets/behavior_packs/*",
-            "type": "minecraft_behavior_pack"
-        }
-    ],
+    "resources": [],
     "sources": [
         {
             "source": "src/dev",

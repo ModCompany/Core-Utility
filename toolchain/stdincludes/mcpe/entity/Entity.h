@@ -1,14 +1,18 @@
 #pragma once
 
-#include <stl/string.h>
+#include <stl/string>
 #define stl std::__ndk1
 
 class Attribute;
+class ActorUniqueID;
+class Vec3;
+class Level;
 
 class Actor {
     public:
     
     public:
+    Actor(Level&);
     bool isOnHotBlock() const;
     bool isInWaterOrRain() const;
     bool isInLava() const;
@@ -25,6 +29,8 @@ class Actor {
     bool isImmobile() const;
     bool isSneaking() const;
 	bool wasHurt();
+
+    void setPosVTABLE(Vec3&);
 };
 
 class Mob : public Actor {
