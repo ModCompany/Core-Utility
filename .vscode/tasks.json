@@ -1,0 +1,162 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Assemble Mod for Release",
+			"type": "shell",
+			"options": {
+				"cwd": "./toolchain/python"
+			},
+			"command": "sh ../assemble-release.sh",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Build and Push Everything",
+			"type": "shell",
+			"options": {
+				"cwd": "./toolchain/python"
+			},
+			"command": "sh ../build-and-push-all.sh",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Build Everything",
+			"type": "shell",
+			"options": {
+				"cwd": "./toolchain/python"
+			},
+			"command": "sh ../build-all.sh",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Build Scripts and Resources",
+			"type": "shell",
+			"options": {
+				"cwd": "./toolchain/python"
+			},
+			"command": "sh ../build-scripts-and-resources.sh",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Cleanup",
+			"type": "shell",
+			"options": {
+				"cwd": "./toolchain/python"
+			},
+			"command": "sh ../cleanup.sh",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Build and Push Java",
+			"type": "shell",
+			"options": {
+				"cwd": "./toolchain/python"
+			},
+			"command": "sh ../compile-java.sh",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Build and Push Native",
+			"type": "shell",
+			"options": {
+				"cwd": "./toolchain/python"
+			},
+			"command": "sh ../compile-native.sh",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Connect to ADB",
+			"type": "shell",
+			"options": {
+				"cwd": "./toolchain/python"
+			},
+			"command": "python",
+			"args": [
+				"task.py",
+				"connectToADB",
+				"'${input:ip}:${input:port}'"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Download Declarations",
+			"type": "shell",
+			"options": {
+				"cwd": "./toolchain/python"
+			},
+			"command": "sh ../download-declarations.sh",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Dump Log",
+			"type": "shell",
+			"options": {
+				"cwd": "./toolchain/adb"
+			},
+			"command": "sudo ./adb shell cat /storage/emulated/0/games/horizon/logs/log.txt",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Dump Crash Log",
+			"type": "shell",
+			"options": {
+				"cwd": "./toolchain/adb"
+			},
+			"command": "sudo ./adb shell cat /storage/emulated/0/games/horizon/logs/crash.txt",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+			
+	],
+	"inputs": [
+		{
+			"id": "ip",
+			"description": "IP:",
+			"default": "192.168.31.74",
+			"type": "promptString"
+		},
+		{
+			"id": "port",
+			"description": "Port:",
+			"default": "5037",
+			"type": "promptString"
+		}
+	]
+}

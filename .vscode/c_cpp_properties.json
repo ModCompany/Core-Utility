@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "name": "Android",
+            "includePath": [
+                "${workspaceFolder}/toolchain/stdincludes/horizon",
+                "${workspaceFolder}/toolchain/stdincludes/inner",
+                "${workspaceFolder}/toolchain/stdincludes/mcpe/**",
+                "${workspaceFolder}/toolchain/ndk/arm/sysroot/usr/include/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "intelliSenseMode": "gcc-x64"
+        }
+    ],
+    "version": 4
+}
