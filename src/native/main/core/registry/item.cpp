@@ -19,15 +19,15 @@
 #include <innercore/legacy_item_registry.h>
 #include <innercore/id_conversion_map.h>
 
-#include "../../shared_headers/JavaClass.h"
-#include "../../shared_headers/VtableHelper.h"
-#include "../../shared_headers/OverridedName.h"
+#include <core/JavaClass.h>
+#include <core/VtableHelper.h>
+#include <core/OverridedName.h>
 
 typedef int content_id_t;
 
 
-#define ItemToStatic(ID)  IdConversion::dynamicToStatic(ID, IdConversion::ITEM);
-#define ItemToDynamic(ID) IdConversion::staticToDynamic(ID, IdConversion::ITEM);
+#define ItemToStatic(ID)  return IdConversion::dynamicToStatic(ID, IdConversion::ITEM);
+#define ItemToDynamic(ID) return IdConversion::staticToDynamic(ID, IdConversion::ITEM);
 
 
 

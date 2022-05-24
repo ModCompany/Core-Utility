@@ -10,7 +10,7 @@
 
 #include <innercore/common.h>
 
-#include "../shared_headers/OverridedName.h"
+#include <core/OverridedName.h>
 
 void OverridedName::addNameForId(int id, std::string name){
 	names[id] = name;

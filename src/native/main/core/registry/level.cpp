@@ -18,7 +18,7 @@
 
 #include <innercore/global_context.h>
 #include <horizon/types.h>
-#include "../../shared_headers/JavaClass.h"
+#include <core/JavaClass.h>
 
 
 export(void, level_registry_FeatureRegistry_cleanupFeature){

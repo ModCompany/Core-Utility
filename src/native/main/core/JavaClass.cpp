@@ -1,8 +1,7 @@
 
 #include <string>
-#include "../shared_headers/JavaClass.h"
 #include <logger.h>
-
+#include <core/JavaClass.h>
 
 JavaClass::JavaClass(JNIEnv* a, jobject b){
     env = a;

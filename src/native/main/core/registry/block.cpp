@@ -22,7 +22,7 @@
 #include <innercore/block_registry.h>
 #include <innercore/legacy_block_registry.h>
 #include <innercore/id_conversion_map.h>
-#include "../../shared_headers/JavaClass.h"
+#include <core/JavaClass.h>
 typedef int content_id_t;
 
 

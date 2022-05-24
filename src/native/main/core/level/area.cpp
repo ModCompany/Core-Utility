@@ -17,7 +17,7 @@
 #include <innercore/global_context.h>
 
 #include <horizon/types.h>
-#include "../../shared_headers/JavaClass.h"
+#include <core/JavaClass.h>
 
 export(bool,level_area_TickingAreasManager_hasActiveAreas){
     ServerLevel* level = GlobalContext::getServerLevel();

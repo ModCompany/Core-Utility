@@ -10,7 +10,7 @@
 
 #include <innercore/common.h>
 
-#include "../shared_headers/VtableHelper.h"
+#include <core/VtableHelper.h>
 
 VtableHelper::VtableHelper(void* a){
 	original = a;

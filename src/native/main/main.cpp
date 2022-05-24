@@ -19,10 +19,12 @@
 #include <innercore/legacy_item_registry.h>
 #include <innercore/id_conversion_map.h>
 
+#include <core/JavaClass.h>
+
 typedef int content_id_t;
 
 #include "core/registry/sound.h"
-#include "shared_headers/JavaClass.h"
+
 
 class CoreUtility : public Module {
 public:
