@@ -1,8 +1,9 @@
 
+#include <java.h>
 #include "engine/JniInjector.h"
 #include "../shared_headers/VtableHelper.h"
+#include "../shared_headers/JavaClass.h"
 
-#include <java.h>
 JniInjector::JniInjector(void* a){
     this->table = a;
 };
@@ -22,6 +23,17 @@ float JniInjector::getFloatResult(const char* table, const char* symbol){
 }
 
 export(jlong, Injector_init_injector, jlong ptr){
-    JniInjector injector (ptr);
+    return (jlong) new JniInjector(ptr);
+}
 
+export(jint, Injector_getIntResult, jlong ptr, jstring a,jstring b){
+    const char* table = JavaClass::release(env,a);
+    const char* address = JavaClass::release(env,b);
+    return ((JniInjector*) ptr)->getIntResult(table,address);
+}
+
+export(jint, Injector_getFloatResult, jlong ptr, jstring a,jstring b){
+    const char* table = JavaClass::release(env,a);
+    const char* address = JavaClass::release(env,b);
+    return ((JniInjector*) ptr)->getFloatResult(table,address);
 }
