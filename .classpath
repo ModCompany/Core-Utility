@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="toolchain/classpath/android-support-v4.jar"/>
 	<classpathentry kind="lib" path="toolchain/classpath/horizon-classes.jar"/>
 	<classpathentry kind="lib" path="toolchain/classpath/android-support-multidex.jar"/>
+	<classpathentry kind="lib" path="toolchain/classpath/inner.jar"/>
 	<classpathentry kind="output" path="toolchain/build/java"/>
 </classpath>

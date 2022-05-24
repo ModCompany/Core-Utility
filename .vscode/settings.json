@@ -96,5 +96,11 @@
         "memory_resource": "cpp",
         "__locale": "cpp"
     },
-    "C_Cpp.errorSquiggles": "Disabled"
+    "C_Cpp.errorSquiggles": "Disabled",
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "toolchain/classpath/classes.jar",
+        "toolchain/classpath/test-classes.jar",
+        "toolchain/classpath/classes-dex2jar.jar"
+    ]
 }
