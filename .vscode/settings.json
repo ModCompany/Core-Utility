@@ -23,7 +23,8 @@
         "toolchain/*.bat": true,
         "toolchain/*.sh": true,
         "**/*.log": true,
-        "make.json" : true
+        "make.json" : true,
+        "README.md" : true,
     },
     "files.associations": {
         "ostream": "cpp",

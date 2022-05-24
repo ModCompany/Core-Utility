@@ -12,3 +12,4 @@ output
 toolchain/*.sh
 toolchain/python
 toolchain/adb
+toolchain/*.bat
