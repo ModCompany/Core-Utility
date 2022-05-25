@@ -3,6 +3,8 @@
 #include <level/api/BlockSource.h>
 #include <innercore/global_context.h>
 #include <level/api/Vec3.h>
+#include <type/ActorType.h>
+#include <entity/ActorDefinitionIdentifier.h>
 
 #include <hook.h>
 #include <symbol.h>
@@ -32,15 +34,15 @@ void CustomEntity::spawnEnity(BlockSource* region, Vec3* pos, std::string name){
 class ActorFactory;
 
 void CustomEntity::init(){
-    /*HookManager::addCallback(
+    HookManager::addCallback(
         SYMBOL("mcpe","_ZN5Actor4tickER11BlockSource"), 
         LAMBDA((Actor* thas, BlockSource& region),{
-            Logger::info("TEST", "tick");
+            Logger::info("TEST", "tick 2");
             Logger::flush();
-            Logger::info("TEST", "%s", thas->getEntityTypeVTABLE().c_str());
+            Logger::info("TEST", "%s", thas->getActorIdentifier()->getFullName().c_str());
             Logger::flush();
 	    },
-    ), HookManager::CALL | HookManager::LISTENER  | HookManager::RESULT);*/
+    ), HookManager::CALL | HookManager::LISTENER  | HookManager::RESULT);
 
     /*HookManager::addCallback(
         SYMBOL("mcpe","_ZN12ActorFactory21registerEntityMappingERK9ActorTypebRKPFNSt6__ndk110unique_ptrI5ActorNS3_14default_deleteIS5_EEEEP20ActorDefinitionGroupRK25ActorDefinitionIdentifierEN6nonstd13optional_lite8optionalIiEE"),

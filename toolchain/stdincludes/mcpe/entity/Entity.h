@@ -7,6 +7,7 @@ class Attribute;
 class ActorUniqueID;
 class Vec3;
 class Level;
+class ActorDefinitionIdentifier;
 
 class Actor {
     public:
@@ -29,9 +30,9 @@ class Actor {
     bool isImmobile() const;
     bool isSneaking() const;
 	bool wasHurt();
+    ActorDefinitionIdentifier* getActorIdentifier() const;
 
     void setPosVTABLE(Vec3&);
-    std::string getEntityTypeVTABLE();
 };
 
 class Mob : public Actor {

@@ -24,10 +24,10 @@ void Level::spawnEntity(BlockSource* region, Vec3* pos, Actor* actor){
 void spawn(int x,int y,int z){
     Level* level = GlobalContext::getServerLevel();
     ActorFactory* factory = level->getActorFactory();
-    stl::unique_ptr<Actor> entity = factory->createEntity("spawned", ActorDefinitionIdentifier((ActorType) 75), {(float) x,(float)y,(float) z}, {0,0});
+    //stl::unique_ptr<Actor> entity = factory->createEntity("spawned", ActorDefinitionIdentifier((ActorType) 75), {(float) x,(float)y,(float) z}, {0,0});
     
 
-    level->addEntity(GlobalContext::getRegion(),std::move(entity));
+    //level->addEntity(GlobalContext::getRegion(),std::move(entity));
 }
 
 JS_MODULE_VERSION(Level, 1);
