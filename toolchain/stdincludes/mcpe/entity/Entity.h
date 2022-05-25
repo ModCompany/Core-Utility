@@ -31,6 +31,7 @@ class Actor {
 	bool wasHurt();
 
     void setPosVTABLE(Vec3&);
+    std::string getEntityTypeVTABLE();
 };
 
 class Mob : public Actor {

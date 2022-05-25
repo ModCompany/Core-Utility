@@ -25,6 +25,8 @@ typedef int content_id_t;
 
 #include "core/registry/sound.h"
 
+#include <core/entity/CustomEntity.h>
+
 
 class CoreUtility : public Module {
 public:
@@ -42,6 +44,7 @@ public:
 			CoreUtility::callback_class = reinterpret_cast<jclass>(env->NewGlobalRef(a));
 		}
 
+		CustomEntity::init();
 
 		HookManager::addCallback(SYMBOL("mcpe","_ZN36EnchantingContainerManagerController13enchantResultEi"), LAMBDA((HookManager::CallbackController* controller, EnchantingContainerManagerController* a,int b),{
 
