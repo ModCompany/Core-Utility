@@ -77,7 +77,7 @@ let GlobalContext = WRAP_JAVA("com.core.api.innnercore.GlobalContext");
 
 Callback.addCallback("ItemUse",function(coords,item,block,external,player){
     level.spawn(coords.relative.x,coords.relative.y,coords.relative.z);
-    alert(GlobalContext.getServerLevelPointer().getRandom().nextInt(100));
+    alert(GlobalContext.getLevelServer().getRandom().nextInt(100));
 }); 
 
 Callback.addCallback("ItemUseLocal", function(coords){
