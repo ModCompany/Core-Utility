@@ -10,22 +10,18 @@
 #define stl std::__ndk1
 
 #include <type/Json.h>
-#include <client/ui/Container.h>
-
 #include <horizon/types.h>
 #include <horizon/item.h>
-
 #include <innercore/item_registry.h>
 #include <innercore/legacy_item_registry.h>
 #include <innercore/id_conversion_map.h>
-
-#include <core/JavaClass.h>
-
 typedef int content_id_t;
-
-#include "core/registry/sound.h"
-
+#include <core/JavaClass.h>
 #include <core/entity/CustomEntity.h>
+#include <client/ui/Container.h>
+#include <client/Sound.h>
+
+
 
 
 class CoreUtility : public Module {
@@ -131,35 +127,11 @@ MAIN {
 
 }	
 
-class BossbarManager {
-	public:
-	void add(stl::string const&, Json::Value const&);
-};
+
 
 #include <innercore/global_context.h>
 
 
-class Level {
-	public:
-
-};
-
-class ServerLevel : public Level {
-	public:
-	BossbarManager* getBossbarManager();
-};
-JS_MODULE_VERSION(Boss, 1);
-
-JS_EXPORT(Boss, reg, "V()", (JNIEnv* env){
-
-	ServerLevel* level = GlobalContext::getServerLevel();
-	BossbarManager* manager = level->getBossbarManager();
-	Json::Value value;
-	value["color"] = "green";
-	value["max"] = 100;
-	value["style"] = "progress";
 
 
-	manager->add("Test", value);
-});
 
