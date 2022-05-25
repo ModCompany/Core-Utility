@@ -1,3 +1,7 @@
+#include <horizon/types.h>
+#include <java.h>
+#include <level/Level.h>
+
 #include <vtable.h>
 #include <entity/Entity.h>
 #include <innercore/global_context.h>
