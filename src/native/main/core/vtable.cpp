@@ -47,3 +47,33 @@ template<typename A> A VtableHelper::call(const char* table, const char* symbol)
 	auto a = (A(*)(void*)) SYMBOL(table, symbol);
 	return a(this->original);
 };
+
+std::map<int, void**> VtableCache::block_tables;
+std::map<int, void**> VtableCache::item_tables;
+
+void VtableCache::addTable(VtableType type,int id, void** table){
+	if(type == VtableType::ITEM) item_tables[id] = table;
+	if(type == VtableType::BLOCK) block_tables[id] = table;
+};
+void VtableCache::addTable(VtableType type,int id, void* table){
+	if(type == VtableType::ITEM) item_tables[id] = *(void***) table;
+	if(type == VtableType::BLOCK) block_tables[id] = *(void***) table;
+};
+void** VtableCache::getItemTable(int id){
+	if(item_tables.count(id)) return item_tables[id];
+};
+void** VtableCache::getBlockTable(int id){
+	if(block_tables.count(id)) return block_tables[id];
+};
+
+bool VtableCache::isExist(VtableType type, int id){
+	if(type == VtableType::ITEM){
+		if(item_tables.count(id)) return true;
+		return false;
+	}
+	if(type == VtableType::BLOCK){
+		if(block_tables.count(id)) return true;
+		return false;
+	}
+}
+

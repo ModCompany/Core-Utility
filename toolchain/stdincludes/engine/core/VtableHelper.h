@@ -18,3 +18,20 @@ class VtableHelper {
 
 	static void* getAdreess(const char*, const char*);
 };
+
+class VtableCache {
+	public:
+	enum VtableType {
+		ITEM,
+		BLOCK
+	};
+	static std::map<int, void**> item_tables;
+	static std::map<int, void**> block_tables;
+
+	static void addTable(VtableType, int, void**);
+	static void addTable(VtableType, int, void*);
+
+	static void** getItemTable(int);
+	static void** getBlockTable(int);
+	static bool isExist(VtableType, int);
+};
