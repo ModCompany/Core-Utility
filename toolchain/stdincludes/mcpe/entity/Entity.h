@@ -31,6 +31,7 @@ class Actor {
     bool isSneaking() const;
 	bool wasHurt();
     ActorDefinitionIdentifier* getActorIdentifier() const;
+    ActorUniqueID* getUniqueID() const;
 
     void setPosVTABLE(Vec3&);
 };

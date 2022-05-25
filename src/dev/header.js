@@ -1,4 +1,9 @@
 var ChunkPos = WRAP_JAVA("com.core.api.level.ChunkPos");
+let CustomEntityJava = WRAP_JAVA("com.core.api.entity.CustomEntity");
+
+CustomEntityJava.setHandlerTick("minecraft:chicken<>", function(ent){
+    Entity.addVelocity(ent, 0, .3, 0);
+});
 
 var NativeItem = {
     api: WRAP_JAVA("com.core.api.Item"),
