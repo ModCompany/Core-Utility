@@ -77,7 +77,7 @@ bool VtableCache::isExist(VtableType type, int id){
 	}
 }
 
-void VtablePatcher::patch(VtableType type,int id, void* a){
+void VtablePatcher::patch(VtableCache::VtableType type,int id, void* a){
 	if(VtableCache::isExist(type, id)){
 		VtableHelper helper (a);
 		

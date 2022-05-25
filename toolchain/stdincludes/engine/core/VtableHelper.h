@@ -40,5 +40,5 @@ class VtablePatcher {
 	public:
 	VtablePatcher(VtableCache::VtableType, void*);
 	void patch(const char*, const char*, void*);
-
+	void patch(VtableCache::VtableType, int, void*);
 };
