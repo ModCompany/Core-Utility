@@ -9,7 +9,7 @@
 
 #define stl std::__ndk1
 
-#include "sound.h"
+#include <client/Sound.h>
 
 
 

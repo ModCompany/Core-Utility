@@ -44,4 +44,5 @@ class VtablePatcher {
 
 	VtablePatcher(VtableCache::VtableType,int, void*);
 	void patch(const char*, const char*, void*);
+	template<typename...A> void call(int, A...);
 };
