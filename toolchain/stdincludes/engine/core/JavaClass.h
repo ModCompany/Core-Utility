@@ -17,11 +17,5 @@ class JavaClass {
     bool getBool(const char*);
     
     static const char* release(JNIEnv* env,jstring);
-};
-
-
-class JavaHelper {
-    public:
-
-    static const char* release(jstring);
+    static std::string toString(JNIEnv* env,jstring);
 };

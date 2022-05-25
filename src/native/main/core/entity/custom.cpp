@@ -11,7 +11,7 @@
 #include <logger.h>
 #include <innercore_callbacks.h>
 #include <type/AutomaticID.h>
-
+#include <core/JavaClass.h>
 std::map<std::string, Entity*> CustomEntity::customs;
 std::map<std::string, bool> CustomEntity::ticks;
 jclass CustomEntity::customEntity;
@@ -73,9 +73,6 @@ std::string toString(JNIEnv* env, jstring jStr) {
 	return ret;
 }
 
-extern "C" {
-	JNIEXPORT void JNICALL Java_com_core_api_entity_CustomEntity_setTick
-	(JNIEnv* env, jclass, jstring name, jboolean value) {
-        CustomEntity::setTick(toString(env, name),(bool)(value == JNI_TRUE));
-	}
+export(void,api_entity_CustomEntity_setTick,jstring name, jboolean value) {
+        CustomEntity::setTick(JavaClass::toString(env,name),(bool)(value == JNI_TRUE));
 }

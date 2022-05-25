@@ -42,7 +42,6 @@ const char* JavaClass::getString(const char* value){
 }
 
 const char* JavaClass::release(JNIEnv* env,jstring value){
-
     const char* a = env->GetStringUTFChars(value, 0);
     const char* b;
     b = a;
@@ -50,3 +49,10 @@ const char* JavaClass::release(JNIEnv* env,jstring value){
     return b;
 }
 
+std::string JavaClass::toString(JNIEnv* env,jstring value){
+    const char* a = env->GetStringUTFChars(value, 0);
+    const char* b;
+    b = a;
+    env->ReleaseStringUTFChars(value, a);
+    return std::string(b);
+}

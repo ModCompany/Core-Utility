@@ -37,10 +37,8 @@ JS_EXPORT(Level, spawn, "V(III)", (JNIEnv* env,int x,int y,int z){
     spawn(x,y,z);
 });
 
-extern "C" {
-	JNIEXPORT jlong JNICALL Java_com_core_api_mcpe_level_Level_getRandomPointer
-	(JNIEnv* env, jclass, jlong pointer) {
-        Core::Random random = ((Level*) pointer)->getRandom();
-        return (jlong) &random;
-	}
+
+export(jlong,mcpe_level_Level_getRandomPointer,jlong pointer) {
+    Core::Random random = ((Level*) pointer)->getRandom();
+    return (jlong) &random;
 }
