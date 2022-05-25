@@ -17,6 +17,10 @@ VtableHelper::VtableHelper(void* a){
 	vtable = *(void***) a;
 };
 
+VtableHelper::VtableHelper(){
+
+};
+
 void** VtableHelper::get(){
 	return vtable;
 };
@@ -66,6 +70,11 @@ void** VtableCache::getBlockTable(int id){
 	if(block_tables.count(id)) return block_tables[id];
 };
 
+void** VtableCache::getTable(VtableType type, int id){
+	if(type==VtableType::ITEM && item_tables.count(id)) return item_tables[id];
+	if(type==VtableType::BLOCK && block_tables.count(id)) return block_tables[id];	
+	return nullptr;
+}
 bool VtableCache::isExist(VtableType type, int id){
 	if(type == VtableType::ITEM){
 		if(item_tables.count(id)) return true;
@@ -75,13 +84,17 @@ bool VtableCache::isExist(VtableType type, int id){
 		if(block_tables.count(id)) return true;
 		return false;
 	}
+};
+
+VtablePatcher::VtablePatcher(VtableCache::VtableType type,int id, void* table){
+	this->type = type;
+	this->helper = VtableHelper(table);
+	if(VtableCache::isExist(type,id)){
+		this->helper.vtable = VtableCache::getTable(type, id);
+	}else this->helper.resize();
+};
+
+void VtablePatcher::patch(const char* table, const char* symbol, void* func){
+	this->helper.patch(table,symbol,func);
 }
 
-void VtablePatcher::patch(VtableCache::VtableType type,int id, void* a){
-	if(VtableCache::isExist(type, id)){
-		VtableHelper helper (a);
-		
-	}else{
-
-	}
-}

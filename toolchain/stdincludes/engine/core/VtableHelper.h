@@ -4,7 +4,7 @@ class VtableHelper {
 	public:
 	void** vtable;
 	void* original;
-
+	VtableHelper();
 	VtableHelper(void*);
 	void resize();
 	void patch(const char*, const char*, void*);
@@ -30,7 +30,7 @@ class VtableCache {
 
 	static void addTable(VtableType, int, void**);
 	static void addTable(VtableType, int, void*);
-
+	static void** getTable(VtableType, int);
 	static void** getItemTable(int);
 	static void** getBlockTable(int);
 	static bool isExist(VtableType, int);
@@ -38,7 +38,10 @@ class VtableCache {
 
 class VtablePatcher {
 	public:
-	VtablePatcher(VtableCache::VtableType, void*);
+	VtableCache::VtableType type;
+	VtableHelper helper;
+	int id;
+
+	VtablePatcher(VtableCache::VtableType,int, void*);
 	void patch(const char*, const char*, void*);
-	void patch(VtableCache::VtableType, int, void*);
 };
