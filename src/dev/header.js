@@ -74,13 +74,16 @@ var debug = 0;
 var level = WRAP_NATIVE("Level");
 
 let GlobalContext = WRAP_JAVA("com.core.api.innnercore.GlobalContext");
-
+/*
 Callback.addCallback("ItemUse",function(coords,item,block,external,player){
     level.spawn(coords.relative.x,coords.relative.y,coords.relative.z);
-    alert(GlobalContext.getLevelServer().getRandom().nextInt(100));
-}); 
+    //alert(GlobalContext.getLevelServer().getRandom().nextInt(100));
+}); */
 
-Callback.addCallback("ItemUseLocal", function(coords){
+Callback.addCallback("ItemUse", function(coords){
     Game.message("Test");
-    level.spawn(coords.relative.x,coords.relative.y,coords.relative.z);
+    
+        level.spawn(2,coords.relative.x,coords.relative.y,coords.relative.z);
+    
+
 })

@@ -32,9 +32,10 @@ class Level {
     int getCurrentServerTick() const;
     int getCurrentTick() const;
     int getChunkTickRange() const;
-    void addEntity(BlockSource*, stl::unique_ptr<Actor>);
+    void addEntity(BlockSource&, stl::unique_ptr<Actor>);
+    virtual void addGlobalEntity(BlockSource&, stl::unique_ptr<Actor>);
     void spawnEntity(BlockSource*, Vec3* pos, Actor* actor);
-    ActorFactory* getActorFactory();
+    ActorFactory const& getActorFactory();
     bool isClientSide() const;
 };
 

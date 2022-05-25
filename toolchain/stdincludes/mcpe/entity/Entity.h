@@ -32,7 +32,7 @@ class Actor {
 	bool wasHurt();
     ActorDefinitionIdentifier* getActorIdentifier() const;
     ActorUniqueID* getUniqueID() const;
-    BlockSource& getRegion() const;
+    BlockSource* getRegion() const;
     void setPos(Vec3 const&);
 
     void setPosVTABLE(Vec3&);
@@ -88,3 +88,7 @@ class LocalPlayer : public Player{
     static Attribute BOAT_REVERSE_FORCE;
 };
 
+class ServerPlayer : public Player {
+    public:
+
+};

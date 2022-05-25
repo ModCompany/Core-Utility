@@ -46,11 +46,11 @@ void VtableHelper::patch(const char* table, const char* symbol, void* func){
 void* VtableHelper::getAdreess(const char* table, const char* symbol){
 	return SYMBOL(table, symbol);
 };
-
+/*
 template<typename A> A VtableHelper::call(const char* table, const char* symbol){
 	auto a = (A(*)(void*)) SYMBOL(table, symbol);
 	return a(this->original);
-};
+};*/
 
 
 

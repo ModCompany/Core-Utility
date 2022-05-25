@@ -22,23 +22,29 @@ void Level::spawnEntity(BlockSource* region, Vec3* pos, Actor* actor){
    // VTABLE_CALL<void*>(Level_addEntity, this, &region, stl::unique_ptr<Actor>(&actor));
 }
 
-void spawn(int x,int y,int z){
-    Level* level = GlobalContext::getServerLevel();
+void spawn(int id,int x,int y,int z){
+    Level* level = GlobalContext::getLevel();
+    Logger::debug("EntityAPI", "get level");
     Player* player = GlobalContext::getLocalPlayer();
-    Actor* actor = new Actor(*level);
-    ActorFactory* factory = level->getActorFactory();
+    Logger::debug("EntityAPI", "get player");
 
-        stl::unique_ptr<Actor> entity = factory->createSpawnedEntity(ActorDefinitionIdentifier((ActorType) 3),actor, {(float) x,(float)y,(float) z}, {0,0});
-        level->addEntity(&player->getRegion(),std::move(entity));
-        entity.get()->setPos({(float) x,(float) y,(float) z});
-    
+    Logger::debug("EntityAPI", "new actor");
+    ActorFactory factory = level->getActorFactory();
+    Logger::debug("EntityAPI", "get factory");
+    stl::unique_ptr<Actor> entity = factory.createSummonedEntity(ActorDefinitionIdentifier((ActorType) 73),player, {(float) x,(float)y,(float) z});
+    Logger::debug("EntityAPI", "create entity");
+
+    level->addEntity(*player->getRegion(),std::move(entity));
+
+    Logger::debug("EntityAPI", "add entity to level");
+    Logger::flush();
 
 }
 
 JS_MODULE_VERSION(Level, 1);
 
-JS_EXPORT(Level, spawn, "V(III)", (JNIEnv* env,int x,int y,int z){
-    spawn(x,y,z);
+JS_EXPORT(Level, spawn, "V(III)", (JNIEnv* env,int id,int x,int y,int z){
+    spawn(id,x,y,z);
 });
 
 
