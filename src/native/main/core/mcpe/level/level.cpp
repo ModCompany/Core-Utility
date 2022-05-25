@@ -1,6 +1,7 @@
 #include <horizon/types.h>
 #include <java.h>
 #include <level/Level.h>
+#include <Core.h>
 
 #include <vtable.h>
 #include <entity/Entity.h>
@@ -35,3 +36,11 @@ JS_MODULE_VERSION(Level, 1);
 JS_EXPORT(Level, spawn, "V(III)", (JNIEnv* env,int x,int y,int z){
     spawn(x,y,z);
 });
+
+extern "C" {
+	JNIEXPORT jlong JNICALL Java_com_core_api_mcpe_level_Level_getRandomPointer
+	(JNIEnv* env, jclass, jlong pointer) {
+        Core::Random random = ((Level*) pointer)->getRandom();
+        return (jlong) &random;
+	}
+}

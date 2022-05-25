@@ -1,10 +1,6 @@
 var ChunkPos = WRAP_JAVA("com.core.api.level.ChunkPos");
 let CustomEntityJava = WRAP_JAVA("com.core.api.entity.CustomEntity");
 
-CustomEntityJava.setHandlerTick("minecraft:chicken<>", function(ent){
-    Entity.addVelocity(ent, 0, .3, 0);
-});
-
 var NativeItem = {
     api: WRAP_JAVA("com.core.api.Item"),
     registerItem:function(uid, name, obj){
@@ -77,8 +73,11 @@ var debug = 0;
 
 var level = WRAP_NATIVE("Level");
 
+let GlobalContext = WRAP_JAVA("com.core.api.innnercore.GlobalContext");
+
 Callback.addCallback("ItemUse",function(coords,item,block,external,player){
     level.spawn(coords.relative.x,coords.relative.y,coords.relative.z);
+    alert(GlobalContext.getServerLevelPointer().getRandom().nextInt(100));
 }); 
 
 Callback.addCallback("ItemUseLocal", function(coords){

@@ -15,6 +15,7 @@ class FeatureRegistry;
 class BlockSource;
 class Vec3;
 class ActorFactory;
+class Random;
 
 class Level {
     public:
@@ -34,6 +35,7 @@ class Level {
     void addEntity(BlockSource*, stl::unique_ptr<Actor>);
     void spawnEntity(BlockSource*, Vec3* pos, Actor* actor);
     ActorFactory* getActorFactory();
+    bool isClientSide() const;
 };
 
 class ServerLevel : public Level {
