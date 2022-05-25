@@ -76,3 +76,4 @@ std::string toString(JNIEnv* env, jstring jStr) {
 export(void,api_entity_CustomEntity_setTick,jstring name, jboolean value) {
         CustomEntity::setTick(JavaClass::toString(env,name),(bool)(value == JNI_TRUE));
 }
+
