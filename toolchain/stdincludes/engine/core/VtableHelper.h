@@ -35,3 +35,10 @@ class VtableCache {
 	static void** getBlockTable(int);
 	static bool isExist(VtableType, int);
 };
+
+class VtablePatcher {
+	public:
+	VtablePatcher(VtableCache::VtableType, void*);
+	void patch(const char*, const char*, void*);
+
+};
