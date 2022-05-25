@@ -52,6 +52,8 @@ template<typename A> A VtableHelper::call(const char* table, const char* symbol)
 	return a(this->original);
 };
 
+
+
 std::map<int, void**> VtableCache::block_tables;
 std::map<int, void**> VtableCache::item_tables;
 
