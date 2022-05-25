@@ -70,10 +70,13 @@ Callback.addCallback("OnEnchant",function(){
 });
 var debug = 0;
 
-Callback.addCallback("ItemUseLocal",function(){
-    Game.tipMessage("debug : " + debug);
-    govno.setDebug(debug);
-    debug++;
-});
+var level = WRAP_NATIVE("Level");
 
-Callback.addCallback("ItemUse")
+Callback.addCallback("ItemUse",function(coords,item,block,external,player){
+    level.spawn(coords.relative.x,coords.relative.y,coords.relative.z);
+}); 
+
+Callback.addCallback("ItemUseLocal", function(coords){
+    Game.message("Test");
+    level.spawn(coords.relative.x,coords.relative.y,coords.relative.z);
+})

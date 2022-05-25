@@ -5,6 +5,11 @@
 #ifndef HORIZON_TYPES_H
 #define HORIZON_TYPES_H
 
+class Vec2 {
+    public:
+    float x,y;
+    Vec2(float x,float y) : x(x), y(y) {};
+};
 class Vec3 {
     public:
     float x, y, z;
@@ -52,15 +57,5 @@ struct Color {
 
 };
 
-class Bounds {
-    public:
 
-    enum Option {
-
-    };
-    Bounds(BlockPos const& pos1, BlockPos const& pos2, int range, Bounds::Option option){
-        auto a = (void*(*)(BlockPos const&, BlockPos const&, int, Bounds::Option)) SYMBOL("mcpe", "_ZN6BoundsC2ERK8BlockPosS2_iNS_6OptionE");
-        a(pos1,pos2,range,option);
-    }
-};
 #endif //HORIZON_TYPES_H

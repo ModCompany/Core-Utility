@@ -19,7 +19,7 @@
             "nativejs"
         ],
         "excludeFromRelease": [],
-        "pushTo": "storage/emulated/0/games/horizon/packs/innercore-test-b113-performance-beta-v2/innercore/mods/CoreEngine",
+        "pushTo": "storage/emulated/0/games/horizon/packs/Inner_Core/innercore/mods/CoreEngine",
         "ndkPath": null
     },
     "resources": [],

@@ -3,6 +3,7 @@
 #include <mce.h>
 #include <Core.h>
 #include <type/AutomaticID.h>
+
 class TickingArea;
 class BossbarManager;
 class TickingAreasManager;
@@ -13,6 +14,7 @@ class BlockPos;
 class FeatureRegistry;
 class BlockSource;
 class Vec3;
+class ActorFactory;
 
 class Level {
     public:
@@ -29,8 +31,9 @@ class Level {
     int getCurrentServerTick() const;
     int getCurrentTick() const;
     int getChunkTickRange() const;
-
+    void addEntity(BlockSource*, stl::unique_ptr<Actor>);
     void spawnEntity(BlockSource*, Vec3* pos, Actor* actor);
+    ActorFactory* getActorFactory();
 };
 
 class ServerLevel : public Level {
