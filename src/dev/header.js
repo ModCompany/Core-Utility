@@ -71,19 +71,11 @@ Callback.addCallback("OnEnchant",function(){
 });
 var debug = 0;
 
-var level = WRAP_NATIVE("Level");
-
 let GlobalContext = WRAP_JAVA("com.core.api.innnercore.GlobalContext");
-/*
 Callback.addCallback("ItemUse",function(coords,item,block,external,player){
-    level.spawn(coords.relative.x,coords.relative.y,coords.relative.z);
+    alert("getServerLevel");
+    let level = GlobalContext.getLevelServer();
+    alert("spawn")
+    level.addEntity(BlockSource.getDefaultForActor(player), coords.relative.x, coords.relative.y, coords.relative.z,"minecraft:cow");
     //alert(GlobalContext.getLevelServer().getRandom().nextInt(100));
-}); */
-
-Callback.addCallback("ItemUse", function(coords){
-    Game.message("Test");
-    
-        level.spawn(2,coords.relative.x,coords.relative.y,coords.relative.z);
-    
-
-})
+}); 

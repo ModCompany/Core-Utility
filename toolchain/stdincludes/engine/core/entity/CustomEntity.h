@@ -20,6 +20,6 @@ class CustomEntity {
         static bool isTick(std::string);
         static void setTick(std::string, bool);
         static Actor* getEntityByName(std::string);
-        static void spawnEnity(BlockSource*, Vec3*, std::string);
+        static void addEntity(BlockSource*, Vec3*, std::string);
         static void init();
 };

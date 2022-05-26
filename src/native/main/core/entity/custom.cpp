@@ -2,7 +2,7 @@
 #include <core/entity/Entity.h>
 #include <level/api/BlockSource.h>
 #include <innercore/global_context.h>
-#include <level/api/Vec3.h>
+#include <horizon/types.h>
 #include <type/ActorType.h>
 #include <entity/ActorDefinitionIdentifier.h>
 
@@ -30,8 +30,19 @@ void CustomEntity::setTick(std::string name, bool value){
     ticks[name] = value;
 }
 
-void CustomEntity::spawnEnity(BlockSource* region, Vec3* pos, std::string name){
-    region->addEntity(pos, new EntityEmpty(*(region->getLevel())));
+void CustomEntity::addEntity(BlockSource* region, Vec3* pos, std::string name){
+    Logger::debug("TEST", "getLevel");
+    Logger::flush();
+    Level* level = region->getLevel();
+    Logger::debug("TEST", "getActorFactory");
+    Logger::flush();
+    ActorFactory factory = level->getActorFactory();
+    Logger::debug("TEST", "createSummonedEntity");
+    Logger::flush();
+    stl::unique_ptr<Actor> entity = factory.createSummonedEntity(ActorDefinitionIdentifier(stl::string(name.c_str())),GlobalContext::getLocalPlayer(), *pos);
+    Logger::debug("TEST", "addEntity");
+    Logger::flush();
+    level->addEntity(*region,std::move(entity));
 }
 
 class ActorFactory;
@@ -59,21 +70,10 @@ void CustomEntity::init(){
     ), HookManager::CALL | HookManager::LISTENER  | HookManager::RESULT);*/
 }
 
-std::string toString(JNIEnv* env, jstring jStr) {
-	if (!jStr)
-		return "";
-	const jclass stringClass = env->GetObjectClass(jStr);
-	const jmethodID getBytes = env->GetMethodID(stringClass, "getBytes", "(Ljava/lang/String;)[B");
-	const jbyteArray stringJbytes = (jbyteArray) env->CallObjectMethod(jStr, getBytes, env->NewStringUTF("UTF-8"));
-	size_t length = (size_t) env->GetArrayLength(stringJbytes);
-	jbyte* pBytes = env->GetByteArrayElements(stringJbytes, NULL);
-	std::string ret = std::string((char *)pBytes, length);
-	env->ReleaseByteArrayElements(stringJbytes, pBytes, JNI_ABORT);
-	env->DeleteLocalRef(stringJbytes); env->DeleteLocalRef(stringClass);
-	return ret;
-}
-
 export(void,api_entity_CustomEntity_setTick,jstring name, jboolean value) {
-        CustomEntity::setTick(JavaClass::toString(env,name),(bool)(value == JNI_TRUE));
+    CustomEntity::setTick(JavaClass::toString(env,name),(bool)(value == JNI_TRUE));
+}
+export(void,mcpe_level_Level_addEntityLevel,jlong pointer, jfloat x, jfloat y, jfloat z, jstring name) {
+    CustomEntity::addEntity((BlockSource*) pointer, new Vec3((float) x, (float) y, (float) z), JavaClass::toString(env,name));
 }
 
