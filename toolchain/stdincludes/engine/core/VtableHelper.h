@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vtable.h>
 class VtableHelper {
 	public:
 	void** vtable;
@@ -11,7 +12,10 @@ class VtableHelper {
 
     public:
 
-	template<typename A> A call(const char*, const char*);
+	template<typename A> A call(const char* table, const char* symbol){
+		auto a = (A(*)(void*)) SYMBOL(table, symbol);
+		return a(this->original);
+	};
     void* getTop();
     void** get();
 	public:
