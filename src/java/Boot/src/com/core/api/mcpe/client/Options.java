@@ -11,4 +11,8 @@ public class Options {
     public int getUiProfile(){
         return getUiProfilePointer(pointer);
     }
+
+    public long get(){
+        return this.pointer;
+    }
 }
