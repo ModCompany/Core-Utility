@@ -72,11 +72,17 @@ Callback.addCallback("OnEnchant",function(){
 var debug = 0;
 
 let GlobalContext = WRAP_JAVA("com.core.api.innnercore.GlobalContext");
+let Injector = WRAP_JAVA("com.core.api.Injector");
+
 Callback.addCallback("ItemUse",function(coords,item,block,external,player){
     alert("getServerLevel");
     let level = GlobalContext.getLevelServer();
+    let a = GlobalContext.getLocalPlayer();
+    let ptr = Injector.init_injector(a.getPointer());
+    Injector.call(ptr,"_ZTV6Player", "_ZN6Player13startSwimmingEv");
+
     alert("spawn")
-    level.addEntity(BlockSource.getDefaultForActor(player), coords.relative.x, coords.relative.y, coords.relative.z,"minecraft:cow");
+    //level.addEntity(BlockSource.getDefaultForActor(player), coords.relative.x, coords.relative.y, coords.relative.z,"minecraft:cow");
     //alert(GlobalContext.getLevelServer().getRandom().nextInt(100));
 }); 
 
