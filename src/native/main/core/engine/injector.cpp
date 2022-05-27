@@ -37,6 +37,11 @@ float JniInjector::getFloatResult(const char* symbol){
     return helper.call<float>(symbol);
 }
 
+bool JniInjector::getBoolResult(const char* symbol){
+    VtableHelper helper (this->table);
+    return helper.call<bool>(symbol);
+}
+
 void JniInjector::call(const char* symbol){
     Logger::debug("Mod-Test", "Pointer of table: %p", (long) this->table);
     VtableHelper helper(this->table);
@@ -51,9 +56,12 @@ export(jint, Injector_getIntResult, jlong ptr,jstring a){
     return ((JniInjector*) ptr)->getIntResult(to(env,a).data());
 }
 
-export(jint, Injector_getFloatResult, jlong ptr,jstring a){
-
+export(jfloat, Injector_getFloatResult, jlong ptr,jstring a){
     return ((JniInjector*) ptr)->getFloatResult(to(env,a).data());
+}
+
+export(jboolean, Injector_getBoolResult, jlong ptr,jstring a){
+    return ((JniInjector*) ptr)->getBoolResult(to(env,a).data());
 }
 
 export(void, Injector_call, jlong ptr,jstring b){

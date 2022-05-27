@@ -17,8 +17,8 @@ class VtableHelper {
 
 	template<typename A> A call(const char* symbol){
 		void* handle = dlopen("libminecraftpe.so", RTLD_LAZY);
-		auto a = (void(*)(void*)) dlsym(handle, symbol);
-		a(this->original);
+		auto a = (A(*)(void*)) dlsym(handle, symbol);
+		return a(this->original);
 	};
     void* getTop();
     void** get();

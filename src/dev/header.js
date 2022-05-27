@@ -77,10 +77,10 @@ let Injector = WRAP_JAVA("com.core.api.Injector");
 
 Callback.addCallback("ItemUse",function(coords,item,block,external,player){
     alert("getServerLevel");
-    let level = GlobalContext.getLevelServer();
+    let level = GlobalContext.getLevel();
     let a = GlobalContext.getLocalPlayer();
-    let inj = Injector.init_injector(a.getPointer());
-    Injector.call(inj,"test","_ZN6Player13startSwimmingEv");
+    let inj = new Injector(level.getPointer());
+    alert(inj.getIntResult("_ZNK5Level20getActivePlayerCountEv"));
     //alert(g.test());
 }); 
 
