@@ -73,13 +73,7 @@ var debug = 0;
 
 let GlobalContext = WRAP_JAVA("com.core.api.innnercore.GlobalContext");
 let Injector = WRAP_JAVA("com.core.api.Injector");
-Callback.addCallback("LevelLoaded",function(){
-    NativeItem.overrideName(280,0, "test");
-    for(var i = 0;i < 16; i++){
-        NativeItem.overrideName(5,i, "DATA: " + i);
-    }
 
-});
 
 Callback.addCallback("ItemUse",function(coords,item,block,external,player){
     alert("getServerLevel");
