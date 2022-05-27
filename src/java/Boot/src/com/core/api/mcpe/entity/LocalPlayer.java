@@ -7,6 +7,6 @@ public class LocalPlayer {
     }
 
     public long getPointer(){
-        return pointer;
+        return this.pointer;
     }
 }

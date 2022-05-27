@@ -310,12 +310,10 @@ int getAttackDamage(Item* item){
 export(void, Item_overrideName, int id,int data, jstring name){
 	Item* item = ItemRegistry::getItemById(IdConversion::staticToDynamic(id, IdConversion::ITEM));
 	if(item){
-		const char* a = env->GetStringUTFChars(name, NULL);
+		const char* a = JavaClass::release(env, name);
         OverridedName::addNameForId(id,data, a);
-		env->ReleaseStringUTFChars(name, a);
-		VtableHelper helper (item);
-		helper.resize();
-		helper.patch("_ZTV4Item", "_ZNK4Item20buildDescriptionNameERK13ItemStackBase",(void*) &getName);
+		VtablePatcher patcher(VtableCache::VtableType::ITEM,id,item);
+		patcher.patch("_ZTV4Item", "_ZNK4Item20buildDescriptionNameERK13ItemStackBase",(void*) &getName);
 	}
 }
 
@@ -327,3 +325,6 @@ export(void, Item_overrideArmorValue, int id){
 		helper.patch("_ZTV4Item", "_ZNK4Item13getArmorValueEv",(void*) &getAttackDamage);
 	}
 }
+
+#include <core/JniInjector.h>
+#include <innercore/global_context.h>
