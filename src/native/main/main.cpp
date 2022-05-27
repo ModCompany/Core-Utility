@@ -20,7 +20,7 @@ typedef int content_id_t;
 #include <core/entity/CustomEntity.h>
 #include <client/ui/Container.h>
 #include <client/Sound.h>
-
+#include <core/module/ToolTip.h>
 
 
 
@@ -41,6 +41,7 @@ public:
 		}
 
 		CustomEntity::init();
+		ToolTip::init();
 
 		HookManager::addCallback(SYMBOL("mcpe","_ZN36EnchantingContainerManagerController13enchantResultEi"), LAMBDA((HookManager::CallbackController* controller, EnchantingContainerManagerController* a,int b),{
 

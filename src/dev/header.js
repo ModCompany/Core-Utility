@@ -79,3 +79,19 @@ Callback.addCallback("ItemUse",function(coords,item,block,external,player){
     level.addEntity(BlockSource.getDefaultForActor(player), coords.relative.x, coords.relative.y, coords.relative.z,"minecraft:cow");
     //alert(GlobalContext.getLevelServer().getRandom().nextInt(100));
 }); 
+
+let ToolTip = WRAP_JAVA("com.core.api.item.ToolTip");
+
+ToolTip.addToolTip(263, 0, "coal");
+ToolTip.addToolTips(264, 0, ["coal1", "coal2", "coal3"]);
+ToolTip.deletToolTip(264, 0, "coal2");
+
+function printArray(arr) {
+    alert("arr - "+arr.length);
+    for(let i in arr)
+        alert(arr[i]);
+}
+
+printArray(ToolTip.getToolTips(263, 0));
+ToolTip.clearToolTip(263, 0);
+printArray(ToolTip.getToolTips(263, 0));
