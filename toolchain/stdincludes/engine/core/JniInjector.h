@@ -12,6 +12,7 @@ class JniInjector {
     int getIntResult(const char*);
     float getFloatResult(const char*);
     bool getBoolResult(const char*);
+    long getPointerResult(const char*);
     void call(const char*);
     private:
 
