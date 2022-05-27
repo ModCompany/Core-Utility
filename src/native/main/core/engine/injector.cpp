@@ -42,7 +42,7 @@ bool JniInjector::getBoolResult(const char* symbol){
     return helper.call<bool>(symbol);
 }
 
-bool JniInjector::getPointerResult(const char* symbol){
+long JniInjector::getPointerResult(const char* symbol){
     VtableHelper helper (this->table);
     return helper.call<long>(symbol);
 }

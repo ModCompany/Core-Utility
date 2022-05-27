@@ -15,10 +15,10 @@ class VtableHelper {
 
     public:
 
-	template<typename A> A call(const char* symbol){
+	template<typename A,typename ... B> A call(const char* symbol,B...args){
 		void* handle = dlopen("libminecraftpe.so", RTLD_LAZY);
-		auto a = (A(*)(void*)) dlsym(handle, symbol);
-		return a(this->original);
+		auto a = (A(*)(void*,B...)) dlsym(handle, symbol);
+		return a(this->original,args...);
 	};
     void* getTop();
     void** get();
