@@ -23,10 +23,7 @@ export(jlong,mcpe_level_Level_getRandomPointer,jlong pointer) {
     return (jlong) &random;
 }
 
-export(void, level_registry_FeatureRegistry_cleanupFeature){
-    ServerLevel* level = GlobalContext::getServerLevel();
-    level->getFeatureRegistry().cleanupFeatures();
-}
+
 
 export(float, mcpe_level_Level_getSpecialMultiplier,jlong pointer, jint dimensionid){
     return ((Level*) pointer)->getSpecialMultiplier(dimensionid);
