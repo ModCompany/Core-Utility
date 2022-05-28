@@ -23,8 +23,8 @@ var NativeItem = {
     getType:function(a){
         if(TierType[a]) return TierType[a];
     },
-    overrideName:function(id, name){
-        this.api.overrideName(id,name);
+    overrideName:function(id,data, name){
+        this.api.overrideName(id,data,name);
     },
     overrideArmorValue:function(id){
         this.api.overrideArmorValue(id);
@@ -70,13 +70,13 @@ var debug = 0;
 let GlobalContext = WRAP_JAVA("com.core.api.innnercore.GlobalContext");
 let Injector = WRAP_JAVA("com.core.api.Injector");
 
+let phase = 0;
+let string = WRAP_JAVA("java.lang.String");
+let BlockPos = WRAP_JAVA("com.core.api.engine.BlockPos");
 Callback.addCallback("ItemUse",function(coords,item,block,external,player){
     alert("getServerLevel");
-    let level = GlobalContext.getLevelServer();
-    let a = GlobalContext.getLocalPlayer();
-    let ptr = Injector.init_injector(a.getPointer());
-    Injector.call(ptr,"_ZTV6Player", "_ZN6Player13startSwimmingEv");
 
+<<<<<<< HEAD
     alert("spawn")
     //level.addEntity(BlockSource.getDefaultForActor(player), coords.relative.x, coords.relative.y, coords.relative.z,"minecraft:cow");
     //alert(GlobalContext.getLevelServer().getRandom().nextInt(100));
@@ -84,3 +84,12 @@ Callback.addCallback("ItemUse",function(coords,item,block,external,player){
 Callback.addCallback("TEST", function(pointer){
     alert(pointer);
 });
+=======
+
+    let a = GlobalContext.getLocalPlayer();
+    let inj = new Injector(GlobalContext.getDimension().getPointer());
+    Injector.callArgs(123123,"test", new BlockPos(1,2,3));
+    //alert(g.test());
+}); 
+
+>>>>>>> 0389d54baf383a72777ca48b0f4e29c3c72ae564

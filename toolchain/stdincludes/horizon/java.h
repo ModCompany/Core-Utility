@@ -124,5 +124,8 @@ namespace JavaInterface {
 #define JAVA_CATCH(EXCEPTION_VAR) JAVA_CATCH_E(JavaInterface::getDefaultEnvironment(), EXCEPTION_VAR)
 #define export(TYPE, CLZ, ...) extern "C" JNIEXPORT TYPE JNICALL Java_com_core_api_##CLZ (JNIEnv* env, jclass clz, ##__VA_ARGS__)
 #define release_string(text) JNIEnv* _env; const char* _a = _env->GetStringUTFChars(text, NULL); const char* value = _a; env->ReleaseStringUTFChars(text, _a);
+
+
+
 #endif //HORIZON_JAVA_H
 

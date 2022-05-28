@@ -3,6 +3,9 @@
 #include <core/JniInjector.h>
 #include <core/VtableHelper.h>
 #include <core/JavaClass.h>
+#include <functional>
+
+
 
 JniInjector::JniInjector(void* a){
     this->table = a;
@@ -13,41 +16,86 @@ JniInjector::JniInjector(long pointer){
     this->table = (void*) pointer;
 };
 
-int JniInjector::getIntResult(const char* table,const char* symbol){
+int JniInjector::getIntResult(const char* symbol){
     VtableHelper helper (this->table);
-    return helper.call<int>(table,symbol);
+    return helper.call<int>(symbol);
 }
 
-float JniInjector::getFloatResult(const char* table,const char* symbol){
+float JniInjector::getFloatResult(const char* symbol){
     VtableHelper helper (this->table);
-    return helper.call<float>(table,symbol);
+    return helper.call<float>(symbol);
 }
 
-void JniInjector::call(const char* table,const char* symbol){
+bool JniInjector::getBoolResult(const char* symbol){
+    VtableHelper helper (this->table);
+    return helper.call<bool>(symbol);
+}
+
+long JniInjector::getPointerResult(const char* symbol){
+    VtableHelper helper (this->table);
+    return helper.call<long>(symbol);
+}
+
+stl::string JniInjector::getStringResult(const char* symbol){
+    VtableHelper helper(this->table);
+    return helper.call<stl::string>(symbol);
+}
+
+void JniInjector::call(const char* symbol){
     Logger::debug("Mod-Test", "Pointer of table: %p", (long) this->table);
     VtableHelper helper(this->table);
-    return helper.call<void>(table,symbol);
+    return helper.call<void>(symbol);
 }
+
+void JniInjector::replaceResult(const char* table,const char* symbol, void* lambda){
+    VtableHelper helper(this->table);
+    helper.resize();
+    helper.patch(table,symbol,lambda);
+}
+
+
 
 export(jlong, Injector_init_1injector, jlong ptr){
     return (jlong) new JniInjector(ptr);
 }
 
-export(jint, Injector_getIntResult, jlong ptr,jstring a, jstring b){
-    const char* table = JavaClass::release(env,a);
-    const char* address = JavaClass::release(env,b);
-    return ((JniInjector*) ptr)->getIntResult(table,address);
+export(jint, Injector_getIntResult, jlong ptr,jstring a){
+    return ((JniInjector*) ptr)->getIntResult(JavaClass::toString(env,a).data());
 }
 
-export(jint, Injector_getFloatResult, jlong ptr,jstring a, jstring b){
-    const char* table = JavaClass::release(env,a);
-    const char* address = JavaClass::release(env,b);
-    return ((JniInjector*) ptr)->getFloatResult(table,address);
+export(jfloat, Injector_getFloatResult, jlong ptr,jstring a){
+    return ((JniInjector*) ptr)->getFloatResult(JavaClass::toString(env,a).data());
 }
 
-export(void, Injector_call, jlong ptr,jstring a,jstring b){
-    const char* table = JavaClass::release(env,a);    
-    const char* address = JavaClass::release(env,b);
-    Logger::debug("Mod-Test", address);
-    return ((JniInjector*) ptr)->call(table,address);
+export(jboolean, Injector_getBoolResult, jlong ptr,jstring a){
+    return ((JniInjector*) ptr)->getBoolResult(JavaClass::toString(env,a).data());
+}
+
+export(jboolean, Injector_getPointerResult, jlong ptr,jstring a){
+    return ((JniInjector*) ptr)->getPointerResult(JavaClass::toString(env,a).data());
+}
+
+export(jstring, Injector_getStringResult, jlong ptr,jstring a){
+    return env->NewStringUTF(((JniInjector*) ptr)->getStringResult(JavaClass::toString(env,a).data()).c_str());
+}
+
+export(void, Injector_call, jlong ptr,jstring b){
+    Logger::debug("Mod-Test", JavaClass::toString(env,b).data());
+    return ((JniInjector*) ptr)->call(JavaClass::toString(env,b).data());
+}
+
+int replace(int value){
+    return value;
+}
+
+export(void, Injector_replace, jlong ptr,jstring a,jstring b,int value){
+    ((JniInjector*) ptr)->replaceResult(JavaClass::toString(env,a).data(),JavaClass::toString(env,b).data(),(void*) replace(value));
+}
+
+export(void, Injector_callArgs, jlong ptr, jstring a,jobject object){
+    JavaClass first (env,object);
+    Logger::debug("Mod-Test","%i",first.getInt("args_count"));
+
+    Logger::flush();
+
 }

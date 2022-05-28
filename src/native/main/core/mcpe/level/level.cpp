@@ -22,3 +22,21 @@ export(jlong,mcpe_level_Level_getRandomPointer,jlong pointer) {
     Core::Random random = ((Level*) pointer)->getRandom();
     return (jlong) &random;
 }
+
+
+
+export(float, mcpe_level_Level_getSpecialMultiplier,jlong pointer, jint dimensionid){
+    return ((Level*) pointer)->getSpecialMultiplier(dimensionid);
+}
+
+export(int, mcpe_level_Level_getCurrentServerTick, jlong pointer){
+    return ((Level*) pointer)->getCurrentServerTick();
+}
+
+export(int, mcpe_level_Level_getCurrentTick, jlong pointer){
+    return ((Level*) pointer)->getCurrentTick();
+}
+
+export(int, mcpe_level_Level_getChunkTickRange, jlong pointer){
+    return ((Level*) pointer)->getChunkTickRange();
+}
