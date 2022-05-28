@@ -3,6 +3,7 @@ package com.core.api.innnercore;
 import com.core.api.mcpe.client.ClientInstance;
 import com.core.api.mcpe.entity.LocalPlayer;
 import com.core.api.mcpe.entity.ServerPlayer;
+import com.core.api.mcpe.level.Dimension;
 import com.core.api.mcpe.level.Level;
 import com.core.api.mcpe.level.LevelServer;
 
@@ -12,6 +13,7 @@ public class GlobalContext {
     native private static long getLocalPlayerPointer();
     native private static long getServerLevelPointer();
     native private static long getLevelPointer();
+    native private static long getDimensionPointer();
 
     public static ClientInstance getClientInstace(){
         return new ClientInstance(getClientInstacePointer());
@@ -27,5 +29,9 @@ public class GlobalContext {
     }
     public static ServerPlayer getServerPlayer(){
         return new ServerPlayer(getServerPlayerPointer());
+    }
+
+    public static Dimension getDimension(){
+        return new Dimension(getDimensionPointer());
     }
 }

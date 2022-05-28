@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stl/string>
+#define stl std::__ndk1
 
 class JniInjector {
     public:
@@ -13,6 +15,8 @@ class JniInjector {
     float getFloatResult(const char*);
     bool getBoolResult(const char*);
     long getPointerResult(const char*);
+    stl::string getStringResult(const char*);
+    void replaceResult(const char*,const char*,void*);
     void call(const char*);
     private:
 

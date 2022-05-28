@@ -74,28 +74,16 @@ var debug = 0;
 let GlobalContext = WRAP_JAVA("com.core.api.innnercore.GlobalContext");
 let Injector = WRAP_JAVA("com.core.api.Injector");
 
+let phase = 0;
 
 Callback.addCallback("ItemUse",function(coords,item,block,external,player){
     alert("getServerLevel");
-    let level = GlobalContext.getLevel();
+    phase++;
+    if(phase == 4) phase = 0;
+
     let a = GlobalContext.getLocalPlayer();
-    let inj = new Injector(level.getPointer());
-    alert(inj.getIntResult("_ZNK5Level20getActivePlayerCountEv"));
+    let inj = new Injector(GlobalContext.getDimension().getPointer());
+    inj.replace("_ZTV9Dimension","_ZNK9Dimension12getMoonPhaseEv",phase);
     //alert(g.test());
 }); 
 
-let ToolTip = WRAP_JAVA("com.core.api.item.ToolTip");
-
-ToolTip.addToolTip(263, 0, "coal");
-ToolTip.addToolTips(264, 0, ["coal1", "coal2", "coal3"]);
-ToolTip.deletToolTip(264, 0, "coal2");
-
-function printArray(arr) {
-    alert("arr - "+arr.length);
-    for(let i in arr)
-        alert(arr[i]);
-}
-
-printArray(ToolTip.getToolTips(263, 0));
-ToolTip.clearToolTip(263, 0);
-printArray(ToolTip.getToolTips(263, 0));

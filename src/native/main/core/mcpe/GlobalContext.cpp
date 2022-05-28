@@ -16,3 +16,6 @@ export(jlong,innnercore_GlobalContext_getServerLevelPointer){
 export(jlong,innnercore_GlobalContext_getLevelPointer){
 	return (jlong) GlobalContext::getLevel();
 }
+export(jlong,innnercore_GlobalContext_getDimensionPointer){
+	return (jlong) GlobalContext::getDimension();
+}

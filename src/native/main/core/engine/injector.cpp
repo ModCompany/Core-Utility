@@ -3,6 +3,7 @@
 #include <core/JniInjector.h>
 #include <core/VtableHelper.h>
 #include <core/JavaClass.h>
+#include <functional>
 
 std::string to(JNIEnv* env, jstring jStr) {
 	if (!jStr)
@@ -47,10 +48,21 @@ long JniInjector::getPointerResult(const char* symbol){
     return helper.call<long>(symbol);
 }
 
+stl::string JniInjector::getStringResult(const char* symbol){
+    VtableHelper helper(this->table);
+    return helper.call<stl::string>(symbol);
+}
+
 void JniInjector::call(const char* symbol){
     Logger::debug("Mod-Test", "Pointer of table: %p", (long) this->table);
     VtableHelper helper(this->table);
     return helper.call<void>(symbol);
+}
+
+void JniInjector::replaceResult(const char* table,const char* symbol, void* lambda){
+    VtableHelper helper(this->table);
+    helper.resize();
+    helper.patch(table,symbol,lambda);
 }
 
 export(jlong, Injector_init_1injector, jlong ptr){
@@ -72,7 +84,21 @@ export(jboolean, Injector_getBoolResult, jlong ptr,jstring a){
 export(jboolean, Injector_getPointerResult, jlong ptr,jstring a){
     return ((JniInjector*) ptr)->getPointerResult(to(env,a).data());
 }
+
+export(jstring, Injector_getStringResult, jlong ptr,jstring a){
+    return env->NewStringUTF(((JniInjector*) ptr)->getStringResult(to(env,a).data()).c_str());
+}
+
 export(void, Injector_call, jlong ptr,jstring b){
     Logger::debug("Mod-Test", to(env,b).data());
     return ((JniInjector*) ptr)->call(to(env,b).data());
+}
+
+int replace(int value){
+    return value;
+}
+export(void, Injector_replace, jlong ptr,jstring a,jstring b,int value){
+
+    ((JniInjector*) ptr)->replaceResult(to(env,a).data(),to(env,b).data(),(void*) replace(value));
+
 }
