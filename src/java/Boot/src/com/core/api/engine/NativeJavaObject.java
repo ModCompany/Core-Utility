@@ -4,7 +4,9 @@ public abstract class NativeJavaObject {
     
     public Object[] object;
     public int args_count;
-    public NativeJavaObject(){
+    public NativeJavaObject(Object...obj){
+        object = obj;
+        args_count = obj.length;
     }
 
     public Object[] getObject(){

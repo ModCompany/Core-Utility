@@ -1,14 +1,13 @@
-package com.core.api.engine;
+package com.core.api.engine.data;
+
+import com.core.api.engine.NativeJavaObject;
 
 public class BlockPos extends NativeJavaObject {
 
     public BlockPos(int a,int b,int c){
-        super();
-        Object[] o ={a,b,c};
-        this.object = o;
-        this.args_count = this.object.length;
-
+        super(a,b,c);
     }
+    
     @Override
     public String getType() {
         return "BlockPos";
