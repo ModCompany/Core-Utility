@@ -47,9 +47,6 @@ void* VtableHelper::getAdreess(const char* table, const char* symbol){
 	return SYMBOL(table, symbol);
 };
 
-
-
-
 std::map<int, void**> VtableCache::block_tables;
 std::map<int, void**> VtableCache::item_tables;
 
@@ -73,6 +70,7 @@ void** VtableCache::getTable(VtableType type, int id){
 	if(type==VtableType::BLOCK && block_tables.count(id)) return block_tables[id];	
 	return nullptr;
 }
+
 bool VtableCache::isExist(VtableType type, int id){
 	if(type == VtableType::ITEM){
 		if(item_tables.count(id)) return true;

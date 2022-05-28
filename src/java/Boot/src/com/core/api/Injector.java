@@ -1,5 +1,7 @@
 package com.core.api;
 
+import com.core.api.engine.NativeJavaObject;
+
 public class Injector {
     
     private long pointer;
@@ -32,6 +34,9 @@ public class Injector {
         replace(this.pointer,table,symbol,value);
     }
 
+    public void call(String symbol, NativeJavaObject a){
+        callArgs(this.pointer, symbol, a);
+    }
     public native static long init_injector(long ptr);
     public native static int getIntResult(long ptr,String symbol);
     public native static float getFloatResult(long ptr,String symbol);
@@ -40,4 +45,5 @@ public class Injector {
     public native static String getStringResult(long ptr,String symbol);
     public native static void call(long ptr,String symbol);
     public native static void replace(long ptr, String table,String symbol, int value);
+    public native static void callArgs(long ptr,String symbol, NativeJavaObject a);
 }

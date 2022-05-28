@@ -75,15 +75,15 @@ let GlobalContext = WRAP_JAVA("com.core.api.innnercore.GlobalContext");
 let Injector = WRAP_JAVA("com.core.api.Injector");
 
 let phase = 0;
-
+let string = WRAP_JAVA("java.lang.String");
+let BlockPos = WRAP_JAVA("com.core.api.engine.BlockPos");
 Callback.addCallback("ItemUse",function(coords,item,block,external,player){
     alert("getServerLevel");
-    phase++;
-    if(phase == 4) phase = 0;
+
 
     let a = GlobalContext.getLocalPlayer();
     let inj = new Injector(GlobalContext.getDimension().getPointer());
-    inj.replace("_ZTV9Dimension","_ZNK9Dimension12getMoonPhaseEv",phase);
+    Injector.callArgs(123123,"test", new BlockPos(1,2,3));
     //alert(g.test());
 }); 
 

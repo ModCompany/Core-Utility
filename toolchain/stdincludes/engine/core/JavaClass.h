@@ -15,7 +15,7 @@ class JavaClass {
     float getFloat(const char*);
     const char* getString(const char*);
     bool getBool(const char*);
-    
+    std::string getClassName();
     static const char* release(JNIEnv* env,jstring);
     static std::string toString(JNIEnv* env,jstring);
 };
