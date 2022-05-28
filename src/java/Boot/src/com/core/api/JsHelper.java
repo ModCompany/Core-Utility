@@ -5,8 +5,8 @@ import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 
 public class JsHelper {
-    private static Context context = Context.enter();
-    private static Scriptable scriptable = context.initStandardObjects();
+    public static Context context = Context.enter();
+    public static Scriptable scriptable = context.initStandardObjects();
     private static Scriptable that = context.newObject(scriptable);
 
     public static Object callFunction(Function function, Object[] args) {

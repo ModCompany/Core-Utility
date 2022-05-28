@@ -126,5 +126,6 @@
         "toolchain/classpath/classes.jar",
         "toolchain/classpath/test-classes.jar",
         "toolchain/classpath/classes-dex2jar.jar"
-    ]
+    ],
+    "tslint.jsEnable": true
 }

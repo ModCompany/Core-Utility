@@ -58,7 +58,11 @@
     ],
     "additional": [
         {
-            "source": "src/assets/root/*",
+            "source": "src/config.json",
+            "targetDir": "."
+        },
+        {
+            "source": "src/hooks.json",
             "targetDir": "."
         }
     ]

@@ -76,14 +76,6 @@ void ToolTip::init(){
     );
 }
 
-class ToolTipModule : public Module {
-	public:
-        ToolTipModule(): Module("ToolTip") {};
-        virtual void initialize(){
-            
-        }
-};
-
 //Артём, тот метод иногда выдовал какуя-то хуйню)
 std::string toString(JNIEnv* env, jstring jStr) {
 	if (!jStr)
