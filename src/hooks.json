@@ -1,9 +1,13 @@
 [
     {
         "symbol": "_ZN6Player13startSwimmingEv",
-        "callback": "StartSwimming",
+        "callback": "Player.startSwimming",
         "priority": "pre",
-        "args": [],
         "return": "void"
+    },{
+        "symbol": "_ZNK9Dimension5isDayEv",
+        "callback": "Dimension.isDay",
+        "priority": "pre",
+        "return": "bool"
     }
 ]

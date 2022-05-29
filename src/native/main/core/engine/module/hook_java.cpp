@@ -12,6 +12,7 @@ jclass HookJava::HOOK;
 jclass HookJava::DATA;
 jmethodID HookJava::ID;
 jmethodID HookJava::ID_INTAS;
+jmethodID HookJava::ID_FLOATAS;
 std::map<std::string, jstring> HookJava::cache;
 
 std::vector<Hook*> HookJava::getHooks(JNIEnv* env){
@@ -50,6 +51,9 @@ class Controller {
             this->controller = controller;
             isResultV = false;
         }
+        void end(JNIEnv* env){
+            env->DeleteGlobalRef(result);
+        }
         void replace(){
             controller->replace();
         }
@@ -71,15 +75,14 @@ template<typename T>
 void registerHook(JNIEnv* env, Hook* hook, std::function<T(JNIEnv*,Hook*,Controller)> func, int v){
     HookManager::addCallback(
         SYMBOL("mcpe",hook->symbol.c_str()), 
-        LAMBDA((HookManager::CallbackController* controller, void* self, void* a, void* b, void* b, void* d, void* e),{
-            Logger::debug("TEST", "1");
+        LAMBDA((HookManager::CallbackController* controller, void* self, void* a, void* b, void* c, void* d, void* e),{
             Controller ctr(controller);
-            Logger::debug("TEST", "2");
-            JavaCallbacks::invokeCallback(HookJava::HOOK, "hook", "(JJLjava/lang/String;Ljava/lang/String;)V", (jlong) &ctr, (jlong) self, HookJava::getJavaString(env, hook->callback), HookJava::getJavaString(env, hook->returnType));
-            //env->CallStaticVoidMethod(HookJava::HOOK, HookJava::ID, (jlong) &ctr, (jlong) self, HookJava::getJavaString(env, hook->callback), HookJava::getJavaString(env, hook->returnType));
-            Logger::debug("TEST", "3");
-            if(ctr.isResult())
-                return func(env, hook,ctr);
+            JavaCallbacks::invokeCallback(HookJava::HOOK, "hookCallback", "(JJLjava/lang/String;Ljava/lang/String;)V", (jlong) &ctr, (jlong) self, HookJava::getJavaString(env, hook->callback), HookJava::getJavaString(env, hook->returnType));
+            if(ctr.isResult()){
+                T result = func(env, hook,ctr);
+                ctr.end(env);
+                return result;
+            }
         },hook, env, func
     ), v);
 }
@@ -89,9 +92,10 @@ void HookJava::init(){
 	ATTACH_JAVA(env, JNI_VERSION_1_2){
 		HookJava::HOOK = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/module/Hook")));
         HookJava::DATA = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/module/JsonData")));
-        HookJava::ID = env->GetStaticMethodID(HookJava::HOOK, "hook", "(JJLjava/lang/String;Ljava/lang/String;)V");
+        HookJava::ID = env->GetStaticMethodID(HookJava::HOOK, "hookCallback", "(JJLjava/lang/String;Ljava/lang/String;)V");
         jclass Double = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("java/lang/Double")));
         HookJava::ID_INTAS = env->GetMethodID(Double, "intValue", "()I");
+        HookJava::ID_FLOATAS = env->GetMethodID(Double, "floatValue", "()F");
         
         std::vector<Hook*> hooks = HookJava::getHooks(env);
         for(int i = 0;i < hooks.size();i++){
@@ -103,10 +107,22 @@ void HookJava::init(){
                 v = HookManager::RETURN | HookManager::LISTENER | HookManager::CONTROLLER;
 
             if(hook->returnType == "void"){
-                registerHook<void>(env, hook, [](JNIEnv* env, Hook* hook, Controller ctr){}, v);
+                registerHook<void*>(env, hook, [](JNIEnv* env, Hook* hook, Controller ctr){return nullptr;}, v);
             }else if(hook->returnType == "stl::string"){
                 registerHook<stl::string>(env, hook, [](JNIEnv* env, Hook* hook, Controller ctr){
                     return stl::string(HookJava::getStringByObject(env, ctr.getResultHook()).c_str());
+                }, v);
+            }else if(hook->returnType == "int"){
+                registerHook<int>(env, hook, [](JNIEnv* env, Hook* hook, Controller ctr){
+                    return HookJava::getIntByObject(env, ctr.getResultHook());
+                }, v);
+            }else if(hook->returnType == "bool"){
+                registerHook<bool>(env, hook, [](JNIEnv* env, Hook* hook, Controller ctr){
+                    return HookJava::getBoolByObject(env, ctr.getResultHook());
+                }, v);
+            }else if(hook->returnType == "float"){
+                registerHook<float>(env, hook, [](JNIEnv* env, Hook* hook, Controller ctr){
+                    return HookJava::getFloatByObject(env, ctr.getResultHook());
                 }, v);
             }
         }

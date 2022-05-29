@@ -74,14 +74,11 @@ let phase = 0;
 let string = WRAP_JAVA("java.lang.String");
 let BlockPos = WRAP_JAVA("com.core.api.engine.BlockPos");
 
-Callback.addCallback("StartSwimming", function(controller, pointer){
-    alert("StartSwimming");
+Callback.addCallback("Player.startSwimming", function(controller, pointer){
     controller.replace();
+    Game.message("swimming");
 });
-Callback.addCallback("BuildName", function(controller, pointer){
-    alert("replace");
+Callback.addCallback("Dimension.isDay", function(controller, pointer){
     controller.replace();
-    alert("setResult")
-    controller.setResult("test name");
-    alert("end");
+    controller.setResult(false);
 });

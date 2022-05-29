@@ -19,6 +19,7 @@ class HookJava {
         static jclass HOOK, DATA;
         static jmethodID ID;
         static jmethodID ID_INTAS;
+        static jmethodID ID_FLOATAS;
 
         static int getIntByObject(JNIEnv* env, jobject v){
             return (int) (env->CallIntMethod(v, HookJava::ID_INTAS));
@@ -28,20 +29,22 @@ class HookJava {
             return getIntByObject(env, v) == 1;
         }
 
+        static float getFloatByObject(JNIEnv* env, jobject v){
+            return (float) (env->CallFloatMethod(v, HookJava::ID_FLOATAS));
+        }
+
         static std::string getStringByObject(JNIEnv* env, jobject v){
-            Logger::debug("TEST", "getStringByObject");
-            std::string str = JavaClass::toString(env, (jstring) v);
-            Logger::debug("TEST", str.c_str());
+            jstring t = (jstring) v;
+            std::string str = JavaClass::toString(env, t);
             return str;
         }
 
         static std::vector<Hook*> getHooks(JNIEnv*);
         static void init();
-        static jstring getJavaString(JNIEnv* env, std::string n){
-            Logger::debug("TEST", n.c_str());
+        static jstring& getJavaString(JNIEnv* env, std::string n){
             if(cache.find(n) != cache.end())
                 return cache.find(n)->second;
-            cache[n] = env->NewStringUTF(n.c_str());
+            cache[n] = (jstring) env->NewGlobalRef(env->NewStringUTF(n.c_str()));
             return cache.find(n)->second;
         }
 };

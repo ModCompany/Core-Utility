@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.core.api.module.types.ReturnBool;
 import com.core.api.module.types.ReturnInt;
 import com.core.api.module.types.ReturnString;
 import com.zhekasmirnov.apparatus.modloader.ApparatusMod;
@@ -75,6 +76,8 @@ public class Hook {
     static {
         registerType("int", new ReturnInt());
         registerType("stl::string", new ReturnString());
+        registerType("bool", new ReturnBool());
+        registerType("float", new ReturnInt());
     }
 
     public static class Controller {
@@ -99,8 +102,8 @@ public class Hook {
         }
     }
 
-    public static void hook(long controller, long pointer, String name, String returnType){
-        Logger.error("HOOK", "hook");
+    public static void hookCallback(long controller, long pointer, String name, String returnType){
+        Logger.error("HOOK", name);
         try{
             Callback.invokeCallback(name, new Controller(controller, returnType), pointer);
         }catch(Exception e){
