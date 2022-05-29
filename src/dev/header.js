@@ -73,23 +73,11 @@ let Injector = WRAP_JAVA("com.core.api.Injector");
 let phase = 0;
 let string = WRAP_JAVA("java.lang.String");
 let BlockPos = WRAP_JAVA("com.core.api.engine.BlockPos");
-Callback.addCallback("ItemUse",function(coords,item,block,external,player){
-    alert("getServerLevel");
 
-<<<<<<< HEAD
-    alert("spawn")
-    //level.addEntity(BlockSource.getDefaultForActor(player), coords.relative.x, coords.relative.y, coords.relative.z,"minecraft:cow");
-    //alert(GlobalContext.getLevelServer().getRandom().nextInt(100));
+Callback.addCallback("StartSwimming", function(controller, pointer){
+    controller.replace();
 });
-Callback.addCallback("TEST", function(pointer){
-    alert(pointer);
+Callback.addCallback("getMaxUseDuration", function(controller, pointer){
+    controller.replace();
+    controller.setResult(10);
 });
-=======
-
-    let a = GlobalContext.getLocalPlayer();
-    let inj = new Injector(GlobalContext.getDimension().getPointer());
-    Injector.callArgs(123123,"test", new BlockPos(1,2,3));
-    //alert(g.test());
-}); 
-
->>>>>>> 0389d54baf383a72777ca48b0f4e29c3c72ae564

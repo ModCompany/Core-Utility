@@ -22,5 +22,9 @@ public:
     operator long long() const {
         return this->id;
     }
+
+    long long getId(){
+        return id;
+    }
 };
 

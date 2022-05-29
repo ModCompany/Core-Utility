@@ -1,6 +1,13 @@
 [
     {
-        "symbol": "_ZNK13ItemStackBase5getIdEv",
-        "callback": "TEST"
+        "symbol": "_ZN6Player13startSwimmingEv",
+        "callback": "StartSwimming",
+        "priority": "pre",
+        "return": "void"
+    },{
+        "symbol": "_ZNK4Item17getMaxUseDurationEPK9ItemStack",
+        "callback": "getMaxUseDuration",
+        "priority": "pre",
+        "return": "int"
     }
 ]

@@ -21,12 +21,9 @@ typedef int content_id_t;
 #include <client/ui/Container.h>
 #include <client/Sound.h>
 #include <core/module/ToolTip.h>
-<<<<<<< HEAD
 #include <core/module/hook_java.h>
 
-=======
 #include <core/JniHook.h>
->>>>>>> 0389d54baf383a72777ca48b0f4e29c3c72ae564
 
 
 class CoreUtility : public Module {

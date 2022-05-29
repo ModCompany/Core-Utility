@@ -4,15 +4,17 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import com.core.api.module.types.ReturnInt;
 import com.zhekasmirnov.apparatus.modloader.ApparatusMod;
 import com.zhekasmirnov.apparatus.modloader.ApparatusModLoader;
 import com.zhekasmirnov.horizon.runtime.logger.Logger;
 import com.zhekasmirnov.innercore.api.runtime.Callback;
 
 import org.json.JSONArray;
-import org.json.JSONObject;;
+import org.json.JSONObject;
 
 public class Hook {
     public static final String file_name = "hooks.json";
@@ -38,7 +40,7 @@ public class Hook {
                     JSONArray array = new JSONArray(json);
                     for(int j = 0;j < array.length();j++){
                         JSONObject object = array.getJSONObject(j);
-                        jsons.add(new JsonData(object.getString("symbol"), object.getString("callback")));
+                        jsons.add(new JsonData(object.getString("symbol"), object.getString("callback"), object.getString("priority"), object.getString("return")));
                     }
                 }
             } catch (Exception e) {
@@ -47,9 +49,58 @@ public class Hook {
         }
     }
 
-    public static void hook(long pointer, String name){
+    native private static void replace(long pointer);
+    native private static Object getResult(long ptr);
+    native private static void setResult(long ptr, Object v);
+    native private static void setIsResult(long ptr, boolean is);
+
+
+    public static abstract class ReturnType<T> {
+        abstract public T getConvert(Object v);
+    }
+
+
+
+    private static HashMap<String, ReturnType<?>> types = new HashMap<>();
+
+    public static void registerType(String name, ReturnType<?> type){
+        types.put(name, type);
+    }
+
+    public static Object getConvert(String name, Object type){
+        return types.get(name).getConvert(type);
+    }
+
+    static {
+        registerType("int", new ReturnInt());
+    }
+
+    public static class Controller {
+        long ptr;
+        String type;
+        public Controller(long ptr, String type){
+            this.ptr = ptr;
+            this.type = type;
+        }
+
+        public long getPointer() {
+            return ptr;
+        }
+
+        public void replace(){
+            Hook.replace(ptr);
+        }
+
+        public void setResult(Object result){
+            setIsResult(ptr, true);
+            Hook.setResult(ptr,getConvert(type,result));
+        }
+    }
+
+    public static void hook(long controller, long pointer, String name, String returnType){
+        Logger.error("HOOK", "hook");
         try{
-            Callback.invokeCallback(name, pointer);
+            Callback.invokeCallback(name, new Controller(controller, returnType), pointer);
         }catch(Exception e){
             Logger.error("HOOK", e.getMessage());
         }

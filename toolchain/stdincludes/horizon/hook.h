@@ -184,7 +184,7 @@ namespace HookManager {
     CallbackAddStatus* addCallback(void* addr, int64_t lambda);
 }
 
-#define LAMBDA(ARGS, CODE, VALUES, ...) ((int64_t) new std::function<void ARGS>([VALUES] ARGS CODE))
+#define LAMBDA(ARGS, CODE, VALUES...) ((int64_t) new std::function<void ARGS>([VALUES] ARGS CODE))
 
 
 
