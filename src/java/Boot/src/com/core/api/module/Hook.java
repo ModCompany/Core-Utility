@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.core.api.module.types.ReturnInt;
+import com.core.api.module.types.ReturnString;
 import com.zhekasmirnov.apparatus.modloader.ApparatusMod;
 import com.zhekasmirnov.apparatus.modloader.ApparatusModLoader;
 import com.zhekasmirnov.horizon.runtime.logger.Logger;
@@ -73,6 +74,7 @@ public class Hook {
 
     static {
         registerType("int", new ReturnInt());
+        registerType("stl::string", new ReturnString());
     }
 
     public static class Controller {

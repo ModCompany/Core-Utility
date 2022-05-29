@@ -3,11 +3,7 @@
         "symbol": "_ZN6Player13startSwimmingEv",
         "callback": "StartSwimming",
         "priority": "pre",
+        "args": [],
         "return": "void"
-    },{
-        "symbol": "_ZNK4Item17getMaxUseDurationEPK9ItemStack",
-        "callback": "getMaxUseDuration",
-        "priority": "pre",
-        "return": "int"
     }
 ]

@@ -75,9 +75,13 @@ let string = WRAP_JAVA("java.lang.String");
 let BlockPos = WRAP_JAVA("com.core.api.engine.BlockPos");
 
 Callback.addCallback("StartSwimming", function(controller, pointer){
+    alert("StartSwimming");
     controller.replace();
 });
-Callback.addCallback("getMaxUseDuration", function(controller, pointer){
+Callback.addCallback("BuildName", function(controller, pointer){
+    alert("replace");
     controller.replace();
-    controller.setResult(10);
+    alert("setResult")
+    controller.setResult("test name");
+    alert("end");
 });
