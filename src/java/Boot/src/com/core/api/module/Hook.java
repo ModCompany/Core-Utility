@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.core.api.module.types.Parameter;
 import com.core.api.module.types.ReturnBool;
 import com.core.api.module.types.ReturnInt;
 import com.core.api.module.types.ReturnString;
+import com.core.api.module.types.ReturnVoid;
 import com.zhekasmirnov.apparatus.modloader.ApparatusMod;
 import com.zhekasmirnov.apparatus.modloader.ApparatusModLoader;
 import com.zhekasmirnov.horizon.runtime.logger.Logger;
@@ -42,7 +44,11 @@ public class Hook {
                     JSONArray array = new JSONArray(json);
                     for(int j = 0;j < array.length();j++){
                         JSONObject object = array.getJSONObject(j);
-                        jsons.add(new JsonData(object.getString("symbol"), object.getString("callback"), object.getString("priority"), object.getString("return")));
+                        JSONArray arr = object.getJSONArray("args");
+                        String[] args = new String[arr.length()];
+                        for(int v = 0;v < arr.length();v++)
+                            args[v] = arr.getString(v);
+                        jsons.add(new JsonData(object.getString("symbol"), object.getString("callback"), object.getString("priority"), object.getString("return"), args));
                     }
                 }
             } catch (Exception e) {
@@ -74,6 +80,7 @@ public class Hook {
     }
 
     static {
+        registerType("void", new ReturnVoid());
         registerType("int", new ReturnInt());
         registerType("stl::string", new ReturnString());
         registerType("bool", new ReturnBool());
@@ -102,10 +109,16 @@ public class Hook {
         }
     }
 
-    public static void hookCallback(long controller, long pointer, String name, String returnType){
-        Logger.error("HOOK", name);
+    public static void hookCallback(long controller, long pointer, String name, String returnType, Parameter[] args){
         try{
-            Callback.invokeCallback(name, new Controller(controller, returnType), pointer);
+            Object[] args_callback = new Object[args.length+2];
+            args_callback[0] = new Controller(controller, returnType);
+            args_callback[1] = pointer;
+            for(int i = 2;i < args_callback.length;i++)
+                if(args[i - 2] != null)
+                    args_callback[i] = ((Parameter) args[i - 2]).getValue();
+
+            Callback.invokeCallback(name, args_callback);
         }catch(Exception e){
             Logger.error("HOOK", e.getMessage());
         }

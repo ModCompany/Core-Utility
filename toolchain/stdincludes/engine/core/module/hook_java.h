@@ -9,20 +9,27 @@
 class Hook {
     public:
         std::string symbol, callback, priority, returnType;
-        Hook(std::string symbol, std::string callback, std::string priority, std::string returnType): symbol(symbol), callback(callback), priority(priority), returnType(returnType){}
+        std::vector<std::string> args;
+        Hook(std::string symbol, std::string callback, std::string priority, std::string returnType, std::vector<std::string> args): symbol(symbol), callback(callback), priority(priority), returnType(returnType), args(args){}
 };
 
 class HookJava {
     private:
         static std::map<std::string, jstring> cache;
     public:
-        static jclass HOOK, DATA;
+        static jclass HOOK, DATA, OBJECT;
         static jmethodID ID;
         static jmethodID ID_INTAS;
         static jmethodID ID_FLOATAS;
+        static jmethodID ID_LongAS;
+        static jobject obj;
 
         static int getIntByObject(JNIEnv* env, jobject v){
             return (int) (env->CallIntMethod(v, HookJava::ID_INTAS));
+        }
+
+        static jlong getPointerByObject(JNIEnv* env, jobject v){
+            return (env->CallIntMethod(v, HookJava::ID_LongAS));
         }
 
         static bool getBoolByObject(JNIEnv* env, jobject v){

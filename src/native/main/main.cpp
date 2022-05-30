@@ -22,6 +22,7 @@ typedef int content_id_t;
 #include <client/Sound.h>
 #include <core/module/ToolTip.h>
 #include <core/module/hook_java.h>
+#include <core/module/NativeAPI.h>
 
 #include <core/JniHook.h>
 
@@ -44,6 +45,7 @@ public:
 
 		CustomEntity::init();
 		ToolTip::init();
+		NativeAPI::init();
 		HookJava::init();
 
 		HookManager::addCallback(SYMBOL("mcpe","_ZN36EnchantingContainerManagerController13enchantResultEi"), LAMBDA((HookManager::CallbackController* controller, EnchantingContainerManagerController* a,int b),{

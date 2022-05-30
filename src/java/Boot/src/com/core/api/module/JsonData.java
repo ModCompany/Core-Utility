@@ -2,11 +2,13 @@ package com.core.api.module;
 
 public class JsonData {
     String symbol, callback, priority, returnType;
-    public JsonData(String symbol, String callback, String priority, String returnType){
+    String[] args;
+    public JsonData(String symbol, String callback, String priority, String returnType, String[] args){
         this.symbol = symbol;
         this.callback = callback;
         this.priority = priority;
         this.returnType = returnType;
+        this.args = args;
     }
 
     public String getCallback() {
@@ -23,6 +25,10 @@ public class JsonData {
 
     public String getReturn(){
         return returnType;
+    }
+
+    public String[] getArgs(){
+        return args;
     }
 
     @Override

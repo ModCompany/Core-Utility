@@ -75,10 +75,16 @@ let string = WRAP_JAVA("java.lang.String");
 let BlockPos = WRAP_JAVA("com.core.api.engine.BlockPos");
 
 Callback.addCallback("Player.startSwimming", function(controller, pointer){
-    controller.replace();
     Game.message("swimming");
 });
 Callback.addCallback("Dimension.isDay", function(controller, pointer){
     controller.replace();
     controller.setResult(false);
 });
+Callback.addCallback("Actor.setTradingPlayer", function(controller, pointer, player){
+    if(player != 0)
+        new Injector(player).call("_ZN6Player13startSwimmingEv");
+});
+/*Callback.addCallback("ItemStackBase.init", function(controller, pointer){
+    alert(NativeAPI.dynamicToStatic(new Injector(pointer).getIntResult("_ZNK13ItemStackBase5getIdEv"), ConversionType.ITEM));
+});*/

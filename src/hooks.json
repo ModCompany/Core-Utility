@@ -1,13 +1,21 @@
 [
     {
-        "symbol": "_ZN6Player13startSwimmingEv",
-        "callback": "Player.startSwimming",
-        "priority": "pre",
-        "return": "void"
+        "symbol":"_ZN6Player13startSwimmingEv",
+        "callback":"Player.startSwimming",
+        "args":[],
+        "priority":"pre",
+        "return":"void"
     },{
-        "symbol": "_ZNK9Dimension5isDayEv",
-        "callback": "Dimension.isDay",
-        "priority": "pre",
-        "return": "bool"
+        "symbol":"_ZNK9Dimension5isDayEv",
+        "callback":"Dimension.isDay",
+        "args":[],
+        "priority":"pre",
+        "return":"bool"
+    },{
+        "symbol":"_ZN5Actor16setTradingPlayerEP6Player",
+        "callback":"Actor.setTradingPlayer",
+        "args":["ptr"],
+        "priority":"post",
+        "return":"void"
     }
 ]

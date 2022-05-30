@@ -26,6 +26,10 @@ public class Injector {
         return getBoolResult(this.pointer, symbol);
     }
 
+    public String getStringResult(String symbol){
+        return getStringResult(this.pointer, symbol);
+    }
+
     public long getPointerResult(String symbol){
         return getPointerResult(this.pointer, symbol);
     }
