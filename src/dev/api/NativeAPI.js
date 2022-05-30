@@ -5,9 +5,21 @@ var ConversionType = {
 };
 var NativeAPI = {
     dynamicToStatic(id, type){
-        return  Number(NativeAPIJava.dynamicToStatic(id, type));
+        return Number(NativeAPIJava.dynamicToStatic(id, type));
     },
     staticToDynamic(id, type){
-        return  Number(NativeAPIJava.staticToDynamic(id, type));
+        return Number(NativeAPIJava.staticToDynamic(id, type));
+    },
+    getActorID(ptr){
+        return Number(NativeAPIJava.getActorID(ptr));
+    },
+    getXBlockPos(ptr){
+        return Number(NativeAPIJava.getXBlockPos(ptr));
+    },
+    getYBlockPos(ptr){
+        return Number(NativeAPIJava.getYBlockPos(ptr));
+    },
+    getZBlockPos(ptr){
+        return Number(NativeAPIJava.getZBlockPos(ptr));
     }
 };
