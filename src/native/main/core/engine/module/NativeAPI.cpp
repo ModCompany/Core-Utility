@@ -37,6 +37,8 @@ void NativeAPI::init(){
 #include <entity/Entity.h>
 #include <type/AutomaticID.h>
 #include <horizon/types.h>
+#include <innercore/global_context.h>
+#include <level/Level.h>
 
 export(jint,module_NativeAPI_dynamicToStatic, jint id, jint type) {
     return (jint) IdConversion::dynamicToStatic((int) id, (IdConversion::Scope) ((int) type));
@@ -55,4 +57,7 @@ export(jint,module_NativeAPI_getYBlockPos, jlong ptr) {
 }
 export(jint,module_NativeAPI_getZBlockPos, jlong ptr) {
     return (jint) ((BlockPos*) ptr)->z;
+}
+export(jlong,module_NativeAPI_getActorById, jlong ptr) {
+    return (jlong) GlobalContext::getServerLevel()->fetchEntity((long long) ptr, true);
 }

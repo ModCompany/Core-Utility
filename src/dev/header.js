@@ -85,6 +85,12 @@ Callback.addCallback("Actor.setTradingPlayer", function(controller, pointer, pla
     if(player != 0)
         new Injector(player).call("_ZN6Player13startSwimmingEv");
 });
-/*Callback.addCallback("ItemStackBase.init", function(controller, pointer){
-    alert(NativeAPI.dynamicToStatic(new Injector(pointer).getIntResult("_ZNK13ItemStackBase5getIdEv"), ConversionType.ITEM));
+/*Callback.addCallback("Actor.tick", function(controller, actor, region){
+    let id = NativeAPI.getActorID(actor);
+    alert(id);
+    Entity.addVelocity(id, 0, 0.05, 1);
+    //if(World.getThreadTime() % 40 == 0){
+        //let ActorIdentifier = new Injector(actor).getPointerResult("_ZNK5Actor18getActorIdentifierEv");
+        //Game.message(id+" "+(new Injector(ActorIdentifier).getStringResult("_ZNK25ActorDefinitionIdentifier11getFullNameEv")), "Actor.tick");
+    //}
 });*/

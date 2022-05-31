@@ -11,7 +11,7 @@ var NativeAPI = {
         return Number(NativeAPIJava.staticToDynamic(id, type));
     },
     getActorID(ptr){
-        return Number(NativeAPIJava.getActorID(ptr));
+        return NativeAPIJava.getActorID(ptr);
     },
     getXBlockPos(ptr){
         return Number(NativeAPIJava.getXBlockPos(ptr));
@@ -21,5 +21,8 @@ var NativeAPI = {
     },
     getZBlockPos(ptr){
         return Number(NativeAPIJava.getZBlockPos(ptr));
+    },
+    getActorById(ptr){
+        return NativeAPIJava.getActorById(ptr);
     }
 };

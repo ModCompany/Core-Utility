@@ -7,4 +7,5 @@ public class NativeAPI {
     native public static int getXBlockPos(long ptr);
     native public static int getYBlockPos(long ptr);
     native public static int getZBlockPos(long ptr);
+    native public static long getActorById(long id);
 }
