@@ -72,18 +72,20 @@ let Injector = WRAP_JAVA("com.core.api.Injector");
 
 let phase = 0;
 let string = WRAP_JAVA("java.lang.String");
-let BlockPos = WRAP_JAVA("com.core.api.engine.BlockPos");
+let BlockPos = WRAP_JAVA("com.core.api.engine.data.BlockPos");
 
 Callback.addCallback("Player.startSwimming", function(controller, pointer){
     Game.message("swimming");
 });
 Callback.addCallback("Dimension.isDay", function(controller, pointer){
     controller.replace();
+
     controller.setResult(false);
 });
 Callback.addCallback("Actor.setTradingPlayer", function(controller, pointer, player){
     if(player != 0)
         new Injector(player).call("_ZN6Player13startSwimmingEv");
+
 });
 /*Callback.addCallback("Actor.tick", function(controller, actor, region){
     let id = NativeAPI.getActorID(actor);
@@ -94,3 +96,9 @@ Callback.addCallback("Actor.setTradingPlayer", function(controller, pointer, pla
         //Game.message(id+" "+(new Injector(ActorIdentifier).getStringResult("_ZNK25ActorDefinitionIdentifier11getFullNameEv")), "Actor.tick");
     //}
 });*/
+var Spawner = WRAP_NATIVE("Spawner");
+Callback.addCallback("ItemUse",function(coords,item,block,external,bool){
+    for(var i = 0;i < 30;i++) Spawner.test(coords.relative.x,coords.relative.y,coords.relative.z,i);
+    Game.message("TEST");
+
+});

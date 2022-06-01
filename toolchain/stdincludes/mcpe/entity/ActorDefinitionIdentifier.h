@@ -8,9 +8,10 @@ class Actor;
 class Vec2;
 class ActorDefinitionIdentifier {
     public:
-        ActorDefinitionIdentifier(ActorType);
-        ActorDefinitionIdentifier(stl::string const&);
-        stl::string& getFullName() const;
+    char filler[256];
+    ActorDefinitionIdentifier(ActorType);
+    ActorDefinitionIdentifier(stl::string const&);
+    stl::string& getFullName() const;
 };
 
 class ActorFactory {

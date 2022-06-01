@@ -5,7 +5,7 @@ import com.core.api.engine.NativeJavaObject;
 public class Injector {
     
     private long pointer;
-
+    public Object[] args;
     public Injector(long ptr){
         this.pointer = init_injector(ptr);
     }
@@ -36,10 +36,14 @@ public class Injector {
 
     public void replace(String table,String symbol,int value){
         replace(this.pointer,table,symbol,value);
+    }  
+
+    public void push(Object[] a){
+        args = a;
     }
 
-    public void call(String symbol, NativeJavaObject a){
-        callArgs(this.pointer, symbol, a);
+    public void call(String symbol, Object...obj){
+        callArgs(this.pointer, symbol, obj);
     }
     public native static long init_injector(long ptr);
     public native static int getIntResult(long ptr,String symbol);
@@ -49,5 +53,5 @@ public class Injector {
     public native static String getStringResult(long ptr,String symbol);
     public native static void call(long ptr,String symbol);
     public native static void replace(long ptr, String table,String symbol, int value);
-    public native static void callArgs(long ptr,String symbol, NativeJavaObject a);
+    public native static void callArgs(long ptr,String symbol, Object[] a);
 }

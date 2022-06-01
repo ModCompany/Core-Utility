@@ -8,7 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stl/vector>
-
+#include <stl/string>
+#define stl std::__ndk1
 template<typename _Tp>
 using stl_vector = std::__ndk1::vector<_Tp>; 
 class Actor;
@@ -90,7 +91,7 @@ class ItemStackBase {
 };
 class ItemStack : public ItemStackBase {
     public:
-
+	ItemStack(Item const&);
 };
 
 class FishingRodItem : public Item {

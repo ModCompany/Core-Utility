@@ -33,6 +33,7 @@ class Actor {
     ActorDefinitionIdentifier* getActorIdentifier() const;
     ActorUniqueID* getUniqueID() const;
     BlockSource* getRegion() const;
+    Vec3 getPos() const;
     void setPos(Vec3 const&);
 
     void setPosVTABLE(Vec3&);

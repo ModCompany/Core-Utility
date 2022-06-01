@@ -1,10 +1,14 @@
+#include <horizon/types.h>
+#include <horizon/item.h>
 #include <core/entity/CustomEntity.h>
 #include <core/entity/Entity.h>
-#include <level/api/BlockSource.h>
-#include <innercore/global_context.h>
-#include <horizon/types.h>
 #include <type/ActorType.h>
 #include <entity/ActorDefinitionIdentifier.h>
+
+#include <level/Spawner.h>
+#include <level/api/BlockSource.h>
+#include <innercore/global_context.h>
+
 
 #include <hook.h>
 #include <symbol.h>
@@ -12,6 +16,8 @@
 #include <innercore_callbacks.h>
 #include <type/AutomaticID.h>
 #include <core/JavaClass.h>
+
+
 std::map<std::string, Entity*> CustomEntity::customs;
 std::map<std::string, bool> CustomEntity::ticks;
 jclass CustomEntity::customEntity;
@@ -42,7 +48,7 @@ void CustomEntity::addEntity(BlockSource* region, Vec3* pos, std::string name){
     stl::unique_ptr<Actor> entity = factory.createSummonedEntity(ActorDefinitionIdentifier(stl::string(name.c_str())),GlobalContext::getLocalPlayer(), *pos);
     Logger::debug("TEST", "addEntity");
     Logger::flush();
-    level->addEntity(*region,std::move(entity));
+
 }
 
 class ActorFactory;
@@ -77,3 +83,18 @@ export(void,mcpe_level_Level_addEntityLevel,jlong pointer, jfloat x, jfloat y, j
     CustomEntity::addEntity((BlockSource*) pointer, new Vec3((float) x, (float) y, (float) z), JavaClass::toString(env,name));
 }
 
+#include <nativejs.h>
+
+#include <innercore/item_registry.h>
+#include <innercore/id_conversion_map.h>
+#include <innercore/block_registry.h>
+void test(int x,int y,int z,int i){
+    ServerLevel* level = GlobalContext::getServerLevel();
+    Spawner* spawn = level->getSpawner();
+
+    spawn->spawnMob(*GlobalContext::getRegion(),ActorDefinitionIdentifier((ActorType) i),nullptr, {x,y,z},false,true,false);
+}
+JS_MODULE_VERSION(Spawner,1);
+JS_EXPORT(Spawner, test, "V(IIII)", (JNIEnv* env, int x,int y,int z,int i){
+    test(x,y,z,i);
+})

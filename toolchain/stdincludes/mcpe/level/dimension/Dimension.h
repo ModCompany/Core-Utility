@@ -1,7 +1,7 @@
 #pragma once
 
 #include <../mcpe/type/AutomaticID.h>
-
+class BlockSource;
 class TickingAreasManager;
 class Dimension;
 using DimensionId = AutomaticID<Dimension, int>; 
@@ -11,7 +11,7 @@ class Dimension {
     TickingAreasManager const& getTickingAreas();
     TickingAreasManager* getTickingAreas() const;
     DimensionId getDimensionId() const;
-    
+ 
     
     int getHeightRange() const;
     int getMinHeight() const;
