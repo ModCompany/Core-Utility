@@ -83,19 +83,17 @@ Callback.addCallback("Dimension.isDay", function(controller, pointer){
     controller.setResult(false);
 });
 Callback.addCallback("Actor.setTradingPlayer", function(controller, pointer, player){
+    alert(player)
     if(player != 0)
         new Injector(player).call("_ZN6Player13startSwimmingEv");
 
 });
-/*Callback.addCallback("Actor.tick", function(controller, actor, region){
-    let id = NativeAPI.getActorID(actor);
-    alert(id);
-    Entity.addVelocity(id, 0, 0.05, 1);
-    //if(World.getThreadTime() % 40 == 0){
-        //let ActorIdentifier = new Injector(actor).getPointerResult("_ZNK5Actor18getActorIdentifierEv");
-        //Game.message(id+" "+(new Injector(ActorIdentifier).getStringResult("_ZNK25ActorDefinitionIdentifier11getFullNameEv")), "Actor.tick");
-    //}
-});*/
+Callback.addCallback("Actor.tick", function(controller, actor, region){
+    if(World.getThreadTime() % 40 == 0){
+        let ActorIdentifier = new Injector(actor).getPointerResult("_ZNK5Actor18getActorIdentifierEv");
+        alert(new Injector(ActorIdentifier).getStringResult("_ZNK25ActorDefinitionIdentifier11getFullNameEv"));
+    }
+});
 var Spawner = WRAP_NATIVE("Spawner");
 Callback.addCallback("ItemUse",function(coords,item,block,external,bool){
     for(var i = 0;i < 30;i++) Spawner.test(coords.relative.x,coords.relative.y,coords.relative.z,i);

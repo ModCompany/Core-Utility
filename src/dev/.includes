@@ -1,4 +1,5 @@
 header.js
 api/ToolTip.js
 api/NativeAPI.js
+api/Injector.js
 shared.js

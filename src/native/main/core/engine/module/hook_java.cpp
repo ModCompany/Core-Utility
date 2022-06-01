@@ -82,8 +82,6 @@ class Controller {
 
 #include <core/module/NativeAPI.h>
 
-jobjectArray default_;
-
 void registerParameter(JNIEnv* env, void* paramter, jobjectArray& array, int i, std::string type){
     if(type == "ptr"){
         env->SetObjectArrayElement(array, i, NativeAPI::createHookParameter(env, (jlong) paramter, HookJava::getJavaString(env, type)));
@@ -100,6 +98,39 @@ void registerParameter(JNIEnv* env, void* paramter, jobjectArray& array, int i, 
     }
 }
 
+jobjectArray HookJava::getParameters(JNIEnv* env, std::vector<std::string> types, std::vector<jlong> ptrs, void* a, void* b, void* c, void* d, void* e, void* k, void* l, void* f, void* t, void* p){
+    int size = types.size()+ptrs.size();
+    jobjectArray array = (jobjectArray) env->NewGlobalRef(env->NewObjectArray(size, NativeAPI::PARAMETER, HookJava::obj));
+
+    for(int i = 0;i < ptrs.size();i++)
+        env->SetObjectArrayElement(array, i, NativeAPI::createHookParameter(env, ptrs[i], HookJava::getJavaString(env, "ptr")));
+    
+    for(int i = 0;i < types.size();i++){
+        std::string type = types[i];
+        if(i == 0)
+            registerParameter(env, a, array, i+ptrs.size(), type);
+        else if(i == 1)
+            registerParameter(env, b, array, i+ptrs.size(), type);
+        else if(i == 2)
+            registerParameter(env, c, array, i+ptrs.size(), type);
+        else if(i == 3)
+            registerParameter(env, d, array, i+ptrs.size(), type);
+        else if(i == 4)
+            registerParameter(env, e, array, i+ptrs.size(), type);
+        else if(i == 5)
+            registerParameter(env, k, array, i+ptrs.size(), type);
+        else if(i == 6)
+            registerParameter(env, l, array, i+ptrs.size(), type);
+        else if(i == 7)
+            registerParameter(env, f, array, i+ptrs.size(), type);
+        else if(i == 8)
+            registerParameter(env, t, array, i+ptrs.size(), type);
+        else if(i == 9)
+            registerParameter(env, p, array, i+ptrs.size(), type);
+    }
+    return array;
+}
+
 template<typename T>
 void registerHook(JNIEnv* env, Hook* hook, std::function<T(JNIEnv*,Hook*,Controller)> func, int v){
     HookManager::addCallback(
@@ -108,49 +139,17 @@ void registerHook(JNIEnv* env, Hook* hook, std::function<T(JNIEnv*,Hook*,Control
             JNIEnv* env;
 	        ATTACH_JAVA(env, JNI_VERSION_1_6){
                 Controller ctr(controller);
-                jobjectArray array;
-                int size = hook->args.size();
-
-                if(size > 0)
-                    array = (jobjectArray) env->NewGlobalRef(env->NewObjectArray(size, NativeAPI::PARAMETER, HookJava::obj));
-                else
-                    array = default_;
-
-                for(int i = 0;i < size;i++){
-                    std::string type = hook->args[i];
-                    if(i == 0)
-                        registerParameter(env, a, array, i, type);
-                    else if(i == 1)
-                        registerParameter(env, b, array, i, type);
-                    else if(i == 2)
-                        registerParameter(env, c, array, i, type);
-                    else if(i == 3)
-                        registerParameter(env, d, array, i, type);
-                    else if(i == 4)
-                        registerParameter(env, e, array, i, type);
-                    else if(i == 5)
-                        registerParameter(env, k, array, i, type);
-                    else if(i == 6)
-                        registerParameter(env, l, array, i, type);
-                    else if(i == 7)
-                        registerParameter(env, f, array, i, type);
-                    else if(i == 8)
-                        registerParameter(env, t, array, i, type);
-                    else if(i == 9)
-                        registerParameter(env, p, array, i, type);
-                }
+                jobjectArray array = HookJava::getParameters(env, hook->args, {(jlong) &ctr, (jlong) self}, a, b, c, d, e, k, l, f, t, p);
 
                 JavaCallbacks::invokeCallback(
                     HookJava::HOOK, "hookCallback",
-                    "(JJLjava/lang/String;Ljava/lang/String;[Lcom/core/api/module/types/Parameter;)V",
-                    (jlong) &ctr, (jlong) self, 
+                    "(Ljava/lang/String;Ljava/lang/String;[Lcom/core/api/module/types/Parameter;)V",
                     HookJava::getJavaString(env, hook->callback), 
                     HookJava::getJavaString(env, hook->returnType), 
                     array
                 );
 
-                if(size > 0)
-                    env->DeleteGlobalRef(array);
+                env->DeleteGlobalRef(array);
                 
                 if(ctr.isResult()){
                     T result = func(env, hook,ctr);
@@ -173,7 +172,6 @@ void HookJava::init(){
         HookJava::ID_INTAS = env->GetMethodID(Double, "intValue", "()I");
         HookJava::ID_FLOATAS = env->GetMethodID(Double, "floatValue", "()F");
         HookJava::ID_LongAS = env->GetMethodID(Double, "longValue", "()J");
-        default_ = (jobjectArray) env->NewGlobalRef(env->NewObjectArray(1, NativeAPI::PARAMETER, NULL));
 
         HookJava::obj = NativeAPI::createHookParameter(env, (jlong) 0, HookJava::getJavaString(env, "ptr"));
         

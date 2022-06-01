@@ -31,14 +31,17 @@ bool JniInjector::getBoolResult(const char* symbol){
     return helper.call<bool>(symbol);
 }
 
-long JniInjector::getPointerResult(const char* symbol){
+void* JniInjector::getPointerResult(const char* symbol){
     VtableHelper helper (this->table);
-    return helper.call<long>(symbol);
+    return helper.call<void*>(symbol);
 }
 
 stl::string JniInjector::getStringResult(const char* symbol){
     VtableHelper helper(this->table);
-    return helper.call<stl::string>(symbol);
+    stl::string str = helper.call<stl::string>(symbol);
+    Logger::debug("TEST", str.c_str());
+    Logger::flush();
+    return str;
 }
 
 void JniInjector::call(const char* symbol){
@@ -71,8 +74,8 @@ export(jboolean, Injector_getBoolResult, jlong ptr,jstring a){
     return ((JniInjector*) ptr)->getBoolResult(JavaClass::toString(env,a).data());
 }
 
-export(jboolean, Injector_getPointerResult, jlong ptr,jstring a){
-    return ((JniInjector*) ptr)->getPointerResult(JavaClass::toString(env,a).data());
+export(jlong, Injector_getPointerResult, jlong ptr,jstring a){
+    return (jlong) ((JniInjector*) ptr)->getPointerResult(JavaClass::toString(env,a).data());
 }
 
 export(jstring, Injector_getStringResult, jlong ptr,jstring a){

@@ -109,15 +109,14 @@ public class Hook {
         }
     }
 
-    public static void hookCallback(long controller, long pointer, String name, String returnType, Parameter[] args){
+    public static void hookCallback(String name, String returnType, Parameter[] args){
         try{
-            Object[] args_callback = new Object[args.length+2];
-            args_callback[0] = new Controller(controller, returnType);
-            args_callback[1] = pointer;
-            for(int i = 2;i < args_callback.length;i++)
-                if(args[i - 2] != null)
-                    args_callback[i] = ((Parameter) args[i - 2]).getValue();
-
+            Object[] args_callback = new Object[args.length];
+            
+            for(int i = 0;i < args.length;i++)
+                if(args[i] != null)
+                    args_callback[i] = ((Parameter) args[i]).getValue();
+            args_callback[0] = new Controller((long) args_callback[0], returnType);
             Callback.invokeCallback(name, args_callback);
         }catch(Exception e){
             Logger.error("HOOK", e.getMessage());

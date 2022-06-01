@@ -12,6 +12,7 @@ class JavaClass {
     
     JavaClass(JNIEnv*, jobject);
     int getInt(const char*);
+    jobject runJsFunction(jobject, jobjectArray);
     float getFloat(const char*);
     const char* getString(const char*);
     bool getBool(const char*);
