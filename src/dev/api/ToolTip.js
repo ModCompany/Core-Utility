@@ -4,9 +4,9 @@ let ToolTip = {
         ToolTipJava.addToolTip(id, data||-1, name);
     },
     addToolTips(id, data, names){
-        ToolTipJava.addToolTips(id, data||-1, name);
+        ToolTipJava.addToolTips(id, data||-1, names);
     },
-    deletToolTip(id, data, names){
+    deletToolTip(id, data, name){
         ToolTipJava.deletToolTip(id, data||-1, name);
     },
     clearToolTip(id, data){
