@@ -4,6 +4,8 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 
+import com.core.api.module.types.Parameter;
+
 public class JsHelper {
     public static Context context = Context.enter();
     public static Scriptable scriptable = context.initStandardObjects();
@@ -11,5 +13,12 @@ public class JsHelper {
 
     public static Object callFunction(Function function, Object[] args) {
         return function.call(context, scriptable, that, args);
+    }
+
+    public static Object callFunction(Function function, Parameter[] args) {
+        Object[] args_ = new Object[args.length];
+        for (int i = 0; i < args_.length; i++)
+            args_[i] = args[i];
+        return callFunction(function, args_);
     }
 }

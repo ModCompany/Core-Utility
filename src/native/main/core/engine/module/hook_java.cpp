@@ -82,7 +82,7 @@ class Controller {
 
 #include <core/module/NativeAPI.h>
 
-void registerParameter(JNIEnv* env, void* paramter, jobjectArray& array, int i, std::string type){
+inline void registerParameter(JNIEnv* env, void* paramter, jobjectArray& array, int i, std::string type){
     if(type == "ptr"){
         env->SetObjectArrayElement(array, i, NativeAPI::createHookParameter(env, (jlong) paramter, HookJava::getJavaString(env, type)));
     }else if(type == "int"){
@@ -132,7 +132,7 @@ jobjectArray HookJava::getParameters(JNIEnv* env, std::vector<std::string> types
 }
 
 template<typename T>
-void registerHook(JNIEnv* env, Hook* hook, std::function<T(JNIEnv*,Hook*,Controller)> func, int v){
+inline void registerHook(JNIEnv* env, Hook* hook, std::function<T(JNIEnv*,Hook*,Controller)> func, int v){
     HookManager::addCallback(
         SYMBOL("mcpe",hook->symbol.c_str()), 
         LAMBDA((HookManager::CallbackController* controller, void* self, void* a, void* b, void* c, void* d, void* e, void* k, void* l, void* f, void* t, void* p),{

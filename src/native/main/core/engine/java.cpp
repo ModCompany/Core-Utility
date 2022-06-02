@@ -3,6 +3,10 @@
 #include <logger.h>
 #include <core/JavaClass.h>
 
+jclass JavaClass::JsHelper;
+jmethodID JavaClass::callFunction;
+#include <innercore_callbacks.h>
+
 JavaClass::JavaClass(JNIEnv* a, jobject b){
     env = a;
     object = b;
@@ -18,6 +22,11 @@ std::string JavaClass::getClassName(){
     const char* str = env->GetStringUTFChars(strObj, NULL);
     env->ReleaseStringUTFChars(strObj, str);
     return std::string(str);
+}
+
+jobject JavaClass::runJsFunction(jobject func, jobjectArray args){
+    Logger::debug("TEST", "start run");
+    return this->env->CallStaticObjectMethod(JavaClass::JsHelper, JavaClass::callFunction, func, args);
 }
 
 int JavaClass::getInt(const char* value){
@@ -73,4 +82,12 @@ std::string JavaClass::toString(JNIEnv* env,jstring jStr){
 	env->ReleaseByteArrayElements(stringJbytes, pBytes, JNI_ABORT);
 	env->DeleteLocalRef(stringJbytes); env->DeleteLocalRef(stringClass);
 	return ret;
+}
+
+void JavaClass::init(){
+    JNIEnv* env;
+	ATTACH_JAVA(env, JNI_VERSION_1_6){
+        JavaClass::JsHelper = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/JsHelper")));
+        JavaClass::callFunction = env->GetStaticMethodID(JavaClass::JsHelper, "callFunction", "(Lorg/mozilla/javascript/Function;[Lcom/core/api/module/types/Parameter;)Ljava/lang/Object;");
+    }
 }

@@ -23,6 +23,7 @@ typedef int content_id_t;
 #include <core/module/ToolTip.h>
 #include <core/module/hook_java.h>
 #include <core/module/NativeAPI.h>
+#include <core/JavaClass.h>
 
 #include <core/JniHook.h>
 
@@ -43,6 +44,7 @@ public:
 			CoreUtility::callback_class = reinterpret_cast<jclass>(env->NewGlobalRef(a));
 		}
 
+		JavaClass::init();
 		CustomEntity::init();
 		ToolTip::init();
 		NativeAPI::init();

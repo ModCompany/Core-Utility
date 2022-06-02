@@ -4,6 +4,7 @@
 #include <core/VtableHelper.h>
 #include <core/JavaClass.h>
 #include <functional>
+#include <core/module/hook_java.h>
 
 
 
@@ -87,12 +88,23 @@ export(void, Injector_call, jlong ptr,jstring b){
     return ((JniInjector*) ptr)->call(JavaClass::toString(env,b).data());
 }
 
-int replace(int value){
-    return value;
-}
+#include <vector>
+#include <hook.h>
 
-export(void, Injector_replace, jlong ptr,jstring a,jstring b,int value){
-    ((JniInjector*) ptr)->replaceResult(JavaClass::toString(env,a).data(),JavaClass::toString(env,b).data(),(void*) replace(value));
+export(jobject, Injector_replace, jlong ptr,jstring a,jstring b, jobject value, jobjectArray arr){
+    jobject func = env->NewGlobalRef(value);
+    std::vector<std::string>* types = new std::vector<std::string>();
+    for(int j=0;j<env->GetArrayLength(arr);j++)
+        types->push_back(JavaClass::toString(env,(jstring) env->GetObjectArrayElement(arr, j)));
+    JniInjector* injector = ((JniInjector*) ptr);
+    JavaClass* java = new JavaClass(env, NULL);
+    injector->replaceResult(JavaClass::toString(env,a).data(),JavaClass::toString(env,b).data(),(void*) LAMBDA((void* a, void* b, void* c, void* d, void* e, void* k, void* l, void* f, void* t, void* p), {
+        Logger::debug("TEST", "table");
+        java->runJsFunction(func, HookJava::getParameters(env, *types, {}, a, b, c, d, e, k, l, f, t, p));
+        return stl::string("popa");
+        Logger::debug("TEST", "end run");
+    }, java, types, env, func));
+    return NULL;
 }
 
 export(void, Injector_callArgs, jlong ptr, jstring a,jobject object){

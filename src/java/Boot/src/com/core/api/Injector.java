@@ -1,5 +1,7 @@
 package com.core.api;
 
+import org.mozilla.javascript.Function;
+
 import com.core.api.engine.NativeJavaObject;
 
 public class Injector {
@@ -34,8 +36,8 @@ public class Injector {
         return getPointerResult(this.pointer, symbol);
     }
 
-    public void replace(String table,String symbol,int value){
-        replace(this.pointer,table,symbol,value);
+    public void replace(String table,String symbol, Function func, String[] types){
+        replace(this.pointer,table,symbol,func,types);
     }  
 
     public void push(Object[] a){
@@ -52,6 +54,6 @@ public class Injector {
     public native static long getPointerResult(long ptr, String symbol);
     public native static String getStringResult(long ptr,String symbol);
     public native static void call(long ptr,String symbol);
-    public native static void replace(long ptr, String table,String symbol, int value);
+    public native static void replace(long ptr, String table,String symbol, Function func, String[] args);
     public native static void callArgs(long ptr,String symbol, Object[] a);
 }

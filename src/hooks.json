@@ -17,5 +17,11 @@
         "args":["ptr"],
         "priority":"post",
         "return":"void"
+    },{
+        "symbol":"_ZN4ItemC1ERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEs",
+        "callback":"condtructorItem",
+        "args":[],
+        "priority":"post",
+        "return":"void"
     }
 ]

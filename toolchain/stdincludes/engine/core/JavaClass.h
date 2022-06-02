@@ -9,6 +9,8 @@ class JavaClass {
     public:
     JNIEnv* env;
     jobject object;
+    static jclass JsHelper;
+    static jmethodID callFunction;
     
     JavaClass(JNIEnv*, jobject);
     int getInt(const char*);
@@ -19,4 +21,5 @@ class JavaClass {
     std::string getClassName();
     static const char* release(JNIEnv* env,jstring);
     static std::string toString(JNIEnv* env,jstring);
+    static void init();
 };

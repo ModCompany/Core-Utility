@@ -94,9 +94,14 @@ Callback.addCallback("Actor.tick", function(controller, actor, region){
         alert(new Injector(ActorIdentifier).getStringResult("_ZNK25ActorDefinitionIdentifier11getFullNameEv"));
     }
 });
+Callback.addCallback("condtructorItem", function(controller, self){
+    new Injector(self).replace("_ZTV4Item", "_ZNK4Item20buildDescriptionNameERK13ItemStackBase", function(){
+        alert("buildName");
+
+    }, [])
+});
 var Spawner = WRAP_NATIVE("Spawner");
 Callback.addCallback("ItemUse",function(coords,item,block,external,bool){
-    for(var i = 0;i < 30;i++) Spawner.test(coords.relative.x,coords.relative.y,coords.relative.z,i);
-    Game.message("TEST");
-
+    //for(var i = 0;i < 30;i++) Spawner.test(coords.relative.x,coords.relative.y,coords.relative.z,i);
+    //Game.message("TEST");
 });
