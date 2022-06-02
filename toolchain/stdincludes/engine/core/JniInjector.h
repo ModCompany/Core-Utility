@@ -2,6 +2,7 @@
 
 #include <stl/string>
 #include <stl/vector>
+#include <functional>
 #define stl std::__ndk1
 
 class JniInjector {

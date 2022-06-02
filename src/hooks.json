@@ -17,5 +17,5 @@
         "args":["ptr"],
         "priority":"post",
         "return":"void"
-    },
+    }
 ]

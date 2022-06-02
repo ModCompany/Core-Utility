@@ -6,7 +6,7 @@
 #include <functional>
 #include <core/module/hook_java.h>
 
-
+typedef void (*func)();
 
 JniInjector::JniInjector(void* a){
     this->table = a;
@@ -54,7 +54,7 @@ void JniInjector::call(const char* symbol){
 void JniInjector::replaceResult(const char* table,const char* symbol, void* lambda){
     VtableHelper helper(this->table);
     helper.resize();
-    helper.patch(table,symbol,lambda);
+    helper.patch(table,symbol, lambda);
 }
 
 
@@ -98,12 +98,14 @@ export(jobject, Injector_replace, jlong ptr,jstring a,jstring b, jobject value, 
         types->push_back(JavaClass::toString(env,(jstring) env->GetObjectArrayElement(arr, j)));
     JniInjector* injector = ((JniInjector*) ptr);
     JavaClass* java = new JavaClass(env, NULL);
-    injector->replaceResult(JavaClass::toString(env,a).data(),JavaClass::toString(env,b).data(),(void*) LAMBDA((void* a, void* b, void* c, void* d, void* e, void* k, void* l, void* f, void* t, void* p), {
+    auto newFunc = ([java, types, env, func](void* a){
         Logger::debug("TEST", "table");
-        java->runJsFunction(func, HookJava::getParameters(env, *types, {}, a, b, c, d, e, k, l, f, t, p));
-        return stl::string("popa");
+        java->runJsFunction(func, HookJava::getParameters(env, *types, {}, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr));
+        
         Logger::debug("TEST", "end run");
-    }, java, types, env, func));
+        return stl::string("popa");
+    });
+    injector->replaceResult(JavaClass::toString(env,a).data(), JavaClass::toString(env,b).data(), (void*) &newFunc);
     return NULL;
 }
 

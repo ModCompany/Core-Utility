@@ -68,7 +68,7 @@ Callback.addCallback("OnEnchant",function(){
 var debug = 0;
 
 let GlobalContext = WRAP_JAVA("com.core.api.innnercore.GlobalContext");
-let Injector = WRAP_JAVA("com.core.api.Injector");
+
 
 let phase = 0;
 let string = WRAP_JAVA("java.lang.String");
@@ -85,7 +85,7 @@ Callback.addCallback("Dimension.isDay", function(controller, pointer){
 Callback.addCallback("Actor.setTradingPlayer", function(controller, pointer, player){
     alert(player)
     if(player != 0)
-        new Injector(player).call("_ZN6Player13startSwimmingEv");
+        new InjectorJava(player).call("_ZN6Player13startSwimmingEv");
 
 });
 Callback.addCallback("Actor.tick", function(controller, actor, region){

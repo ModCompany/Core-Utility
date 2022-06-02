@@ -5,10 +5,10 @@ var ConversionType = {
 };
 var NativeAPI = {
     dynamicToStatic(id, type){
-        return Number(NativeAPIJava.dynamicToStatic(id, type));
+        return Number(NativeAPIJava.dynamicToStatic(id, type || ConversionType.ITEM));
     },
     staticToDynamic(id, type){
-        return Number(NativeAPIJava.staticToDynamic(id, type));
+        return Number(NativeAPIJava.staticToDynamic(id, type || ConversionType.ITEM));
     },
     getActorID(ptr){
         return NativeAPIJava.getActorID(ptr);
