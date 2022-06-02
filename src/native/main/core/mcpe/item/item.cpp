@@ -158,141 +158,71 @@ void FishingFactory::registerItem(){
 		ItemRegistry::registerCustomItem<FishingRodItem>(new FishingProvider(this),IdConversion::staticToDynamic(id, IdConversion::ITEM), nameId);
 	}
 }
+#include <stl/vector>
+
+class MobEffectInstance {
+public:
+	char filler[28];
+	MobEffectInstance(unsigned int potionId, int duration, int amplifier, bool isAmbient, bool alwaysTrue, bool textureSomething);
+
+};
+
+class ArrowItem : public Item {
+	public:
+	char filler[256];
+	ArrowItem(stl::string const&, int);
+	stl::vector<MobEffectInstance> getMobEffects(int) const {
+		stl::vector<MobEffectInstance> vector;
+		vector.push_back(MobEffectInstance(5,20*2,2,true,true,true));
+		Logger::debug("ArrowItem", "Debug");
+		Logger::flush();
+		return vector;
+	};
+};
+
+class ArrowFactory : public LegacyItemRegistry::LegacyItemFactoryBase {
+	public:
+	ArrowFactory() : LegacyItemRegistry::LegacyItemFactoryBase() {};
+	virtual void registerItem();
+};
+
+class ArrowProvider : public LegacyItemRegistry::LegacyItemProviderBase {
+	public:
+	ArrowFactory* factory;
+	ArrowProvider(ArrowFactory* factory) : LegacyItemRegistry::LegacyItemProviderBase() {
+		this->factory = factory;
+	}
+
+	virtual LegacyItemRegistry::LegacyItemFactoryBase* getFactory(){
+		return this->factory;
+	}
+
+
+	virtual void setupVtable(void* a){
+		//LegacyItemRegistry::LegacyItemProviderBase::setupVtable(a);
+		void** table = (void**) a;
+		//table[getVtableOffset("_ZTV9ArrowItem", "_ZNK9ArrowItem13getMobEffectsEi")] = (void*) &ArrowProvider::getEffects;
+		//table[getVtableOffset("_ZTV14FishingRodItem", "_ZNK4Item6_useOnER9ItemStackR5Actor8BlockPoshfff")] = SYMBOL("mcpe", "_ZNK4Item6_useOnER9ItemStackR5Actor8BlockPoshfff");
+		//table[getVtableOffset("_ZTV14FishingRodItem", "_ZNK4Item20validFishInteractionEi")] = SYMBOL("mcpe", "_ZNK4Item20validFishInteractionEi");
+		//table[getVtableOffset("_ZTV14FishingRodItem", "_ZNK14FishingRodItem16requiresInteractEv")] = SYMBOL("mcpe", "_ZNK14FishingRodItem16requiresInteractEv");
+	}
+};
+
+void ArrowFactory::registerItem(){
+	if(id!=0){
+		ItemRegistry::registerCustomItem<ArrowItem>(new ArrowProvider(this),IdConversion::staticToDynamic(id, IdConversion::ITEM), nameId);
+	}
+}
 
 JS_MODULE_VERSION(TestItem, 1);
 JS_EXPORT(TestItem, reg, "V(I)", (JNIEnv* env, int a){
-	FishingFactory* factory = new FishingFactory();
-	factory->initParameters(a, "test_item", "Ydo4ka", "stick",0);
-	factory->props.durability = 100;
+	ArrowFactory* factory = new ArrowFactory();
+	factory->initParameters(a, "test_item", "arrow", "stick",0);
+
 	LegacyItemRegistry::registerItemFactory(factory);
 });
 
 
-template<typename A, typename ... B> class FabricItem : public LegacyItemRegistry::LegacyItemFactoryBase{
-	public:
-	FabricItem() : LegacyItemRegistry::LegacyItemFactoryBase() {
-
-	};
-
-	virtual void registerItem(B...b);
-
-};
-
-template<typename A,typename ...B> class FabricItemProvider : public LegacyItemRegistry::LegacyItemProviderBase  {
-	public:
-	FabricItem<A>* factory;
-	FabricItemProvider(FabricItem<A>* a){
-		this->factory = a;
-	}
-
-	virtual LegacyItemRegistry::LegacyItemFactoryBase* getFactory() {
-		return this->factory;
-	}
-
-
-};
-
-template<typename A, typename ... B> void FabricItem<A,B...>::registerItem(B...b){
-	Logger::debug("Test", "TEst");
-	Logger::flush();
-	ItemRegistry::registerCustomItem<A>(new FabricItem<A>(this),IdConversion::staticToDynamic(id, IdConversion::ITEM), nameId, b...);
-}
-
-
-
-template<typename T>
-class LegacyItemRegistryWrapper {
-	public:
-	class LegacyItemRegistryWrapperFactory : public LegacyItemRegistry::LegacyItemFactoryBase {
-		public:
-		LegacyItemRegistryWrapper *wrapper;
-
-		LegacyItemRegistryWrapperFactory() : LegacyItemRegistry::LegacyItemFactoryBase() {};
-
-		void registerItem() override {
-		wrapper->registerItem();
-		};
-		};
-
-	LegacyItemRegistryWrapperFactory *registryWrapperFactory;
-
-	class LegacyItemRegistryWrapperProvider : public LegacyItemRegistry::LegacyItemProviderBase {
-		public:
-		LegacyItemRegistryWrapperFactory *factory;
-		LegacyItemRegistryWrapper *wrapper;
-
-		explicit LegacyItemRegistryWrapperProvider(LegacyItemRegistryWrapperFactory *factory)
-		: LegacyItemRegistry::LegacyItemProviderBase() {
-
-		this->factory = factory;
-		}
-
-		LegacyItemRegistry::LegacyItemFactoryBase *getFactory() override {
-		return this->factory;
-		}
-
-
-	};
-
-	virtual void registerItem() {
-		auto provider = new LegacyItemRegistryWrapperProvider(registryWrapperFactory);
-		provider->wrapper = this;
-		ItemRegistry::registerCustomItem<T>(provider,
-		IdConversion::staticToDynamic(registryWrapperFactory->id,
-		IdConversion::ITEM),registryWrapperFactory->nameId);
-		Logger::debug("Test","TEEST");
-		Logger::flush();
-	};
-
-
-	void registerWrapper() {
-		auto factory = new LegacyItemRegistryWrapperFactory();
-		factory->wrapper = this;
-
-	}
-};
-
-class TestItem : public LegacyItemRegistryWrapper<Item> {
-	public:
-	TestItem() : LegacyItemRegistryWrapper<Item>() {
-
-	}
-};
-
-namespace ItemWrapper {
-	template<class A,class ... B>
-	class ItemWrappedFactory : public LegacyItemRegistry::LegacyItemFactoryBase {
-		public:
-
-		ItemWrappedFactory() : LegacyItemRegistry::LegacyItemFactoryBase() {
-
-		}
-
-		virtual void registerItem(B...b) override;
-		virtual void setupVtable(void* a);
-	};
-
-	template<class A, class ... B>
-	class ItemWrappedProvider : public LegacyItemRegistry::LegacyItemProviderBase {
-		public:
-		ItemWrappedFactory<A,B...>* factory;
-
-		ItemWrappedProvider(ItemWrappedFactory<A,B...>* a) : LegacyItemRegistry::LegacyItemProviderBase(){
-			this->factory = a;
-		};
-		virtual LegacyItemRegistry::LegacyItemFactoryBase* getFactory(){
-			return this->factory;
-		}
-	};
-
-
-}
-
-template<class A,class ...B> void ItemWrapper::ItemWrappedFactory<A,B...>::registerItem(B...args){
-	if(id != 0){
-		ItemRegistry::registerCustomItem<A>(new ItemWrappedProvider<A,B...>(this), IdConversion::staticToDynamic(id, IdConversion::ITEM), nameId,args...);
-	}
-}
 
 
 

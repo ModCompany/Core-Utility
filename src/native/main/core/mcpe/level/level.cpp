@@ -40,3 +40,14 @@ export(int, mcpe_level_Level_getCurrentTick, jlong pointer){
 export(int, mcpe_level_Level_getChunkTickRange, jlong pointer){
     return ((Level*) pointer)->getChunkTickRange();
 }
+#include <client/gui/GuiData.h>
+#include <client/ClientIntance.h>
+JS_MODULE_VERSION(GUI, 1);
+
+JS_EXPORT(GUI, setTitle, "V()", (JNIEnv* env){
+    ClientInstance* instance = GlobalContext::getMinecraftClient();
+    instance->getGuiData()->setTitle("Test Client.setTitle");
+    instance->getGuiData()->setSubtitle("Test Client.setSubtitile");
+    instance->getGuiData()->setFilteredText("Test Client.setFilteredText");
+    instance->getGuiData()->setActionBarMessage("Action bar message");
+});

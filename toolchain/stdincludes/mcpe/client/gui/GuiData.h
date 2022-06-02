@@ -7,7 +7,10 @@ class GuiData {
 public:
     void displayClientMessage(stl::string const&);
     void showTipMessage(stl::string const&);
-    void setNowPlaying(stl::string const&);
     void displaySystemMessage(stl::string const&);
+    void setTitle(stl::string const&);
+    void setSubtitle(stl::string const&);
+    void setFilteredText(stl::string const&);
+    void setActionBarMessage(stl::string const&);
 };
 
