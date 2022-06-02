@@ -8,7 +8,7 @@ class TickingArea;
 class BossbarManager;
 class TickingAreasManager;
 class Player;
-
+class ItemStack;
 class Actor;
 class BlockPos;
 class FeatureRegistry;
@@ -17,6 +17,9 @@ class Vec3;
 class ActorFactory;
 class Random;
 class Spawner;
+#include <horizon/item.h>
+#include <innercore/item_registry.h>
+#include <innercore/id_conversion_map.h>
 class Level {
     public:
     TickingAreasManager* areas_manager;
@@ -36,6 +39,11 @@ class Level {
     BlockPos const& getSpawnPos() const;
     ActorFactory const& getActorFactory();
     Spawner* getSpawner() const;
+    ItemStack* getItemStackForId(short id,int aux){
+        Item* item = ItemRegistry::getItemById(IdConversion::staticToDynamic(id,IdConversion::Scope::ITEM));
+        if(item) return new ItemStack(*item,1,aux);
+        return nullptr;
+    }
     public:
     float getSpecialMultiplier(AutomaticID<Dimension, int>) const;
     bool isClientSide() const;

@@ -92,6 +92,8 @@ class ItemStackBase {
 class ItemStack : public ItemStackBase {
     public:
 	ItemStack(Item const&);
+	ItemStack(Item const&, int);
+	ItemStack(Item const&, int,int);
 };
 
 class FishingRodItem : public Item {
