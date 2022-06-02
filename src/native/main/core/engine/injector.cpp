@@ -6,7 +6,6 @@
 #include <functional>
 #include <core/module/hook_java.h>
 
-typedef void (*func)();
 
 JniInjector::JniInjector(void* a){
     this->table = a;
@@ -51,10 +50,10 @@ void JniInjector::call(const char* symbol){
     return helper.call<void>(symbol);
 }
 
-void JniInjector::replaceResult(const char* table,const char* symbol, void* lambda){
+void JniInjector::replaceResult(const char* table,const char* symbol, int64_t lambda){
     VtableHelper helper(this->table);
     helper.resize();
-    helper.patch(table,symbol, lambda);
+    helper.patch(table,symbol, (void*) lambda);
 }
 
 
@@ -92,7 +91,7 @@ export(void, Injector_call, jlong ptr,jstring b){
 #include <hook.h>
 
 export(jobject, Injector_replace, jlong ptr,jstring a,jstring b, jobject value, jobjectArray arr){
-    jobject func = env->NewGlobalRef(value);
+   /* jobject func = env->NewGlobalRef(value);
     std::vector<std::string>* types = new std::vector<std::string>();
     for(int j=0;j<env->GetArrayLength(arr);j++)
         types->push_back(JavaClass::toString(env,(jstring) env->GetObjectArrayElement(arr, j)));
@@ -106,13 +105,16 @@ export(jobject, Injector_replace, jlong ptr,jstring a,jstring b, jobject value, 
         return stl::string("popa");
     });
     injector->replaceResult(JavaClass::toString(env,a).data(), JavaClass::toString(env,b).data(), (void*) &newFunc);
-    return NULL;
+    return NULL;*/
 }
 
-export(void, Injector_callArgs, jlong ptr, jstring a,jobject object){
-    JavaClass first (env,object);
-    Logger::debug("Mod-Test","%i",first.getInt("args_count"));
 
-    Logger::flush();
+
+export(void, Injector_callArgs, jlong ptr,jstring a,jstring b,jobject object){
+    JniInjector* injector = (JniInjector*) ptr;
+    
+    injector->replaceResult(JavaClass::toString(env,a).data(),JavaClass::toString(env,b).data(),LAMBDA((void* self),{
+        return "test";
+    }));
 
 }

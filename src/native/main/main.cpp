@@ -58,6 +58,7 @@ public:
 
 			return controller->call<void>(a,b);
 		},),HookManager::CALL | HookManager::REPLACE | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
+
     }
 };
 
