@@ -36,12 +36,9 @@ void* JniInjector::getPointerResult(const char* symbol){
     return helper.call<void*>(symbol);
 }
 
-stl::string JniInjector::getStringResult(const char* symbol){
+stl::string& JniInjector::getStringResult(const char* symbol){
     VtableHelper helper(this->table);
-    stl::string str = helper.call<stl::string>(symbol);
-    Logger::debug("TEST", str.c_str());
-    Logger::flush();
-    return str;
+    return helper.call<stl::string&>(symbol);
 }
 
 void JniInjector::call(const char* symbol){
@@ -91,21 +88,27 @@ export(void, Injector_call, jlong ptr,jstring b){
 #include <hook.h>
 
 export(jobject, Injector_replace, jlong ptr,jstring a,jstring b, jobject value, jobjectArray arr){
-   /* jobject func = env->NewGlobalRef(value);
+    jobject func = env->NewGlobalRef(value);
     std::vector<std::string>* types = new std::vector<std::string>();
     for(int j=0;j<env->GetArrayLength(arr);j++)
         types->push_back(JavaClass::toString(env,(jstring) env->GetObjectArrayElement(arr, j)));
     JniInjector* injector = ((JniInjector*) ptr);
     JavaClass* java = new JavaClass(env, NULL);
-    auto newFunc = ([java, types, env, func](void* a){
+    /*auto newFunc = ([java, types, env, func](void* a){
         Logger::debug("TEST", "table");
         java->runJsFunction(func, HookJava::getParameters(env, *types, {}, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr));
         
         Logger::debug("TEST", "end run");
         return stl::string("popa");
-    });
-    injector->replaceResult(JavaClass::toString(env,a).data(), JavaClass::toString(env,b).data(), (void*) &newFunc);
-    return NULL;*/
+    });*/
+    injector->replaceResult(JavaClass::toString(env,a).data(), JavaClass::toString(env,b).data(), LAMBDA((void* a, void* b), {
+        Logger::debug("TEST", "table");
+        java->runJsFunction(func, HookJava::getParameters(env, *types, {}, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr));
+        
+        Logger::debug("TEST", "end run");
+        return stl::string("popa");
+    }, java, types, env, func));
+    return NULL;
 }
 
 

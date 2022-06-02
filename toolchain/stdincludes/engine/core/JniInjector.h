@@ -17,7 +17,7 @@ class JniInjector {
     float getFloatResult(const char*);
     bool getBoolResult(const char*);
     void* getPointerResult(const char*);
-    stl::string getStringResult(const char*);
+    stl::string& getStringResult(const char*);
     void replaceResult(const char*,const char*,int64_t);
     void call(const char*);
     private:

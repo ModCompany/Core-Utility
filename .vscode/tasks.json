@@ -5,9 +5,9 @@
 			"label": "Assemble Mod for Release",
 			"type": "shell",
 			"options": {
-				"cwd": "./toolchain/python"
+				"cwd": ".\\toolchain\\python"
 			},
-			"command": "sh ../assemble-release.sh",
+			"command": "..\\assemble-release.bat",
 			"group": {
 				"kind": "build",
 				"isDefault": true
@@ -17,9 +17,9 @@
 			"label": "Build and Push Everything",
 			"type": "shell",
 			"options": {
-				"cwd": "./toolchain/python"
+				"cwd": ".\\toolchain\\python"
 			},
-			"command": "sh ../build-and-push-all.sh",
+			"command": "..\\build-and-push-all.bat",
 			"group": {
 				"kind": "build",
 				"isDefault": true
@@ -30,9 +30,9 @@
 			"label": "Build Everything",
 			"type": "shell",
 			"options": {
-				"cwd": "./toolchain/python"
+				"cwd": ".\\toolchain\\python"
 			},
-			"command": "sh ../build-all.sh",
+			"command": "..\\build-all.bat",
 			"group": {
 				"kind": "build",
 				"isDefault": true
@@ -43,9 +43,9 @@
 			"label": "Build Scripts and Resources",
 			"type": "shell",
 			"options": {
-				"cwd": "./toolchain/python"
+				"cwd": ".\\toolchain\\python"
 			},
-			"command": "sh ../build-scripts-and-resources.sh",
+			"command": "..\\build-scripts-and-resources.bat",
 			"group": {
 				"kind": "build",
 				"isDefault": true
@@ -56,9 +56,9 @@
 			"label": "Cleanup",
 			"type": "shell",
 			"options": {
-				"cwd": "./toolchain/python"
+				"cwd": ".\\toolchain\\python"
 			},
-			"command": "sh ../cleanup.sh",
+			"command": "..\\cleanup.bat",
 			"group": {
 				"kind": "build",
 				"isDefault": true
@@ -68,9 +68,9 @@
 			"label": "Build and Push Java",
 			"type": "shell",
 			"options": {
-				"cwd": "./toolchain/python"
+				"cwd": ".\\toolchain\\python"
 			},
-			"command": "sh ../compile-java.sh",
+			"command": "..\\compile-java.bat",
 			"group": {
 				"kind": "build",
 				"isDefault": true
@@ -80,9 +80,9 @@
 			"label": "Build and Push Native",
 			"type": "shell",
 			"options": {
-				"cwd": "./toolchain/python"
+				"cwd": ".\\toolchain\\python"
 			},
-			"command": "sh ../compile-native.sh",
+			"command": "..\\compile-native.bat",
 			"group": {
 				"kind": "build",
 				"isDefault": true
@@ -92,7 +92,7 @@
 			"label": "Connect to ADB",
 			"type": "shell",
 			"options": {
-				"cwd": "./toolchain/python"
+				"cwd": ".\\toolchain\\python"
 			},
 			"command": "python",
 			"args": [
@@ -110,40 +110,15 @@
 			"label": "Download Declarations",
 			"type": "shell",
 			"options": {
-				"cwd": "./toolchain/python"
+				"cwd": ".\\toolchain\\python"
 			},
-			"command": "sh ../download-declarations.sh",
+			"command": "..\\download-declarations.bat",
 			"group": {
 				"kind": "build",
 				"isDefault": true
 			},
 			"problemMatcher": []
-		},
-		{
-			"label": "Dump Log",
-			"type": "shell",
-			"options": {
-				"cwd": "./toolchain/adb"
-			},
-			"command": "sudo ./adb shell cat /storage/emulated/0/games/horizon/logs/log.txt",
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			}
-		},
-		{
-			"label": "Dump Crash Log",
-			"type": "shell",
-			"options": {
-				"cwd": "./toolchain/adb"
-			},
-			"command": "sudo ./adb shell cat /storage/emulated/0/games/horizon/logs/crash.txt",
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			}
 		}
-			
 	],
 	"inputs": [
 		{

@@ -90,14 +90,14 @@ Callback.addCallback("Actor.setTradingPlayer", function(controller, pointer, pla
 });
 Callback.addCallback("Actor.tick", function(controller, actor, region){
     if(World.getThreadTime() % 40 == 0){
-        let ActorIdentifier = new Injector(actor).getPointerResult("_ZNK5Actor18getActorIdentifierEv");
-     //   alert(new Injector(ActorIdentifier).getStringResult("_ZNK25ActorDefinitionIdentifier11getFullNameEv"));
+        let ActorIdentifier = new InjectorJava(actor).getPointerResult("_ZNK5Actor18getActorIdentifierEv");
+        alert(new InjectorJava(ActorIdentifier).getStringResult("_ZNK25ActorDefinitionIdentifier11getFullNameEv"));
     }
 });
 
 var Spawner = WRAP_NATIVE("Spawner");
-var Gui = WRAP_NATIVE("TestItem");
-Gui.reg(IDRegistry.genItemID("test_item"));
+//var Gui = WRAP_NATIVE("TestItem");
+//Gui.reg(IDRegistry.genItemID("test_item"));
 Callback.addCallback("ItemUse",function(coords,item,block,external,bool){
     //for(var i = 0;i < 30;i++) Spawner.test(coords.relative.x,coords.relative.y,coords.relative.z,i);
 
