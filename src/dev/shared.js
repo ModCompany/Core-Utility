@@ -3,6 +3,7 @@ ModAPI.registerAPI("CoreUtility", {
     ConversionType: ConversionType,
     NativeAPI: NativeAPI,
     Injector: Injector,
+    CustomEntity: CustomEntity,
     requireGlobal(cmd){
         return eval(cmd);
     }
