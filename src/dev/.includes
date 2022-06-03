@@ -3,4 +3,5 @@ api/ToolTip.js
 api/NativeAPI.js
 api/Itemsutil.js
 api/Injector.js
+api/CustomEntity.js
 shared.js
