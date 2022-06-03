@@ -23,7 +23,7 @@
         "toolchain/*.bat": true,
         "toolchain/*.sh": true,
         "**/*.log": true,
-        "make.json" : true,
+        "make.json" : false,
         "README.md" : true,
     },
     "files.associations": {

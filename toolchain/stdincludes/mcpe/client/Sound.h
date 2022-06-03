@@ -89,3 +89,9 @@ class SoundModule : public Module {
         system->setReverbProperties(channel, &reverb);
     }
 };
+
+
+class SoundEngine {
+    public:
+
+};

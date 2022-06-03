@@ -70,6 +70,8 @@ class Player : public Mob {
     bool isHungry() const;
     bool isInRaid() const;
     bool isHurt();
+    void registerTrackedBoss(ActorUniqueID);
+    
     public:
     static Attribute HUNGER;
 };

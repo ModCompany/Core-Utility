@@ -88,21 +88,18 @@ Callback.addCallback("Actor.setTradingPlayer", function(controller, pointer, pla
         new InjectorJava(player).call("_ZN6Player13startSwimmingEv");
 
 });
-Callback.addCallback("Actor.tick", function(controller, actor, region){
-    if(World.getThreadTime() % 40 == 0){
-        let ActorIdentifier = new InjectorJava(actor).getPointerResult("_ZNK5Actor18getActorIdentifierEv");
-        alert(new InjectorJava(ActorIdentifier).getStringResult("_ZNK25ActorDefinitionIdentifier11getFullNameEv"));
-    }
-});
 
 var Spawner = WRAP_NATIVE("Spawner");
-//var Gui = WRAP_NATIVE("TestItem");
-//Gui.reg(IDRegistry.genItemID("test_item"));
+var gui = WRAP_NATIVE("GUI");
+
 Callback.addCallback("ItemUse",function(coords,item,block,external,bool){
     //for(var i = 0;i < 30;i++) Spawner.test(coords.relative.x,coords.relative.y,coords.relative.z,i);
 
-   
+  //  gui.setDestroyBlock(coords.relative.x,coords.relative.y,coords.relative.z);
 });
 
+Callback.addCallback("PlayerAttack",function(a,v){
+    gui.set(v);
+});
 
 

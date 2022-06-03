@@ -7,6 +7,7 @@ class Options;
 class GuiData;
 class Level;
 class Actor;
+class SoundEngine;
 
 class ClientInstance {
 public:
@@ -21,6 +22,7 @@ public:
     Level* getLocalServerLevel();
     Actor* getCameraTargetEntity() const;
     int getServerPingTime() const;
+    SoundEngine* getSoundEngine() const;
 };
 
 

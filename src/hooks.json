@@ -17,11 +17,5 @@
         "args":["ptr"],
         "priority":"post",
         "return":"void"
-    },{
-        "symbol":"_ZN5Actor4tickER11BlockSource",
-        "callback":"Actor.tick",
-        "args":["ptr"],
-        "priority":"post",
-        "return":"void"
     }
 ]

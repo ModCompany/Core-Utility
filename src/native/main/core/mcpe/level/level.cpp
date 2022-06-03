@@ -51,3 +51,17 @@ JS_EXPORT(GUI, setTitle, "V()", (JNIEnv* env){
     instance->getGuiData()->setFilteredText("Test Client.setFilteredText");
     instance->getGuiData()->setActionBarMessage("Action bar message");
 });
+#include <level/render/LevelRendererPlayer.h>
+#include <level/dimension/Dimension.h>
+#include <level/Level.h>
+
+JS_EXPORT(GUI, setDestroyBlock, "V(III)", (JNIEnv* env,int x,int y,int z){
+    Dimension* dim = GlobalContext::getDimension();
+
+});
+
+JS_EXPORT(GUI, set,"V(L)",(JNIEnv* env, long long uid){
+    ServerPlayer* player = GlobalContext::getServerPlayer();
+    player->registerTrackedBoss(uid);
+    GlobalContext::getServerLevel()->fetchEntity(uid,true);
+});
