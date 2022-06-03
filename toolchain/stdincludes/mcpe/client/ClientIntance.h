@@ -8,7 +8,7 @@ class GuiData;
 class Level;
 class Actor;
 class SoundEngine;
-
+class LevelRenderer;
 class ClientInstance {
 public:
     MinecraftGame* getMinecraftGame() const;
@@ -23,6 +23,7 @@ public:
     Actor* getCameraTargetEntity() const;
     int getServerPingTime() const;
     SoundEngine* getSoundEngine() const;
+    LevelRenderer* getLevelRenderer() const;
 };
 
 

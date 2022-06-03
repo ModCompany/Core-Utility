@@ -94,12 +94,13 @@ var gui = WRAP_NATIVE("GUI");
 
 Callback.addCallback("ItemUse",function(coords,item,block,external,bool){
     //for(var i = 0;i < 30;i++) Spawner.test(coords.relative.x,coords.relative.y,coords.relative.z,i);
+    for(var x = -1;x < 1;x++){
+        for(var z = -1;z < 1;z++){
+            gui.setDestroyBlock(coords.x + x,coords.y,coords.z + z);
+        }
+    }
 
-  //  gui.setDestroyBlock(coords.relative.x,coords.relative.y,coords.relative.z);
 });
 
-Callback.addCallback("PlayerAttack",function(a,v){
-    gui.set(v);
-});
 
 

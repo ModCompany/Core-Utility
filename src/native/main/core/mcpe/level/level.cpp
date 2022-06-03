@@ -54,14 +54,15 @@ JS_EXPORT(GUI, setTitle, "V()", (JNIEnv* env){
 #include <level/render/LevelRendererPlayer.h>
 #include <level/dimension/Dimension.h>
 #include <level/Level.h>
-
+#include <innercore/block_registry.h>
+#include <innercore/id_conversion_map.h>
 JS_EXPORT(GUI, setDestroyBlock, "V(III)", (JNIEnv* env,int x,int y,int z){
-    Dimension* dim = GlobalContext::getDimension();
-
+    GlobalContext::getMinecraftClient()->getLevelRenderer()->getLevelRendererPlayer()->addDestroyBlock({x,y,z},0.5f);
+    GlobalContext::getMinecraftClient()->getLevelRenderer()->getLevelRendererPlayer()->updateDestroyProgress();
+    GlobalContext::getMinecraftClient()->getLevelRenderer()->getLevelRendererPlayer()->addTerrainParticleEffect({x,y,z},*BlockRegistry::getBlockStateForIdData(IdConversion::staticToDynamic(5,IdConversion::Scope::BLOCK),1),{x,y,z},1,1,1);
 });
+class GameMode {
+    public:
 
-JS_EXPORT(GUI, set,"V(L)",(JNIEnv* env, long long uid){
-    ServerPlayer* player = GlobalContext::getServerPlayer();
-    player->registerTrackedBoss(uid);
-    GlobalContext::getServerLevel()->fetchEntity(uid,true);
-});
+   // void startDestroyBlock(BlockPos const&)
+};

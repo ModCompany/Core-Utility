@@ -13,4 +13,9 @@ namespace mce {
         stl::string asString()const; 
         bool isEmpty() const; 
     };
+
+    class Color {
+        public:
+
+    };
 }

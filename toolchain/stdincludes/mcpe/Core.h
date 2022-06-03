@@ -1,6 +1,8 @@
 #pragma once
 
+#include <stl/string>
 
+#define stl std::__ndk1
 namespace Core {
     class Random {
         public:
@@ -17,4 +19,5 @@ namespace Core {
         void _setSeed(unsigned int);
         Random();
     };
+
 }
