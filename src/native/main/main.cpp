@@ -59,21 +59,17 @@ public:
 			return controller->call<void>(a,b);
 		},),HookManager::CALL | HookManager::REPLACE | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
 
-		HookManager::addCallback(SYMBOL("mcpe","_ZNK7Weather11isSnowingAtER11BlockSourceRK8BlockPos"), LAMBDA((HookManager::CallbackController* controller, void* a,void* b,void* c),{
 
-			return true;
-		},),HookManager::CALL | HookManager::REPLACE | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
-				HookManager::addCallback(SYMBOL("mcpe","_ZNK7Weather15canPlaceTopSnowER11BlockSourceRK8BlockPosbbPi"), LAMBDA((HookManager::CallbackController* controller, void* a,void* b,void* c),{
-
-			return true;
-		},),HookManager::CALL | HookManager::REPLACE | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
-		HookManager::addCallback(SYMBOL("mcpe","_ZNK5Biome15canHaveSnowfallERK11BlockSourceRK8BlockPos"), LAMBDA((HookManager::CallbackController* controller, void* a,void* b,void* c),{
-
-			return true;
-		},),HookManager::CALL | HookManager::REPLACE | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
 		HookManager::addCallback(SYMBOL("mcpe","_ZNK9Dimension15getDefaultBiomeEv"), LAMBDA((HookManager::CallbackController* controller, void* a,void* b,void* c),{
 
 			return 31;
+		},),HookManager::CALL | HookManager::REPLACE | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
+			HookManager::addCallback(SYMBOL("mcpe","_ZN13BiomeRegistry13registerBiomeERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE"), LAMBDA((HookManager::CallbackController* controller,void* a, stl::string const& name),{
+				Logger::debug("Biome-Init",name.data());
+				Logger::flush();
+				if(name.data()=="ice_plains"){
+		
+				}
 		},),HookManager::CALL | HookManager::REPLACE | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
     }
 };
