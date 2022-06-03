@@ -142,7 +142,7 @@ declare interface IItemsUtil {
 }
 declare var ItemsUtil: IItemsUtil;
 
-declare interface ICustomEntity {
+declare interface IEntityRegister {
     /**
      * add handler tick entity
      * @param name - string id entity (minecraft:zombie<>)
@@ -150,7 +150,7 @@ declare interface ICustomEntity {
      */
     setHandlerTick(name: string, func: (entity: number) => void);
 }
-declare var CustomEntity: ICustomEntity;
+declare var EntityRegister: IEntityRegister;
 
 declare interface CoreUtilityAPI {
     NativeAPI: INativeAPI,
@@ -158,7 +158,7 @@ declare interface CoreUtilityAPI {
     ToolTip: IToolTip,
     Injector: Injector,
     ItemsUtil: IItemsUtil,
-    CustomEntity: ICustomEntity,
+    EntityRegister: IEntityRegister,
     requireGlobal(cmd: string): any;
 }
 
