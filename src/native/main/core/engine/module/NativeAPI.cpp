@@ -17,7 +17,7 @@ jobject NativeAPI::createHookParameter(JNIEnv* env, jfloat v, jstring t){
     return env->NewObject(NativeAPI::PARAMETER, NativeAPI::constructorParameterFloat, v, t);
 }
 jobject NativeAPI::createHookParameter(JNIEnv* env, jstring v, jstring t){
-    return env->NewObject(NativeAPI::PARAMETER, NativeAPI::constructorParameterString, v, t);
+    return env->NewObject(NativeAPI::PARAMETER, NativeAPI::constructorParameterString, v, t); 
 }
 
 void NativeAPI::init(){

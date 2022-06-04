@@ -156,6 +156,8 @@ inline void registerHook(JNIEnv* env, Hook* hook, std::function<T(JNIEnv*,Hook*,
                     return result;
                 }
             }
+            delete env;
+            env = nullptr;
         },hook, func
     ), v);
 }
