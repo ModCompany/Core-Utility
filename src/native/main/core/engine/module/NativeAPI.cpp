@@ -8,16 +8,16 @@ jmethodID NativeAPI::constructorParameterFloat;
 jmethodID NativeAPI::constructorParameterString;
 
 jobject NativeAPI::createHookParameter(JNIEnv* env, jlong v, jstring t){
-    return env->NewGlobalRef(env->NewObject(NativeAPI::PARAMETER, NativeAPI::constructorParameterLong, v, t));
+    return env->NewObject(NativeAPI::PARAMETER, NativeAPI::constructorParameterLong, v, t);
 }
 jobject NativeAPI::createHookParameter(JNIEnv* env, jint v, jstring t){
-    return env->NewGlobalRef(env->NewObject(NativeAPI::PARAMETER, NativeAPI::constructorParameterInt, v, t));
+    return env->NewObject(NativeAPI::PARAMETER, NativeAPI::constructorParameterInt, v, t);
 }
 jobject NativeAPI::createHookParameter(JNIEnv* env, jfloat v, jstring t){
-    return env->NewGlobalRef(env->NewObject(NativeAPI::PARAMETER, NativeAPI::constructorParameterFloat, v, t));
+    return env->NewObject(NativeAPI::PARAMETER, NativeAPI::constructorParameterFloat, v, t);
 }
 jobject NativeAPI::createHookParameter(JNIEnv* env, jstring v, jstring t){
-    return env->NewGlobalRef(env->NewObject(NativeAPI::PARAMETER, NativeAPI::constructorParameterString, v, t));
+    return env->NewObject(NativeAPI::PARAMETER, NativeAPI::constructorParameterString, v, t);
 }
 
 void NativeAPI::init(){

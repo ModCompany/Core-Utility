@@ -64,14 +64,14 @@ public:
 
 			return 31;
 		},),HookManager::CALL | HookManager::REPLACE | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
-
+		/*
 		HookManager::addCallback(SYMBOL("mcpe","_ZN20ActorDefinitionGroup29loadActorDefinitionIdentifierERKN4Json5ValueERK10SemVersionRNSt6__ndk112basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEE"), LAMBDA((HookManager::CallbackController* controller, Json::Value const& b,void* c,stl::string& d),{
 
 			//Logger::debug("Test",b.toStyledString().data());
 			//Logger::debug("Test",d.data());
 			return controller->call<void>(b,c,d);
 		},),HookManager::CALL |  HookManager::LISTENER | HookManager::REPLACE | HookManager::CONTROLLER | HookManager::RESULT);
-
+*/
     }
 };
 

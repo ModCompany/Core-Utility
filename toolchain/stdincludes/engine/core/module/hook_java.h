@@ -41,6 +41,7 @@ class HookJava {
         }
 
         static jobjectArray getParameters(JNIEnv*, std::vector<std::string>, std::vector<jlong>, void*, void*, void*, void*, void*, void*, void*, void*, void*, void*);
+        inline static void clearParameters(JNIEnv*, jobjectArray);
 
         static std::string getStringByObject(JNIEnv* env, jobject v){
             jstring t = (jstring) v;

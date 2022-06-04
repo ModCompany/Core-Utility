@@ -74,21 +74,6 @@ let phase = 0;
 let string = WRAP_JAVA("java.lang.String");
 let BlockPos = WRAP_JAVA("com.core.api.engine.data.BlockPos");
 
-Callback.addCallback("Player.startSwimming", function(controller, pointer){
-    Game.message("swimming");
-});
-Callback.addCallback("Dimension.isDay", function(controller, pointer){
-    controller.replace();
-
-    controller.setResult(false);
-});
-Callback.addCallback("Actor.setTradingPlayer", function(controller, pointer, player){
-    alert(player)
-    if(player != 0)
-        new InjectorJava(player).call("_ZN6Player13startSwimmingEv");
-
-});
-
 var Spawner = WRAP_NATIVE("Spawner");
 var gui = WRAP_NATIVE("GUI");
 
@@ -101,6 +86,3 @@ Callback.addCallback("ItemUse",function(coords,item,block,external,bool){
     }
 
 });
-
-
-

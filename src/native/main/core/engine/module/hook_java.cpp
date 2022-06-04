@@ -100,11 +100,9 @@ inline void registerParameter(JNIEnv* env, void* paramter, jobjectArray& array, 
 
 jobjectArray HookJava::getParameters(JNIEnv* env, std::vector<std::string> types, std::vector<jlong> ptrs, void* a, void* b, void* c, void* d, void* e, void* k, void* l, void* f, void* t, void* p){
     int size = types.size()+ptrs.size();
-    jobjectArray array = (jobjectArray) env->NewGlobalRef(env->NewObjectArray(size, NativeAPI::PARAMETER, HookJava::obj));
-
+    jobjectArray array = (jobjectArray) env->NewGlobalRef(env->NewObjectArray(size, NativeAPI::PARAMETER, NULL));
     for(int i = 0;i < ptrs.size();i++)
         env->SetObjectArrayElement(array, i, NativeAPI::createHookParameter(env, ptrs[i], HookJava::getJavaString(env, "ptr")));
-    
     for(int i = 0;i < types.size();i++){
         std::string type = types[i];
         if(i == 0)
@@ -131,28 +129,29 @@ jobjectArray HookJava::getParameters(JNIEnv* env, std::vector<std::string> types
     return array;
 }
 
+inline void HookJava::clearParameters(JNIEnv* env, jobjectArray array){
+    
+}
+
 template<typename T>
 inline void registerHook(JNIEnv* env, Hook* hook, std::function<T(JNIEnv*,Hook*,Controller)> func, int v){
     HookManager::addCallback(
         SYMBOL("mcpe",hook->symbol.c_str()), 
         LAMBDA((HookManager::CallbackController* controller, void* self, void* a, void* b, void* c, void* d, void* e, void* k, void* l, void* f, void* t, void* p),{
             JNIEnv* env;
-	        ATTACH_JAVA(env, JNI_VERSION_1_6){
+	        ATTACH_JAVA(env, JNI_VERSION_1_2){
                 Controller ctr(controller);
                 jobjectArray array = HookJava::getParameters(env, hook->args, {(jlong) &ctr, (jlong) self}, a, b, c, d, e, k, l, f, t, p);
-
                 JavaCallbacks::invokeCallback(
                     HookJava::HOOK, "hookCallback",
                     "(Ljava/lang/String;Ljava/lang/String;[Lcom/core/api/module/types/Parameter;)V",
                     HookJava::getJavaString(env, hook->callback), 
                     HookJava::getJavaString(env, hook->returnType), 
                     array
-                );
-
+                );;
                 env->DeleteGlobalRef(array);
-                
                 if(ctr.isResult()){
-                    T result = func(env, hook,ctr);
+                    T result = func(env, hook, ctr);
                     ctr.end(env);
                     return result;
                 }
