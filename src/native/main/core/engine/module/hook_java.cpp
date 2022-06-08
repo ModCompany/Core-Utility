@@ -98,7 +98,7 @@ inline void registerParameter(JNIEnv* env, void* paramter, jobjectArray& array, 
     }
 }
 
-jobjectArray HookJava::getParameters(JNIEnv* env, std::vector<std::string> types, std::vector<jlong> ptrs, void* a, void* b, void* c, void* d, void* e, void* k, void* l, void* f, void* t, void* p){
+inline jobjectArray HookJava::getParameters(JNIEnv* env, std::vector<std::string> types, std::vector<jlong> ptrs, void* a, void* b, void* c, void* d, void* e, void* k, void* l, void* f, void* t, void* p){
     int size = types.size()+ptrs.size();
     jobjectArray array = (jobjectArray) env->NewGlobalRef(env->NewObjectArray(size, NativeAPI::PARAMETER, NULL));
     for(int i = 0;i < ptrs.size();i++)
@@ -129,26 +129,21 @@ jobjectArray HookJava::getParameters(JNIEnv* env, std::vector<std::string> types
     return array;
 }
 
-inline void HookJava::clearParameters(JNIEnv* env, jobjectArray array){
-    
-}
-
 template<typename T>
 inline void registerHook(JNIEnv* env, Hook* hook, std::function<T(JNIEnv*,Hook*,Controller)> func, int v){
     HookManager::addCallback(
         SYMBOL("mcpe",hook->symbol.c_str()), 
         LAMBDA((HookManager::CallbackController* controller, void* self, void* a, void* b, void* c, void* d, void* e, void* k, void* l, void* f, void* t, void* p),{
             JNIEnv* env;
-	        ATTACH_JAVA(env, JNI_VERSION_1_2){
+	        ATTACH_JAVA(env, JNI_VERSION_1_6){
                 Controller ctr(controller);
                 jobjectArray array = HookJava::getParameters(env, hook->args, {(jlong) &ctr, (jlong) self}, a, b, c, d, e, k, l, f, t, p);
-                JavaCallbacks::invokeCallback(
-                    HookJava::HOOK, "hookCallback",
-                    "(Ljava/lang/String;Ljava/lang/String;[Lcom/core/api/module/types/Parameter;)V",
+                env->CallStaticObjectMethod(
+                    HookJava::HOOK, HookJava::ID, 
                     HookJava::getJavaString(env, hook->callback), 
                     HookJava::getJavaString(env, hook->returnType), 
                     array
-                );;
+                );
                 env->DeleteGlobalRef(array);
                 if(ctr.isResult()){
                     T result = func(env, hook, ctr);
@@ -156,8 +151,6 @@ inline void registerHook(JNIEnv* env, Hook* hook, std::function<T(JNIEnv*,Hook*,
                     return result;
                 }
             }
-            delete env;
-            env = nullptr;
         },hook, func
     ), v);
 }
@@ -168,7 +161,7 @@ void HookJava::init(){
 		HookJava::HOOK = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/module/Hook")));
         HookJava::DATA = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/module/JsonData")));
         HookJava::OBJECT = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("java/lang/Object")));
-        //HookJava::ID = env->GetStaticMethodID(HookJava::HOOK, "hookCallback", "(JJLjava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V");
+        HookJava::ID = env->GetStaticMethodID(HookJava::HOOK, "hookCallback", "(Ljava/lang/String;Ljava/lang/String;[Lcom/core/api/module/types/Parameter;)V");
         jclass Double = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("java/lang/Double")));
         HookJava::ID_INTAS = env->GetMethodID(Double, "intValue", "()I");
         HookJava::ID_FLOATAS = env->GetMethodID(Double, "floatValue", "()F");

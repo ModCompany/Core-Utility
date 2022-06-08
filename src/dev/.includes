@@ -4,4 +4,5 @@ api/NativeAPI.js
 api/Itemsutil.js
 api/Injector.js
 api/CustomEntity.js
+block_model.js
 shared.js

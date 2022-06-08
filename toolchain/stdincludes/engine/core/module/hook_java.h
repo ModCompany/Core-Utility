@@ -40,8 +40,7 @@ class HookJava {
             return (float) (env->CallFloatMethod(v, HookJava::ID_FLOATAS));
         }
 
-        static jobjectArray getParameters(JNIEnv*, std::vector<std::string>, std::vector<jlong>, void*, void*, void*, void*, void*, void*, void*, void*, void*, void*);
-        inline static void clearParameters(JNIEnv*, jobjectArray);
+        inline static jobjectArray getParameters(JNIEnv*, std::vector<std::string>, std::vector<jlong>, void*, void*, void*, void*, void*, void*, void*, void*, void*, void*);
 
         static std::string getStringByObject(JNIEnv* env, jobject v){
             jstring t = (jstring) v;

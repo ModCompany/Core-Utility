@@ -3,7 +3,7 @@
         {
             "name": "Android",
             "includePath": [
-                "${workspaceFolder}/toolchain/stdincludes/horizon",
+                std::__ndk1::string
                 "${workspaceFolder}/toolchain/stdincludes/inner",
                 "${workspaceFolder}/toolchain/stdincludes/mcpe/**",
                 "${workspaceFolder}/toolchain/ndk/arm/sysroot/usr/include/**",
