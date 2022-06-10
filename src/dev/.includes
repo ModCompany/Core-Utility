@@ -5,5 +5,5 @@ api/Itemsutil.js
 api/Injector.js
 api/CustomEntity.js
 api/Gui.js
-api/TickingAreasManager
+api/TickingAreasManager.js
 shared.js
