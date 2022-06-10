@@ -4,5 +4,6 @@ api/NativeAPI.js
 api/Itemsutil.js
 api/Injector.js
 api/CustomEntity.js
-block_model.js
+api/Gui.js
+api/TickingAreasManager
 shared.js

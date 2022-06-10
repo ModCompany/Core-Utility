@@ -139,6 +139,15 @@ declare interface IItemsUtil {
      * @param id - item id
      */
     getItemById(id: number): number;
+
+    /**
+     * replaces the name of an item
+     * @param id - id item
+     * @param data - data item
+     * @param name - new name item
+     */
+    overrideName(id: number, data: number, name: string);
+    overrideArmorValue(id: number, data: number, value: number)
 }
 declare var ItemsUtil: IItemsUtil;
 
@@ -152,6 +161,21 @@ declare interface IEntityRegister {
 }
 declare var EntityRegister: IEntityRegister;
 
+declare interface IGui {
+    animationDestroy(x: number, y: number, z: number);
+}
+declare var Gui: IGui;
+
+declare interface ITickingAreasManager {
+    hasActiveAreas(): boolean;
+    addArea(dimension: number, name: string, x: number, y: number, z: number, range: number): void;
+    addAreaPostions(dimension: number, name: string, x: number, y: number, z: number, xx: number, yy: number, zz: number): void;
+    addEntityArea(dimension: number, ent: number): void;
+    countStandaloneTickingAreas(): number;
+    countPendingAreas(dimension: number): number;
+}
+declare var TickingAreasManager: ITickingAreasManager;
+
 declare interface CoreUtilityAPI {
     NativeAPI: INativeAPI,
     ConversionType: IConversionType,
@@ -159,6 +183,8 @@ declare interface CoreUtilityAPI {
     Injector: Injector,
     ItemsUtil: IItemsUtil,
     EntityRegister: IEntityRegister,
+    Gui: IGui,
+    TickingAreasManager: ITickingAreasManager,
     requireGlobal(cmd: string): any;
 }
 

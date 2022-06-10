@@ -1,37 +1,6 @@
 var ChunkPos = WRAP_JAVA("com.core.api.level.ChunkPos");
 let CustomEntityJava = WRAP_JAVA("com.core.api.entity.CustomEntity");
 
-var NativeItem = {
-    api: WRAP_JAVA("com.core.api.Item"),
-    registerItem:function(uid, name, obj){
-
-    },
-    registerTool:function(uid, texture,tier){
-
-        let id = IDRegistry.genItemID(uid);
-        this.api.registerTool(id, uid,texture,tier);
-        ToolAPI.registerTool(id, "wood", ["stone"], {isNative: true});
-
-    },
-    TierType: {
-        "pickaxe" : 0,
-        "axe" : 1,
-        "sword" : 2,
-        "hoe" : 3,
-        "shovel" : 4,
-    },
-    getType:function(a){
-        if(TierType[a]) return TierType[a];
-    },
-    overrideName:function(id,data, name){
-        this.api.overrideName(id,data,name);
-    },
-    overrideArmorValue:function(id){
-        this.api.overrideArmorValue(id);
-    }
-}
-
-
 /*
 var Test = WRAP_NATIVE("Test");
 
@@ -75,14 +44,3 @@ let string = WRAP_JAVA("java.lang.String");
 let BlockPos = WRAP_JAVA("com.core.api.engine.data.BlockPos");
 
 var Spawner = WRAP_NATIVE("Spawner");
-var gui = WRAP_NATIVE("GUI");
-
-Callback.addCallback("ItemUse",function(coords,item,block,external,bool){
-    //for(var i = 0;i < 30;i++) Spawner.test(coords.relative.x,coords.relative.y,coords.relative.z,i);
-    for(var x = -1;x < 1;x++){
-        for(var z = -1;z < 1;z++){
-            gui.setDestroyBlock(coords.x + x,coords.y,coords.z + z);
-        }
-    }
-
-});
