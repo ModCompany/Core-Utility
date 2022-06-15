@@ -31,7 +31,7 @@ JS_EXPORT_COMPLEX(NativeSound, setReverb, "V(FF)", (JNIEnv* env,NativeJS::Comple
   float l = obj.get("earlyLateMix").asFloat(1);
   float q = obj.get("wet").asFloat(1);
   int channel = obj.get("channel").asInt(1);
-  SoundModule::setReverbProperties(channel,a,b,c,d,e,f,g,h,j,k,l,q);
+  //SoundModule::setReverbProperties(channel,a,b,c,d,e,f,g,h,j,k,l,q);
   return 0;
 });
 

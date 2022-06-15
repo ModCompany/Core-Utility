@@ -23,4 +23,7 @@ function Injector(ptr){
     this.getPointerResult = function(symbol){
         return injector.getPointerResult(symbol);
     }
+    this.free = function(){
+        return injector.free();
+    }
 }

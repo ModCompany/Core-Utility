@@ -187,6 +187,15 @@ declare interface CoreUtilityAPI {
     TickingAreasManager: ITickingAreasManager,
     requireGlobal(cmd: string): any;
 }
+declare class NativeLevel {}
+declare class Dimension {}
+declare class Player {}
+declare class LocalPlayer {}
+declare class ServerPlayer {}
+declare class ClientInstance {}
+
+declare namespace GlobalContext {
+}
 
 declare namespace ModAPI {
     export function addAPICallback(name: "CoreUtility", func: (api: CoreUtilityAPI) => void): void;

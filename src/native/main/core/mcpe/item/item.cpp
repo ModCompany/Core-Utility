@@ -91,10 +91,37 @@ JS_EXPORT(Test, registerBow, "V(I)", (JNIEnv* env,int id){
 })
 */
 
+class Level;
+class BlockSource;
+class Container;
 class ShieldItem : public Item {
-	public:
-	ShieldItem(stl::string const&, int);
+public:
+//Fields
+char filler[512];
+public:
+//Virtual Tables
+virtual ~ShieldItem();
+virtual bool isHandEquipped() const {
+	return true;
 };
+virtual void isValidRepairItem(ItemStackBase const&, ItemStackBase const&) const;
+virtual void getEnchantSlot() const;
+virtual void dispense(BlockSource&, Container&, int, Vec3 const&, unsigned char) const;
+virtual void hurtActor(ItemStack&, Actor&, Mob&) const;
+virtual void inventoryTick(ItemStack&, Level&, Actor&, int, bool) const;
+virtual void getInHandUpdateType(Player const&, ItemInstance const&, ItemInstance const&, bool, bool) const;
+virtual void getInHandUpdateType(Player const&, ItemStack const&, ItemStack const&, bool, bool) const;
+public:
+//Methods
+ShieldItem(stl::string const&, int);
+void playBreakSound(Player*) const;
+void playBlockSound(Player*) const;
+public:
+//Objects
+static ShieldItem * TIMESTAMP_TAG;
+static ShieldItem * EFFECTIVE_BLOCK_DELAY;
+static ShieldItem * IN_HAND_BLOCK_DURATION;
+};//ShieldItem
 
 class ShieldFactory : public LegacyItemRegistry::LegacyItemFactoryBase {
 	public:
@@ -115,8 +142,18 @@ class ShieldProvider : public LegacyItemRegistry::LegacyItemProviderBase {
 		return this->factory;
 	}
 	virtual void setupVtable(void* a){
-       // LegacyItemRegistry::LegacyItemProviderBase::setupVtable(a);
-		void** table = (void**) a;
+        //LegacyItemRegistry::LegacyItemProviderBase::setupVtable(a);
+
+		if(this->factory->item!=nullptr){
+
+			void** table = *(void***) factory->item;
+			//table[getVtableOffset("_ZTV10ShieldItem", "_ZNK16RangedWeaponItem3useER9ItemStackR6Player")] = SYMBOL("mcpe", "_ZNK16RangedWeaponItem3useER9ItemStackR6Player");
+			//table[getVtableOffset("_ZTV10ShieldItem", "_ZNK4Item6_useOnER9ItemStackR5Actor8BlockPoshfff")] = SYMBOL("mcpe", "_ZNK4Item6_useOnER9ItemStackR5Actor8BlockPoshfff");
+			//table[getVtableOffset("_ZTV10ShieldItem","_ZNK16RangedWeaponItem9mineBlockER9ItemStackRK5BlockiiiP5Actor")] = SYMBOL("mcpe","_ZNK16RangedWeaponItem9mineBlockER9ItemStackRK5BlockiiiP5Actor");
+			//table[getVtableOffset("_ZTV10ShieldItem","_ZNK16RangedWeaponItem12releaseUsingER9ItemStackP6Playeri")] = SYMBOL("mcpe", "_ZNK16RangedWeaponItem12releaseUsingER9ItemStackP6Playeri");
+
+		}
+
 	}
 };
 
@@ -125,6 +162,8 @@ void ShieldFactory::registerItem(){
 		ItemRegistry::registerCustomItem<ShieldItem>(new ShieldProvider(this),IdConversion::staticToDynamic(id, IdConversion::ITEM), nameId);
 	}
 }
+
+
 
 class FishingFactory : public LegacyItemRegistry::LegacyItemFactoryBase {
 	public:
@@ -216,8 +255,8 @@ void ArrowFactory::registerItem(){
 
 JS_MODULE_VERSION(TestItem, 1);
 JS_EXPORT(TestItem, reg, "V(I)", (JNIEnv* env, int a){
-	ArrowFactory* factory = new ArrowFactory();
-	factory->initParameters(a, "test_item", "arrow", "stick",0);
+	ShieldFactory* factory = new ShieldFactory();
+	factory->initParameters(a, "test_shield", "arrow", "stick",0);
 
 	LegacyItemRegistry::registerItemFactory(factory);
 });

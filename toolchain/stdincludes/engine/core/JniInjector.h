@@ -20,6 +20,7 @@ class JniInjector {
     stl::string& getStringResult(const char*);
     void replaceResult(const char*,const char*,int64_t);
     void call(const char*);
+    void free();
     private:
 
 

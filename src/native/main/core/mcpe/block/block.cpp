@@ -151,10 +151,7 @@ void MyBlockFactory::registerBlock() {
     }
 }
 
-JS_EXPORT(Test, registerBlock, "V(I)", (JNIEnv* env, int id){
-	auto factory = new MyBlockFactory();
-	factory->initParameters(id, "test_block_1");
-	LegacyBlockRegistry::registerBlockFactory(factory);
-	LegacyItemRegistry::addItemToCreative(id, 1, 0, nullptr);
-	Logger::debug("test", "test block registered!");
-});
+
+
+#include <block/Block.h>
+

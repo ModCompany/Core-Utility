@@ -1,13 +1,10 @@
 package com.core.api;
 
-import org.mozilla.javascript.Function;
-
-import com.core.api.engine.NativeJavaObject;
-
 public class Injector {
     
     private long pointer;
     public Object[] args;
+
     public Injector(long ptr){
         this.pointer = init_injector(ptr);
     }
@@ -47,6 +44,11 @@ public class Injector {
     public void call(String symbol, Object...obj){
         callArgs(this.pointer, symbol, obj);
     }
+
+    public void free(){
+        free(this.pointer);
+    }
+    
     public native static long init_injector(long ptr);
     public native static int getIntResult(long ptr,String symbol);
     public native static float getFloatResult(long ptr,String symbol);
@@ -56,4 +58,5 @@ public class Injector {
     public native static void call(long ptr,String symbol);
     //public native static void replace(long ptr, String table,String symbol, Function func, String[] args);
     public native static void callArgs(long ptr,String symbol, Object[] a);
+    public static native void free(long ptr);
 }

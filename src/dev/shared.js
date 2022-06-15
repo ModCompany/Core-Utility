@@ -7,7 +7,9 @@ ModAPI.registerAPI("CoreUtility", {
     ItemsUtil: ItemsUtil,
     Gui: Gui,
     TickingAreasManager: TickingAreasManager,
+    GlobalContext:GlobalContext,
     requireGlobal(cmd){
         return eval(cmd);
     }
 });
+

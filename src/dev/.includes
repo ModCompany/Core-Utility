@@ -1,9 +1,10 @@
 header.js
 api/ToolTip.js
 api/NativeAPI.js
-api/Itemsutil.js
+api/ItemsUtil.js
 api/Injector.js
 api/CustomEntity.js
 api/Gui.js
 api/TickingAreasManager.js
+api/GlobalContext.js
 shared.js

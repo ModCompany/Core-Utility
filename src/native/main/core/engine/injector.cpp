@@ -53,7 +53,9 @@ void JniInjector::replaceResult(const char* table,const char* symbol, int64_t la
     helper.patch(table,symbol, (void*) lambda);
 }
 
-
+void JniInjector::free(){
+    delete this;
+}
 
 export(jlong, Injector_init_1injector, jlong ptr){
     return (jlong) new JniInjector(ptr);
@@ -82,6 +84,10 @@ export(jstring, Injector_getStringResult, jlong ptr,jstring a){
 export(void, Injector_call, jlong ptr,jstring b){
     Logger::debug("Mod-Test", JavaClass::toString(env,b).data());
     return ((JniInjector*) ptr)->call(JavaClass::toString(env,b).data());
+}
+
+export(void, Injector_free, jlong ptr){
+    return ((JniInjector*) ptr)->free();
 }
 
 #include <vector>
