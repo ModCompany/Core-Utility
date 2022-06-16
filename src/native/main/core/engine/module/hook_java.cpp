@@ -94,7 +94,7 @@ inline void registerParameter(JNIEnv* env, void* paramter, jobjectArray& array, 
     }else if(type == "stl::string"){
         env->SetObjectArrayElement(array, i, NativeAPI::createHookParameter(env, HookJava::getJavaString(env, ((stl::string&) paramter).c_str()), HookJava::getJavaString(env, type)));
     }else{
-        env->SetObjectArrayElement(array, i, NativeAPI::createHookParameter(env, (jint) 0, HookJava::getJavaString(env, "void")));
+        env->SetObjectArrayElement(array, i, NativeAPI::createHookParameter(env, (jlong) paramter, HookJava::getJavaString(env, type)));
     }
 }
 

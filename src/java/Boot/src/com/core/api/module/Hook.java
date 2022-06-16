@@ -3,6 +3,7 @@ package com.core.api.module;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,29 +27,47 @@ public class Hook {
     public static JsonData[] getJsons(){
         return jsons.toArray(new JsonData[jsons.size()]);
     }
+    public static String readFile(String path) throws IOException{
+        File file = new File(path);
+        if(file.exists()){
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String json = "";
+            String line;
+            while((line = reader.readLine()) != null)
+                json+=line;
+            reader.close();
+            return json;
+        }
+        return null;
+    }
+    public static boolean isEnableMod(String path){
+        try {
+            JSONObject object = new JSONObject(readFile(path+"config.json"));
+            return object.getBoolean("enabled");
+        } finally {
+            return true;
+        }
+    }
     public static void jsonLoad(){
         List<ApparatusMod> mods = ApparatusModLoader.getSingleton().getAllMods();
         for(int i = 0;i < mods.size();i++){
             ApparatusMod mod = mods.get(i);
-            String path = mod.getInfo().getProperty("directory_root", String.class, null) + file_name;
+            String path = mod.getInfo().getProperty("directory_root", String.class, null);
             try {
-                File file = new File(path);
-                if(file.exists()){
-                    BufferedReader reader = new BufferedReader(new FileReader(file));
-                    String json = "";
-                    String line;
-                    while((line = reader.readLine()) != null)
-                        json+=line;
-                    reader.close();
-
-                    JSONArray array = new JSONArray(json);
+                if(isEnableMod(path)){
+                    JSONArray array = new JSONArray(readFile(path + file_name));
                     for(int j = 0;j < array.length();j++){
                         JSONObject object = array.getJSONObject(j);
-                        JSONArray arr = object.getJSONArray("args");
-                        String[] args = new String[arr.length()];
-                        for(int v = 0;v < arr.length();v++)
-                            args[v] = arr.getString(v);
-                        jsons.add(new JsonData(object.getString("symbol"), object.getString("callback"), object.getString("priority"), object.getString("return"), args));
+                        String[] args;
+                        if(!object.isNull("args")){
+                            JSONArray arr = object.getJSONArray("args");
+                            args = new String[arr.length()];
+                            for(int v = 0;v < arr.length();v++)
+                                args[v] = arr.getString(v);
+                        }else
+                            args = new String[] {};
+                        
+                        jsons.add(new JsonData(object.getString("symbol"), object.getString("callback"), !object.isNull("priority") ? object.getString("priority") : "post", !object.isNull("return") ? object.getString("return") : "void", args));
                     }
                 }
             } catch (Exception e) {

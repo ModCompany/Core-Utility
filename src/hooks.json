@@ -1,1 +1,7 @@
-[]
+[
+    {
+        "symbol": "_ZN16BlockTessellator17tessellateInWorldER11TessellatorRK5BlockRK8BlockPosb",
+        "callback": "RenderBlock",
+        "args": ["ptr", "ptr", "BlockPos"]
+    }
+]

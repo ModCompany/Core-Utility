@@ -18,7 +18,7 @@ function Injector(ptr){
         return injector.getIntResult(symbol) == 1;
     }
     this.getStringResult = function(symbol){
-        return String(injector.getFloatResult(symbol));
+        return String(injector.getStringResult(symbol));
     }
     this.getPointerResult = function(symbol){
         return injector.getPointerResult(symbol);

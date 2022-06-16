@@ -1,5 +1,8 @@
 package com.core.api.module.types;
 
+import com.core.api.mcpe.api.BlockPos;
+import com.zhekasmirnov.horizon.runtime.logger.Logger;
+
 public class Parameter {
     String type; Object v;
     public Parameter(long v, String type){
@@ -20,8 +23,10 @@ public class Parameter {
     }
 
     public Object getValue(){
-        if(type == "bool")
+        if(type.equals("bool"))
             return ((Integer) v).intValue() == 1;
+        else if(type.equals("BlockPos"))
+            return new BlockPos((long) v);
         return v;
     }
 }
