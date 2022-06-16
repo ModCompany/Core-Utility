@@ -15,7 +15,7 @@ public class GlobalContext {
     native private static long getLevelPointer();
     native private static long getDimensionPointer();
 
-    public static ClientInstance getClientInstace(){
+    public static ClientInstance getClientInstance(){
         return new ClientInstance(getClientInstacePointer());
     }
     public static LevelServer getLevelServer(){

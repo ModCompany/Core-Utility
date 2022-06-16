@@ -17,6 +17,8 @@ class Vec3;
 class ActorFactory;
 class Random;
 class Spawner;
+class ActorUniqueID;
+
 #include <horizon/item.h>
 #include <innercore/item_registry.h>
 #include <innercore/id_conversion_map.h>

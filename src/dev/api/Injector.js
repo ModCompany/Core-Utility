@@ -15,7 +15,7 @@ function Injector(ptr){
         return Number(injector.getFloatResult(symbol));
     }
     this.getBoolResult = function(symbol){
-        return injector.getIntResult(symbol) == 1;
+        return injector.getBoolResult(symbol);
     }
     this.getStringResult = function(symbol){
         return String(injector.getStringResult(symbol));
