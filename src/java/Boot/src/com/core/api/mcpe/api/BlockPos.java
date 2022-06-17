@@ -16,6 +16,9 @@ public class BlockPos {
     public BlockPos(long ptr){
         this.ptr = ptr;
     }
+    public long getPointer(){
+        return ptr;
+    }
 
     public int getX(){
         return NativeAPI.getXBlockPos(ptr);
