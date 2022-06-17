@@ -14,13 +14,13 @@ export(void, mcpe_api_Vec3_setY, jlong ptr, jfloat x){
 export(void, mcpe_api_Vec3_setZ, jlong ptr, jfloat x){
     ((Vec3*) ptr)->z = (float) x;
 }
-export(jfloat, mcpe_api_Vec3_getX, jlong ptr, jfloat x){
+export(jfloat, mcpe_api_Vec3_getX, jlong ptr){
     return (jfloat) ((Vec3*) ptr)->x;
 }
-export(jfloat, mcpe_api_Vec3_getY, jlong ptr, jfloat x){
+export(jfloat, mcpe_api_Vec3_getY, jlong ptr){
     return (jfloat) ((Vec3*) ptr)->y;
 }
-export(jfloat, mcpe_api_Vec3_getZ, jlong ptr, jfloat x){
+export(jfloat, mcpe_api_Vec3_getZ, jlong ptr){
     return (jfloat) ((Vec3*) ptr)->z;
 }
 export(void, mcpe_api_Vec3_free, jlong ptr){

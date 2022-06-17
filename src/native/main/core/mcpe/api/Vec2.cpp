@@ -11,10 +11,10 @@ export(void, mcpe_api_Vec2_setX, jlong ptr, jfloat x){
 export(void, mcpe_api_Vec2_setY, jlong ptr, jfloat x){
     ((Vec2*) ptr)->y = (int) x;
 }
-export(jfloat, mcpe_api_Vec2_getX, jlong ptr, jfloat x){
+export(jfloat, mcpe_api_Vec2_getX, jlong ptr){
     return (jfloat) ((Vec2*) ptr)->x;
 }
-export(jfloat, mcpe_api_Vec2_getY, jlong ptr, jfloat x){
+export(jfloat, mcpe_api_Vec2_getY, jlong ptr){
     return (jfloat) ((Vec2*) ptr)->y;
 }
 export(void, mcpe_api_Vec2_free, jlong ptr){
