@@ -35,7 +35,7 @@ class Actor {
     BlockSource* getRegion() const;
     Vec3 getPos() const;
     void setPos(Vec3 const&);
-
+    static Actor* wrap(long long);
     void setPosVTABLE(Vec3&);
 };
 

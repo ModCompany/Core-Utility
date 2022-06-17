@@ -5,6 +5,7 @@
 #include <core/JavaClass.h>
 #include <functional>
 #include <core/module/hook_java.h>
+#include <type/Json.h>
 
 
 JniInjector::JniInjector(void* a){
@@ -53,6 +54,7 @@ void JniInjector::replaceResult(const char* table,const char* symbol, int64_t la
     helper.patch(table,symbol, (void*) lambda);
 }
 
+
 void JniInjector::free(){
     delete this;
 }
@@ -70,7 +72,12 @@ export(jfloat, Injector_getFloatResult, jlong ptr,jstring a){
 }
 
 export(jboolean, Injector_getBoolResult, jlong ptr,jstring a){
-    return ((JniInjector*) ptr)->getBoolResult(JavaClass::toString(env,a).data());
+    //bool b = ((JniInjector*) ptr)->getBoolResult(JavaClass::toString(env,a).data());
+    JniInjector* injector = (JniInjector*) ptr;
+    bool b = injector->getBoolResult(JavaClass::toString(env,a).data());
+    Logger::debug("Injector", "%i", b);
+    Logger::flush();
+    return b;
 }
 
 export(jlong, Injector_getPointerResult, jlong ptr,jstring a){

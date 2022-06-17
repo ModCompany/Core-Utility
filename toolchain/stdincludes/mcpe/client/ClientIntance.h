@@ -24,6 +24,8 @@ public:
     int getServerPingTime() const;
     SoundEngine* getSoundEngine() const;
     LevelRenderer* getLevelRenderer() const;
+
+    
 };
 
 

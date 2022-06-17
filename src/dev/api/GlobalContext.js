@@ -1,8 +1,8 @@
 var GlobalContext = {
     api:WRAP_JAVA("com.core.api.innnercore.GlobalContext"),
 
-    getClientInstace:function(){
-        return this.api.getClientInstace();
+    getClientInstance:function(){
+        return this.api.getClientInstance();
     },
     getServerLevel:function(){
         return this.api.getLevelServer();
