@@ -31,17 +31,23 @@ class VtableCache {
 	public:
 	enum VtableType {
 		ITEM,
-		BLOCK
+		BLOCK,
+		INJECTOR
 	};
 	static std::map<int, void**> item_tables;
 	static std::map<int, void**> block_tables;
-
+	static std::map<long, void**> injector_tables;
 	static void addTable(VtableType, int, void**);
 	static void addTable(VtableType, int, void*);
+	static void addTable(long, void*);
+	static void addTable(long, void**);
 	static void** getTable(VtableType, int);
 	static void** getItemTable(int);
 	static void** getBlockTable(int);
+	static void** getInjectorTable(long);
 	static bool isExist(VtableType, int);
+	static bool isExist(long);
+	~VtableCache();
 };
 
 class VtablePatcher {
@@ -51,6 +57,8 @@ class VtablePatcher {
 	int id;
 
 	VtablePatcher(VtableCache::VtableType,int, void*);
+	VtablePatcher(long, void*);
 	void patch(const char*, const char*, void*);
+	void replace(const char*, const char*,const char*);
 	template<typename...A> void call(int, A...);
 };

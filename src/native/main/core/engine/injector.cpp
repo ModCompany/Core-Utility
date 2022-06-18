@@ -15,6 +15,7 @@ JniInjector::JniInjector(void* a){
 JniInjector::JniInjector(long pointer){
     Logger::debug("Mod-Test", "Pointer of table: %p", pointer);
     this->table = (void*) pointer;
+    this->pointer = pointer;
 };
 
 int JniInjector::getIntResult(const char* symbol){
@@ -54,6 +55,10 @@ void JniInjector::replaceResult(const char* table,const char* symbol, int64_t la
     helper.patch(table,symbol, (void*) lambda);
 }
 
+void JniInjector::replace(const char* table, const char* symbol, const char* replace){
+    VtablePatcher patcher(this->pointer,this->table);
+    patcher.replace(table,symbol,replace);
+}
 
 void JniInjector::free(){
     delete this;
@@ -99,7 +104,7 @@ export(void, Injector_free, jlong ptr){
 
 #include <vector>
 #include <hook.h>
-
+/* ЗАМОРОЖЕННО ДО ЛУЧШИХ ВРЕМЁН ДА ИЛЬЯ?
 export(jobject, Injector_replace, jlong ptr,jstring a,jstring b, jobject value, jobjectArray arr){
     jobject func = env->NewGlobalRef(value);
     std::vector<std::string>* types = new std::vector<std::string>();
@@ -107,13 +112,13 @@ export(jobject, Injector_replace, jlong ptr,jstring a,jstring b, jobject value, 
         types->push_back(JavaClass::toString(env,(jstring) env->GetObjectArrayElement(arr, j)));
     JniInjector* injector = ((JniInjector*) ptr);
     JavaClass* java = new JavaClass(env, NULL);
-    /*auto newFunc = ([java, types, env, func](void* a){
+    auto newFunc = ([java, types, env, func](void* a){
         Logger::debug("TEST", "table");
         java->runJsFunction(func, HookJava::getParameters(env, *types, {}, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr));
         
         Logger::debug("TEST", "end run");
         return stl::string("popa");
-    });*/
+    });
     injector->replaceResult(JavaClass::toString(env,a).data(), JavaClass::toString(env,b).data(), LAMBDA((void* a, void* b), {
         Logger::debug("TEST", "table");
         java->runJsFunction(func, HookJava::getParameters(env, *types, {}, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr));
@@ -122,7 +127,7 @@ export(jobject, Injector_replace, jlong ptr,jstring a,jstring b, jobject value, 
         return stl::string("popa");
     }, java, types, env, func));
     return NULL;
-}
+}*/
 
 
 
@@ -133,4 +138,9 @@ export(void, Injector_callArgs, jlong ptr,jstring a,jstring b,jobject object){
         return "test";
     }));
 
+}
+
+export(void, Injector_replace, jlong ptr,jstring table,jstring symbol,jstring replace){
+    JniInjector* injector = (JniInjector*) ptr;
+    injector->replace(JavaClass::toString(env,table).data(),JavaClass::toString(env,symbol).data(),JavaClass::toString(env,replace).data());
 }

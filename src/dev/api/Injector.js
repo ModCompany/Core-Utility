@@ -23,6 +23,9 @@ function Injector(ptr){
     this.getPointerResult = function(symbol){
         return injector.getPointerResult(symbol);
     }
+    this.replace = function(table,symbol,replace){
+        return injector.replace(table,symbol,replace);
+    }
     this.free = function(){
         return injector.free();
     }

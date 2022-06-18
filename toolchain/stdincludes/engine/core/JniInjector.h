@@ -36,6 +36,7 @@ class JniInjector {
     };
 
     void* table;
+    long pointer;
     JniInjector(void*);
     JniInjector(long);
 
@@ -87,7 +88,7 @@ class JniInjector {
     bool getBoolResult(const char*);
     void* getPointerResult(const char*);
     stl::string& getStringResult(const char*);
-
+    void replace(const char*,const char*,const char*);
 
 
     private:

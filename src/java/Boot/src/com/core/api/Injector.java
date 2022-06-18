@@ -45,6 +45,10 @@ public class Injector {
         callArgs(this.pointer, symbol, obj);
     }
 
+    public void replace(String symbol,String table,String replace){
+        replace(this.pointer, table, symbol, replace);
+    }
+
     public void free(){
         free(this.pointer);
     }
@@ -56,6 +60,7 @@ public class Injector {
     public native static long getPointerResult(long ptr, String symbol);
     public native static String getStringResult(long ptr,String symbol);
     public native static void call(long ptr,String symbol);
+    public native static void replace(long ptr,String table,String symbol,String replace);
     //public native static void replace(long ptr, String table,String symbol, Function func, String[] args);
     public native static void callArgs(long ptr,String symbol, Object[] a);
     public static native void free(long ptr);
