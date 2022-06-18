@@ -49,10 +49,10 @@ void JniInjector::call(const char* symbol){
     return helper.call<void>(symbol);
 }
 
-void JniInjector::replaceResult(const char* table,const char* symbol, int64_t lambda){
+void JniInjector::replaceResult(const char* table,const char* symbol, void* lambda){
     VtableHelper helper(this->table);
     helper.resize();
-    helper.patch(table,symbol, (void*) lambda);
+    helper.patch(table,symbol, lambda);
 }
 
 void JniInjector::replace(const char* table, const char* symbol, const char* replace){
@@ -130,17 +130,17 @@ export(jobject, Injector_replace, jlong ptr,jstring a,jstring b, jobject value, 
 }*/
 
 
+export(void, Injector_callArgs, jlong ptr,jstring a,jstring b,jobject jclz){
 
-export(void, Injector_callArgs, jlong ptr,jstring a,jstring b,jobject object){
-    JniInjector* injector = (JniInjector*) ptr;
-    
-    injector->replaceResult(JavaClass::toString(env,a).data(),JavaClass::toString(env,b).data(),LAMBDA((void* self),{
-        return "test";
-    }));
 
 }
 
 export(void, Injector_replace, jlong ptr,jstring table,jstring symbol,jstring replace){
     JniInjector* injector = (JniInjector*) ptr;
     injector->replace(JavaClass::toString(env,table).data(),JavaClass::toString(env,symbol).data(),JavaClass::toString(env,replace).data());
+}
+#include <innercore_callbacks.h>
+export(void, Injector_test, jobject jclz){
+
+
 }

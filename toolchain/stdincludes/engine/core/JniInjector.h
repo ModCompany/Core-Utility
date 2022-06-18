@@ -40,7 +40,7 @@ class JniInjector {
     JniInjector(void*);
     JniInjector(long);
 
-    void replaceResult(const char*,const char*,int64_t);
+    void replaceResult(const char*,const char*,void*);
     void call(const char*);
     void free();
 

@@ -28,6 +28,12 @@ typedef int content_id_t;
 #include <core/JniHook.h>
 #include <Core.h>
 
+class PlayScreenModel {
+	public:
+
+};
+
+PlayScreenModel* model;
 class CoreUtility : public Module {
 public:
 	CoreUtility(const char* id): Module(id) {};
@@ -72,6 +78,12 @@ public:
 			return controller->call<void>(b,c,d);
 		},),HookManager::CALL |  HookManager::LISTENER | HookManager::REPLACE | HookManager::CONTROLLER | HookManager::RESULT);
 */
+		HookManager::addCallback(SYMBOL("mcpe","_ZN15PlayScreenModelC2ER14IMinecraftGameR15IClientInstanceR10SceneStackR12SceneFactoryNSt6__ndk110unique_ptrI19IScreenCapabilitiesNS8_14default_deleteISA_EEEE"), LAMBDA((HookManager::CallbackController* controller, PlayScreenModel* a,void* b,void* c,void* d,void* g),{
+
+			model = a;
+			Logger::debug("CoreTest","ModelScreen");
+			Logger::flush();
+		},),HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
     }
 };
 

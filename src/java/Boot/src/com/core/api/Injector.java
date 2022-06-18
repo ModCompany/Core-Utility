@@ -1,5 +1,9 @@
 package com.core.api;
 
+import com.core.api.engine.JniCallable;
+import com.core.api.engine.JniInterface;
+import com.zhekasmirnov.horizon.runtime.logger.Logger;
+
 public class Injector {
     
     private long pointer;
@@ -53,6 +57,10 @@ public class Injector {
         free(this.pointer);
     }
     
+    public static void tests(JniCallable c){
+
+        test(c);
+    }
     public native static long init_injector(long ptr);
     public native static int getIntResult(long ptr,String symbol);
     public native static float getFloatResult(long ptr,String symbol);
@@ -64,4 +72,5 @@ public class Injector {
     //public native static void replace(long ptr, String table,String symbol, Function func, String[] args);
     public native static void callArgs(long ptr,String symbol, Object[] a);
     public static native void free(long ptr);
+    public static native void test(JniCallable b);
 }

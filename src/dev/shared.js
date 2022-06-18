@@ -15,3 +15,11 @@ ModAPI.registerAPI("CoreUtility", {
 });
 
 
+
+var caller = WRAP_JAVA("com.core.api.engine.JniCallable");
+let item = new caller();
+item.register(function(){
+    alert("test");
+});
+
+InjectorJava.tests(item);

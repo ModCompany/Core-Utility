@@ -15,6 +15,9 @@ public class JsHelper {
         return function.call(context, scriptable, that, args);
     }
 
+    public static Object callUnsafe(Function f, Object...obj){
+        return f.call(context,scriptable,that,obj);
+    }
     public static Object callFunction(Function function, Parameter[] args) {
         Object[] args_ = new Object[args.length];
         for (int i = 0; i < args_.length; i++)

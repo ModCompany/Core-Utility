@@ -29,4 +29,9 @@ function Injector(ptr){
     this.free = function(){
         return injector.free();
     }
+
+}
+
+test = function(a){
+    return InjectorJava.test(a);
 }
