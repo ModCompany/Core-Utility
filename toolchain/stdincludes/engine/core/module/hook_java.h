@@ -29,7 +29,7 @@ class HookJava {
         }
 
         static jlong getPointerByObject(JNIEnv* env, jobject v){
-            return (env->CallIntMethod(v, HookJava::ID_LongAS));
+            return (env->CallLongMethod(v, HookJava::ID_LongAS));
         }
 
         static bool getBoolByObject(JNIEnv* env, jobject v){
@@ -41,7 +41,8 @@ class HookJava {
         }
 
         inline static jobjectArray getParameters(JNIEnv*, std::vector<std::string>, std::vector<jlong>, void*, void*, void*, void*, void*, void*, void*, void*, void*, void*);
-
+        static std::vector<void*> getParameters(JNIEnv*, std::vector<std::string>, jobjectArray);
+        
         static std::string getStringByObject(JNIEnv* env, jobject v){
             jstring t = (jstring) v;
             std::string str = JavaClass::toString(env, t);

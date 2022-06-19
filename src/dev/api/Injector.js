@@ -4,24 +4,28 @@ function Injector(ptr){
     let injector = new InjectorJava(ptr);
     this.call = function(symbol){
         injector.call(symbol);
+        return this;
+    }
+    this.setArgsType = function(types){
+        injector.setArgsType(types);
     }
     this.getInjector = function(){
         return injector;
     }
-    this.getIntResult = function(symbol){
-        return Number(injector.getIntResult(symbol));
+    this.getIntResult = function(symbol, args){
+        return Number(injector.getIntResult(symbol, args));
     }
-    this.getFloatResult = function(symbol){
-        return Number(injector.getFloatResult(symbol));
+    this.getFloatResult = function(symbol, args){
+        return Number(injector.getFloatResult(symbol, args));
     }
-    this.getBoolResult = function(symbol){
-        return injector.getBoolResult(symbol);
+    this.getBoolResult = function(symbol, args){
+        return injector.getBoolResult(symbol, args);
     }
-    this.getStringResult = function(symbol){
-        return String(injector.getStringResult(symbol));
+    this.getStringResult = function(symbol, args){
+        return String(injector.getStringResult(symbol, args));
     }
-    this.getPointerResult = function(symbol){
-        return injector.getPointerResult(symbol);
+    this.getPointerResult = function(symbol, args){
+        return injector.getPointerResult(symbol, args);
     }
     this.replace = function(table,symbol,replace){
         return injector.replace(table,symbol,replace);

@@ -128,6 +128,28 @@ inline jobjectArray HookJava::getParameters(JNIEnv* env, std::vector<std::string
     }
     return array;
 }
+#include <logger.h>
+std::vector<void*> HookJava::getParameters(JNIEnv* env, std::vector<std::string> types, jobjectArray array){
+    std::vector<void*> result;
+    for (int i = 0;i < types.size();i++){
+        jobject object = env->GetObjectArrayElement(array, i);
+        std::string type = types[i];
+        if(type == "int"){
+            result.push_back((void*) NativeAPI::getIntHookParameter(env, object));
+        }else if(type == "bool"){
+            result.push_back((void*) (NativeAPI::getIntHookParameter(env, object) == 1));
+        }else if(type == "stl::string"){
+            stl::string str = stl::string(NativeAPI::getStringHookParameter(env, object).c_str());
+            result.push_back((void*) &str);
+        }else if(type == "float"){
+            float v = NativeAPI::getFloatHookParameter(env, object);
+            result.push_back((void*) &v);
+        }else{
+            result.push_back(NativeAPI::getPointerHookParameter(env, object));
+        }
+    }
+    return result;
+}
 
 template<typename T>
 inline void registerHook(JNIEnv* env, Hook* hook, std::function<T(JNIEnv*,Hook*,Controller)> func, int v){

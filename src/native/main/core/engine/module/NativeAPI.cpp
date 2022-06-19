@@ -1,4 +1,5 @@
 #include <core/module/NativeAPI.h>
+#include <core/JavaClass.h>
 
 jclass NativeAPI::JNativeAPI;
 jclass NativeAPI::PARAMETER;
@@ -6,6 +7,10 @@ jmethodID NativeAPI::constructorParameterLong;
 jmethodID NativeAPI::constructorParameterInt;
 jmethodID NativeAPI::constructorParameterFloat;
 jmethodID NativeAPI::constructorParameterString;
+jmethodID NativeAPI::getParameterLong;
+jmethodID NativeAPI::getParameterInt;
+jmethodID NativeAPI::getParameterFloat;
+jmethodID NativeAPI::getParameterString;
 
 jobject NativeAPI::createHookParameter(JNIEnv* env, jlong v, jstring t){
     return env->NewObject(NativeAPI::PARAMETER, NativeAPI::constructorParameterLong, v, t);
@@ -20,6 +25,22 @@ jobject NativeAPI::createHookParameter(JNIEnv* env, jstring v, jstring t){
     return env->NewObject(NativeAPI::PARAMETER, NativeAPI::constructorParameterString, v, t); 
 }
 
+void* NativeAPI::getPointerHookParameter(JNIEnv* env, jobject obj){
+    return (void*) env->CallLongMethod(obj, NativeAPI::getParameterLong);
+}
+
+int NativeAPI::getIntHookParameter(JNIEnv* env, jobject obj){
+    return (int) env->CallIntMethod(obj, NativeAPI::getParameterInt);
+}
+
+float NativeAPI::getFloatHookParameter(JNIEnv* env, jobject obj){
+    return (float) env->CallFloatMethod(obj, NativeAPI::getParameterFloat);
+}
+
+std::string NativeAPI::getStringHookParameter(JNIEnv* env, jobject obj){
+    return JavaClass::toString(env, (jstring) env->CallObjectMethod(obj, NativeAPI::getParameterString));
+}
+
 void NativeAPI::init(){
     JNIEnv* env;
 	ATTACH_JAVA(env, JNI_VERSION_1_2){
@@ -29,6 +50,11 @@ void NativeAPI::init(){
         NativeAPI::constructorParameterInt = env->GetMethodID(NativeAPI::PARAMETER, "<init>", "(ILjava/lang/String;)V");
         NativeAPI::constructorParameterFloat = env->GetMethodID(NativeAPI::PARAMETER, "<init>", "(FLjava/lang/String;)V");
         NativeAPI::constructorParameterString = env->GetMethodID(NativeAPI::PARAMETER, "<init>", "(Ljava/lang/String;Ljava/lang/String;)V");
+        
+        NativeAPI::getParameterLong = env->GetMethodID(NativeAPI::PARAMETER, "getPointer", "()J");
+        NativeAPI::getParameterInt = env->GetMethodID(NativeAPI::PARAMETER, "getInt", "()I");
+        NativeAPI::getParameterFloat = env->GetMethodID(NativeAPI::PARAMETER, "getFloat", "()F");
+        NativeAPI::getParameterString = env->GetMethodID(NativeAPI::PARAMETER, "getString", "()Ljava/lang/String;");
     }
 }
 

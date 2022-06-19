@@ -5,10 +5,17 @@ import com.core.api.mcpe.api.ChunkPos;
 import com.core.api.mcpe.api.Vec2;
 import com.core.api.mcpe.api.Vec3;
 import com.zhekasmirnov.apparatus.mcpe.NativeBlockSource;
-import com.zhekasmirnov.horizon.runtime.logger.Logger;
 import com.zhekasmirnov.innercore.api.nbt.NativeCompoundTag;
 
 public class Parameter {
+    public static Parameter getInt(int v){
+        return new Parameter(v, "int");
+    }
+
+    public static Parameter getBool(boolean v){
+        return new Parameter(v ? 1 : 0, "bool");
+    }
+
     String type; Object v;
     public Parameter(long v, String type){
         this.type = type;
@@ -27,9 +34,25 @@ public class Parameter {
         this.v = v;
     }
 
+    public long getPointer(){
+        return (long) v;
+    }
+
+    public int getInt(){
+        return (int) v;
+    }
+
+    public float getFloat(){
+        return (float) v;
+    }
+
+    public String getString(){
+        return (String) v;
+    }
+
     public Object getValue(){
         if(type.equals("bool"))
-            return ((Integer) v).intValue() == 1;
+            return ((int) v) == 1;
         else if(type.equals("BlockPos"))
             return new BlockPos((long) v);
         else if(type.equals("Vec2"))
