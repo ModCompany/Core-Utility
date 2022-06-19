@@ -12,8 +12,20 @@ public class Parameter {
         return new Parameter(v, "int");
     }
 
+    public static Parameter getFloat(float v){
+        return new Parameter(v, "float");
+    }
+
     public static Parameter getBool(boolean v){
         return new Parameter(v ? 1 : 0, "bool");
+    }
+
+    public static Parameter getPointer(long v){
+        return new Parameter(v, "ptr");
+    }
+
+    public static Parameter getString(String v){
+        return new Parameter(v, "stl::string");
     }
 
     String type; Object v;
