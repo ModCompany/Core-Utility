@@ -1,18 +1,15 @@
 package com.core.api.mcpe.client;
 
-public class Options {
+import com.core.api.engine.PointerClass;
+
+public class Options extends PointerClass{
     public static native void setRenderMobInfoState(boolean a);
     native private static int getUiProfilePointer(long pointer);
 
-    long pointer;
     public Options(long pointer){
-        this.pointer = pointer;
+        super(pointer);
     }
     public int getUiProfile(){
         return getUiProfilePointer(pointer);
-    }
-
-    public long get(){
-        return this.pointer;
     }
 }

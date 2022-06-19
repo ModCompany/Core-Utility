@@ -1,16 +1,12 @@
 package com.core.api.mcpe.level;
 
+import com.core.api.engine.PointerClass;
 import com.core.api.mcpe.api.Random;
 import com.zhekasmirnov.apparatus.mcpe.NativeBlockSource;
 
-public class LevelServer {
-    long pointer;
+public class LevelServer extends PointerClass{
     public LevelServer(long pointer){
-        this.pointer = pointer;
-    }
-
-    public long getPointer(){
-        return pointer;
+        super(pointer);
     }
 
     public Random getRandom(){

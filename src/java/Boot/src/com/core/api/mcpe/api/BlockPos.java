@@ -1,47 +1,44 @@
 package com.core.api.mcpe.api;
 
+import com.core.api.engine.PointerClass;
 import com.core.api.module.NativeAPI;
 
-public class BlockPos {
+public class BlockPos extends PointerClass {
     native public static long newClass(int x, int y, int z);
     native public static void setX(long ptr, int x);
     native public static void setY(long ptr, int x);
     native public static void setZ(long ptr, int x);
     native public static void free(long ptr);
 
-    long ptr;
     public BlockPos(int x, int y, int z){
-        this.ptr = newClass(x, y, z);
+        super(newClass(x, y, z));
     }
     public BlockPos(long ptr){
-        this.ptr = ptr;
-    }
-    public long getPointer(){
-        return ptr;
+        super(ptr);
     }
 
     public int getX(){
-        return NativeAPI.getXBlockPos(ptr);
+        return NativeAPI.getXBlockPos(pointer);
     }
 
     public int getY(){
-        return NativeAPI.getYBlockPos(ptr);
+        return NativeAPI.getYBlockPos(pointer);
     }
 
     public int getZ(){
-        return NativeAPI.getZBlockPos(ptr);
+        return NativeAPI.getZBlockPos(pointer);
     }
 
     public void setX(int x){
-        setX(ptr, x);
+        setX(pointer, x);
     }
     public void setY(int x){
-        setY(ptr, x);
+        setY(pointer, x);
     }
     public void setZ(int x){
-        setZ(ptr, x);
+        setZ(pointer, x);
     }
     public void free(){
-        free(ptr);
+        free(pointer);
     }
 }

@@ -1,5 +1,6 @@
 package com.core.api.module.types;
 
+import com.core.api.engine.PointerClass;
 import com.core.api.mcpe.api.BlockPos;
 import com.core.api.mcpe.api.ChunkPos;
 import com.core.api.mcpe.api.Vec2;
@@ -22,6 +23,10 @@ public class Parameter {
 
     public static Parameter getPointer(long v){
         return new Parameter(v, "ptr");
+    }
+
+    public static Parameter getPointer(PointerClass v){
+        return new Parameter(v.getPointer(), "ptr");
     }
 
     public static Parameter getString(String v){

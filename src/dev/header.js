@@ -2,7 +2,8 @@ let BlockPos = WRAP_JAVA("com.core.api.mcpe.api.BlockPos");
 let Parameter = WRAP_JAVA("com.core.api.module.types.Parameter");
 
 Callback.addCallback("ItemUse", function(coords, item){
-    if(item.id == 280){
+    alert(GlobalContext.getServerLevel().getRandom().nextInt(100));
+    /*if(item.id == 280){
         //let get = new InjectorJava(GlobalContext.getClientInstance().getOptions().get());
 
         let injector = new InjectorJava(GlobalContext.getClientInstance().getOptions().get());
@@ -18,5 +19,5 @@ Callback.addCallback("ItemUse", function(coords, item){
             Parameter.getBool(false)
         ]);
         injector.free();
-    }
+    }*/
 });

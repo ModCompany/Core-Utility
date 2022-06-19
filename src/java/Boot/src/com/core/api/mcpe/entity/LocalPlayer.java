@@ -1,12 +1,9 @@
 package com.core.api.mcpe.entity;
 
-public class LocalPlayer {
-    long pointer;
-    public LocalPlayer(long pointer){
-        this.pointer = pointer;
-    }
+import com.core.api.engine.PointerClass;
 
-    public long getPointer(){
-        return this.pointer;
+public class LocalPlayer extends PointerClass{
+    public LocalPlayer(long pointer){
+        super(pointer);
     }
 }

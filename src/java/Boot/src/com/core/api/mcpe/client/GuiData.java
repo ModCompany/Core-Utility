@@ -1,11 +1,11 @@
 package com.core.api.mcpe.client;
 
-public class GuiData {
+import com.core.api.engine.PointerClass;
 
-    private long pointer;
+public class GuiData extends PointerClass {
 
     public GuiData(long pointer){
-        this.pointer = pointer;
+        super(pointer);
     }
 
     public void setTitle(String title){

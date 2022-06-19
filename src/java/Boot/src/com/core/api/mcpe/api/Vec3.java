@@ -1,6 +1,8 @@
 package com.core.api.mcpe.api;
 
-public class Vec3 {
+import com.core.api.engine.PointerClass;
+
+public class Vec3 extends PointerClass {
     native public static long newClass(float x, float y, float z);
     native public static void setX(long ptr, float x);
     native public static void setY(long ptr, float x);
@@ -10,40 +12,36 @@ public class Vec3 {
     native public static float getZ(long ptr);
     native public static void free(long ptr);
 
-    long ptr;
     public Vec3(float x, float y, float z){
-        this.ptr = newClass(x, y, z);
+        super(newClass(x, y, z));
     }
     public Vec3(long ptr){
-        this.ptr = ptr;
-    }
-    public long getPointer(){
-        return ptr;
+        super(ptr);
     }
 
     public float getX(){
-        return getX(ptr);
+        return getX(pointer);
     }
     public float getY(){
-        return getY(ptr);
+        return getY(pointer);
     }
     public float getZ(){
-        return getZ(ptr);
+        return getZ(pointer);
     }
 
     public void setX(float x){
-        setX(ptr, x);
+        setX(pointer, x);
     }
 
     public void setY(float x){
-        setX(ptr, x);
+        setX(pointer, x);
     }
 
     public void setZ(float x){
-        setZ(ptr, x);
+        setZ(pointer, x);
     }
 
     public void free(){
-        free(ptr);
+        free(pointer);
     }
 }

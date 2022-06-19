@@ -1,12 +1,9 @@
 package com.core.api.mcpe.entity;
 
-public class ServerPlayer {
-    long pointer;
-    public ServerPlayer(long pointer){
-        this.pointer = pointer;
-    }
+import com.core.api.engine.PointerClass;
 
-    public long getPointer(){
-        return pointer;
+public class ServerPlayer extends PointerClass {
+    public ServerPlayer(long pointer){
+        super(pointer);
     }
 }

@@ -33,7 +33,7 @@ class Level {
     public:
     TickingArea* getTickingArea(mce::UUID const&) const;
     Player* getRandomPlayer();
-    Core::Random getRandom() const;
+    Random* getRandom() const;
     TickingAreasManager& getTickingAreasMgr();
     Dimension& getDimension(AutomaticID<Dimension, int>) const;
     Actor* fetchEntity(ActorUniqueID, bool) const;

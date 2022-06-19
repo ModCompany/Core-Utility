@@ -1,10 +1,11 @@
 package com.core.api.mcpe.api;
 
-public class Random {
+import com.core.api.engine.PointerClass;
+
+public class Random extends PointerClass{
     native private static int nextIntPointer(long pointer, int max);
-    long pointer;
     public Random(long pointer){
-        this.pointer = pointer;
+        super(pointer);
     }
     public int nextInt(int max){
         return nextIntPointer(pointer, max);

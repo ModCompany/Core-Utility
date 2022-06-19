@@ -1,7 +1,7 @@
 #include <innercore_callbacks.h>
 #include <java.h>
-#include <Core.h>
+#include <level/api/Random.h>
 
 export(jint,mcpe_api_Random_nextIntPointer,jlong pointer, jint max) {
-        return (jint) ((Core::Random*) pointer)->nextInt(max);
+        return (jint) ((Random*) pointer)->nextInt(max);
 }

@@ -1,15 +1,9 @@
 package com.core.api.mcpe.level;
 
-public class Dimension {
-    private long pointer;
+import com.core.api.engine.PointerClass;
 
+public class Dimension extends PointerClass{
     public Dimension(long ptr){
-        this.pointer = ptr;
+        super(ptr);
     }
-
-    public long getPointer(){
-        return this.pointer;
-    }
-
-    
 }

@@ -19,8 +19,7 @@
 
 
 export(jlong,mcpe_level_Level_getRandomPointer,jlong pointer) {
-    Core::Random random = ((Level*) pointer)->getRandom();
-    return (jlong) &random;
+    return (jlong) ((Level*) pointer)->getRandom();
 }
 
 
@@ -57,7 +56,7 @@ JS_EXPORT(GUI, setTitle, "V()", (JNIEnv* env){
 #include <innercore/block_registry.h>
 #include <innercore/id_conversion_map.h>
 JS_EXPORT(GUI, setDestroyBlock, "V(III)", (JNIEnv* env,int x,int y,int z){
-    GlobalContext::getMinecraftClient()->getLevelRenderer()->getLevelRendererPlayer()->addDestroyBlock({x,y,z},0.5f);
+    GlobalContext::getMinecraftClient()->getLevelRenderer()->getLevelRendererPlayer()->addDestroyBlock({(float)x,(float)y,(float)z},0.5f);
     GlobalContext::getMinecraftClient()->getLevelRenderer()->getLevelRendererPlayer()->updateDestroyProgress();
     GlobalContext::getMinecraftClient()->getLevelRenderer()->getLevelRendererPlayer()->addTerrainParticleEffect({x,y,z},*BlockRegistry::getBlockStateForIdData(IdConversion::staticToDynamic(5,IdConversion::Scope::BLOCK),1),{x,y,z},1,1,1);
 });
