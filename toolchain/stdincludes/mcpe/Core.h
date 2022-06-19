@@ -19,5 +19,8 @@ namespace Core {
         void _setSeed(unsigned int);
         Random();
     };
-
+    struct Path {
+        stl::string path;
+        Path(stl::string path) : path(path){}
+    };
 }

@@ -18,6 +18,8 @@ class MinecraftGraphics;
 class LevelRenderer;
 class LevelRendererPlayer;
 class Tessellator;
+class MinecraftGame;
+
 class Block;
 class Dimension;
 // This is interface, used by deprecated World module in Core Engine API to provide block sources

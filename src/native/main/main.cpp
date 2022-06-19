@@ -27,13 +27,15 @@ typedef int content_id_t;
 
 #include <core/JniHook.h>
 #include <Core.h>
-
-class PlayScreenModel {
+#include <client/MinecraftGame.h>
+class PlayScreenController {
 	public:
-
+	void repopulateLevels();
+	int _getLocalWorldsCount() const;
 };
 
-PlayScreenModel* model;
+PlayScreenController* model;
+LevelListCache* cache;
 class CoreUtility : public Module {
 public:
 	CoreUtility(const char* id): Module(id) {};
@@ -78,12 +80,22 @@ public:
 			return controller->call<void>(b,c,d);
 		},),HookManager::CALL |  HookManager::LISTENER | HookManager::REPLACE | HookManager::CONTROLLER | HookManager::RESULT);
 */
-		HookManager::addCallback(SYMBOL("mcpe","_ZN15PlayScreenModelC2ER14IMinecraftGameR15IClientInstanceR10SceneStackR12SceneFactoryNSt6__ndk110unique_ptrI19IScreenCapabilitiesNS8_14default_deleteISA_EEEE"), LAMBDA((HookManager::CallbackController* controller, PlayScreenModel* a,void* b,void* c,void* d,void* g),{
+		HookManager::addCallback(SYMBOL("mcpe","_ZN20PlayScreenControllerC2ENSt6__ndk110shared_ptrI15PlayScreenModelEE20PlayScreenDefaultTabRKNS0_12basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE"), LAMBDA((HookManager::CallbackController* controller, PlayScreenController* a,void* b,void* c),{
 
 			model = a;
-			Logger::debug("CoreTest","ModelScreen");
+
+		},),HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
+		HookManager::addCallback(SYMBOL("mcpe","_ZN14LevelListCache11_addToCacheERKN4Core4PathE"), LAMBDA((HookManager::CallbackController* controller, LevelListCache* self,Core::Path const& path),{
+
+			Logger::debug("CoreTest",path.path.data());
 			Logger::flush();
 		},),HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
+
+		HookManager::addCallback(SYMBOL("mcpe","_ZN14LevelListCacheC2ER18LevelStorageSourceONSt6__ndk18functionIFbvEEE"), LAMBDA((HookManager::CallbackController* controller, LevelListCache* self,void* path),{
+			cache = self;
+
+		},),HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
+
     }
 };
 
@@ -166,6 +178,12 @@ MAIN {
 #include <innercore/global_context.h>
 
 
+#include <client/ClientIntance.h>
 
 
+JS_MODULE_VERSION(PlayScreen,1);
 
+JS_EXPORT(PlayScreen, refresh,"V()", (JNIEnv* env){
+	cache->_addToCache(Core::Path("/storage/emulated/0/games/horizon/packs/Inner_Core_Test/worlds/test"));
+	model->repopulateLevels();
+});
