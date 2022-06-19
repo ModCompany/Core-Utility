@@ -7,4 +7,5 @@ api/CustomEntity.js
 api/Gui.js
 api/TickingAreasManager.js
 api/GlobalContext.js
+api/BlockUtils.js
 shared.js

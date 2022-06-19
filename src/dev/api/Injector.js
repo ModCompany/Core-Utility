@@ -2,12 +2,13 @@ let InjectorJava = WRAP_JAVA("com.core.api.Injector");
 
 function Injector(ptr){
     let injector = new InjectorJava(ptr);
-    this.call = function(symbol){
-        injector.call(symbol);
+    this.call = function(symbol, args){
+        injector.call(symbol, args);
         return this;
     }
     this.setArgsType = function(types){
         injector.setArgsType(types);
+        return this;
     }
     this.getInjector = function(){
         return injector;

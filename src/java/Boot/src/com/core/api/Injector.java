@@ -1,11 +1,16 @@
 package com.core.api;
 
+import com.core.api.engine.PointerClass;
+
 public class Injector {
     
     private long pointer;
 
     public Injector(long ptr){
         this.pointer = init_injector(ptr);
+    }
+    public Injector(PointerClass v){
+        this.pointer = init_injector(v.getPointer());
     }
 
     public Injector setArgsType(String[] types){
