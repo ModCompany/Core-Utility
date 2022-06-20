@@ -21,7 +21,7 @@
 
 #include <core/JavaClass.h>
 #include <core/VtableHelper.h>
-#include <core/OverridedName.h>
+#include <core/Overrided.h>
 
 typedef int content_id_t;
 
@@ -268,30 +268,30 @@ JS_EXPORT(TestItem, reg, "V(I)", (JNIEnv* env, int a){
 
 stl::string getName(Item* item,ItemStackBase const& stack){
 	int id = IdConversion::dynamicToStatic(stack.getId(), IdConversion::ITEM);
-	return OverridedName::getNameForId(id,stack.getAuxValue());
+	return OverridedItem::OverridedName::getNameForId(id,stack.getAuxValue());
 };
 
 int getAttackDamage(Item* item){
-	
-	return 40;
-}
+	short id = IdConversion::dynamicToStatic(item->getId(), IdConversion::ITEM);
+	return OverridedItem::OverridedArmor::getArmorForId(id);
+};
 
-export(void, Item_overrideName, int id,int data, jstring name){
+export(void, mcpe_item_Item_overrideName, int id,int data, jstring name){
 	Item* item = ItemRegistry::getItemById(IdConversion::staticToDynamic(id, IdConversion::ITEM));
 	if(item){
 		const char* a = JavaClass::release(env, name);
-        OverridedName::addNameForId(id,data, a);
+        OverridedItem::OverridedName::addNameForId(id,data, a);
 		VtablePatcher patcher(VtableCache::VtableType::ITEM,id,item);
 		patcher.patch("_ZTV4Item", "_ZNK4Item20buildDescriptionNameERK13ItemStackBase",(void*) &getName);
 	}
 }
 
-export(void, Item_overrideArmorValue, int id){
+export(void, mcpe_item_Item_overrideArmorValue, int id,float value){
 	Item* item = ItemRegistry::getItemById(IdConversion::staticToDynamic(id, IdConversion::ITEM));
 	if(item){
-		VtableHelper helper (item);
-		helper.resize();
-		helper.patch("_ZTV4Item", "_ZNK4Item13getArmorValueEv",(void*) &getAttackDamage);
+		OverridedItem::OverridedArmor::addArmorForId(id,value);
+		VtablePatcher patcher(VtableCache::VtableType::ITEM,id,item);
+		patcher.patch("_ZTV4Item", "_ZNK4Item13getArmorValueEv",(void*) &getAttackDamage);
 	}
 }
 
