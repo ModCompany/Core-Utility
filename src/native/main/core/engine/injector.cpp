@@ -30,11 +30,11 @@ T JniInjector::call(const char* symbol, std::vector<void*> args){
     int size = args.size();
     if(size == 0)
         return helper.call<T>(symbol);
-    else if(size == 1)
-        return helper.call<T, void*&>(symbol, args[0]);
-    else if(size == 2)
-        return helper.call<T, void*&, void*&>(symbol, args[0], args[1]);
-    else if(size == 3)
+    else if(size == 1){
+        return helper.call<T>(symbol, args[0]);
+    }else if(size == 2){
+        return helper.call<T>(symbol, args[0], args[1]);
+    }else if(size == 3)
         return helper.call<T, void*&, void*&, void*&>(symbol, args[0], args[1], args[2]);
     else if(size == 4)
         return helper.call<T, void*&, void*&, void*&, void*&>(symbol, args[0], args[1], args[2], args[3]);

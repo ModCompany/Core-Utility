@@ -33,6 +33,13 @@ class PlayScreenController {
 	void repopulateLevels();
 	int _getLocalWorldsCount() const;
 };
+struct BlockLegacy {
+	int getBlockItemId() const;
+};
+
+struct Block {
+	BlockLegacy* getBlockLegacy() const;
+};
 
 PlayScreenController* model;
 LevelListCache* cache;
@@ -67,11 +74,15 @@ public:
 			return controller->call<void>(a,b);
 		},),HookManager::CALL | HookManager::REPLACE | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
 
+		HookManager::addCallback(SYMBOL("mcpe","_ZN11BlockSource16setBlockNoUpdateERK8BlockPosRK5Block"), LAMBDA((HookManager::CallbackController* controller, void*, BlockPos& pos, Block& block),{
 
-		HookManager::addCallback(SYMBOL("mcpe","_ZNK9Dimension15getDefaultBiomeEv"), LAMBDA((HookManager::CallbackController* controller, void* a,void* b,void* c),{
-
-			return 31;
-		},),HookManager::CALL | HookManager::REPLACE | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
+				Logger::debug("TEST", "%i %i %i", pos.x, pos.y, pos.z);
+			BlockLegacy* legacy = block.getBlockLegacy();
+			if(legacy != nullptr)
+				Logger::debug("TEST", "%i", legacy->getBlockItemId());
+			else
+				Logger::debug("TEST", "BlockLegacy = nullptr");
+		},),HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
 		/*
 		HookManager::addCallback(SYMBOL("mcpe","_ZN20ActorDefinitionGroup29loadActorDefinitionIdentifierERKN4Json5ValueERK10SemVersionRNSt6__ndk112basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEE"), LAMBDA((HookManager::CallbackController* controller, Json::Value const& b,void* c,stl::string& d),{
 

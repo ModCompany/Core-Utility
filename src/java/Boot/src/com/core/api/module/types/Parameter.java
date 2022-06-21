@@ -9,6 +9,7 @@ import com.zhekasmirnov.apparatus.mcpe.NativeBlockSource;
 import com.zhekasmirnov.innercore.api.nbt.NativeCompoundTag;
 
 public class Parameter {
+
     public static Parameter getInt(int v){
         return new Parameter(v, "int");
     }

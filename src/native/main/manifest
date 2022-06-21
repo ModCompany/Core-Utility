@@ -1,6 +1,6 @@
 {
     "shared": {
-        "name": "sample_lib",
+        "name": "core_engine",
 		"include": [
 
 		]
