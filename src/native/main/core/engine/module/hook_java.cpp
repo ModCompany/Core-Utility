@@ -131,12 +131,6 @@ inline jobjectArray HookJava::getParameters(JNIEnv* env, std::vector<std::string
 #include <logger.h>
 #include <horizon/types.h>
 
-struct WopaArtema {
-    void* get(void* wopa) const{
-        return nullptr;
-    }
-};
-
 std::vector<void*> HookJava::getParameters(JNIEnv* env, std::vector<std::string> types, jobjectArray array){
     std::vector<void*> result;
     for (int i = 0;i < types.size();i++){
@@ -153,8 +147,7 @@ std::vector<void*> HookJava::getParameters(JNIEnv* env, std::vector<std::string>
             float v = NativeAPI::getFloatHookParameter(env, object);
             result.push_back((void*) &v);
         }else{
-            WopaArtema wopa;
-            result.push_back(wopa.get(NativeAPI::getPointerHookParameter(env, object)));
+            result.push_back(NativeAPI::getPointerHookParameter(env, object));
         }
     }
     return result;
