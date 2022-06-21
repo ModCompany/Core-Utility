@@ -50,7 +50,7 @@ class Item {
 	virtual void getEnchantValue() const;
 
 	bool isArmor() const;
-
+	short getId() const;
 	class Tier {
 		public:
 		int getUses() const;

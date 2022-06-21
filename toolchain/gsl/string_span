@@ -698,8 +698,7 @@ bool operator>=(const T& one, gsl::basic_string_span<CharT, Extent> other)
 #endif
 } // namespace gsl
 
-#if defined(_MSC_VER) && !defined(__clang__)
-#pragma warning(pop)
+
 
 #endif // _MSC_VER
 

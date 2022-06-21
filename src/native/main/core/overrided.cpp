@@ -10,12 +10,13 @@
 
 #include <innercore/common.h>
 
-#include <core/OverridedName.h>
+#include <core/Overrided.h>
 
-OverridedName::OverridedData::OverridedData(int id, std::string name){
+OverridedItem::OverridedName::OverridedData::OverridedData(int id, std::string name){
 	this->name[id] = name;
-}
-void OverridedName::addNameForId(int id, int data, std::string name){
+};
+
+void OverridedItem::OverridedName::addNameForId(int id, int data, std::string name){
 	if(OverridedName::isExist(id)){
 		auto it = items.find(id);
 		it->second.name[data] = name;
@@ -25,16 +26,31 @@ void OverridedName::addNameForId(int id, int data, std::string name){
 
 };
 
-stl::string OverridedName::getNameForId(int id, int data){
+stl::string OverridedItem::OverridedName::getNameForId(int id, int data){
 	auto it = items.find(id);
 	return to_stl(it->second.name[data]);
 	
 };
 
-bool OverridedName::isExist(int id){
+bool OverridedItem::OverridedName::isExist(int id){
 	if(items.count(id) > 0){
 		return true;
 	}else return false;
 };
 
-std::map<int, OverridedName::OverridedData> OverridedName::items;
+void OverridedItem::OverridedArmor::addArmorForId(int id,float value){
+	items[id] = value;
+};
+
+float OverridedItem::OverridedArmor::getArmorForId(int id){
+	return items[id];
+};
+
+bool OverridedItem::OverridedArmor::isExist(int id){
+	if(items.count(id) > 0){
+		return true;
+	}else return false;
+};
+
+std::map<int, OverridedItem::OverridedName::OverridedData> OverridedItem::OverridedName::items;
+std::map<int, float> OverridedItem::OverridedArmor::items;
