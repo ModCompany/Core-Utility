@@ -21,8 +21,8 @@ var window = new UI.Window({
     location:{
         x:0,
         y:0,
-        width:100,
-        height:100,
+        width:20,
+        height:20,
     },
     elements:{
         "govno":{type:"button",bitmap:"button",scale: 20,x:0,y:0,clicker:{
@@ -37,4 +37,9 @@ var window = new UI.Window({
 
 var container = new UI.Container();
 
-container.openAs(window);
+//container.openAs(window);
+
+Callback.addCallback("ItemUse",function(){
+    var a = WRAP_NATIVE("PlayScreen");
+    a.refresh();
+});

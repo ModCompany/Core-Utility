@@ -219,46 +219,13 @@ class ArrowItem : public Item {
 	};
 };
 
-class ArrowFactory : public LegacyItemRegistry::LegacyItemFactoryBase {
-	public:
-	ArrowFactory() : LegacyItemRegistry::LegacyItemFactoryBase() {};
-	virtual void registerItem();
-};
-
-class ArrowProvider : public LegacyItemRegistry::LegacyItemProviderBase {
-	public:
-	ArrowFactory* factory;
-	ArrowProvider(ArrowFactory* factory) : LegacyItemRegistry::LegacyItemProviderBase() {
-		this->factory = factory;
-	}
-
-	virtual LegacyItemRegistry::LegacyItemFactoryBase* getFactory(){
-		return this->factory;
-	}
-
-
-	virtual void setupVtable(void* a){
-		//LegacyItemRegistry::LegacyItemProviderBase::setupVtable(a);
-		void** table = (void**) a;
-		//table[getVtableOffset("_ZTV9ArrowItem", "_ZNK9ArrowItem13getMobEffectsEi")] = (void*) &ArrowProvider::getEffects;
-		//table[getVtableOffset("_ZTV14FishingRodItem", "_ZNK4Item6_useOnER9ItemStackR5Actor8BlockPoshfff")] = SYMBOL("mcpe", "_ZNK4Item6_useOnER9ItemStackR5Actor8BlockPoshfff");
-		//table[getVtableOffset("_ZTV14FishingRodItem", "_ZNK4Item20validFishInteractionEi")] = SYMBOL("mcpe", "_ZNK4Item20validFishInteractionEi");
-		//table[getVtableOffset("_ZTV14FishingRodItem", "_ZNK14FishingRodItem16requiresInteractEv")] = SYMBOL("mcpe", "_ZNK14FishingRodItem16requiresInteractEv");
-	}
-};
-
-void ArrowFactory::registerItem(){
-	if(id!=0){
-		ItemRegistry::registerCustomItem<ArrowItem>(new ArrowProvider(this),IdConversion::staticToDynamic(id, IdConversion::ITEM), nameId);
-	}
-}
 
 JS_MODULE_VERSION(TestItem, 1);
 JS_EXPORT(TestItem, reg, "V(I)", (JNIEnv* env, int a){
-	ShieldFactory* factory = new ShieldFactory();
+	/*ArrowFactory* factory = new ArrowFactory();
 	factory->initParameters(a, "test_shield", "arrow", "stick",0);
 
-	LegacyItemRegistry::registerItemFactory(factory);
+	LegacyItemRegistry::registerItemFactory(factory);*/
 });
 
 
