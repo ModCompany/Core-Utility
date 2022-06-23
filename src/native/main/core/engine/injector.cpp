@@ -40,7 +40,7 @@ void JniInjector::free(){
 
 template<typename T>
 T callInjector(JNIEnv* env, JniInjector* injector, jstring symbol, jobjectArray arr){
-    return injector->call<T>(JavaClass::toString(env,symbol).data(), HookJava::getParameters(env, injector->types, arr));
+    return injector->call<T>(JavaClass::toString(env,symbol).data(), HookJava::getParameters(env, injector->table, injector->types, arr));
 }
 
 export(jlong, Injector_init_1injector, jlong ptr){
@@ -68,7 +68,7 @@ export(jstring, Injector_getStringResult, jlong ptr,jstring a, jobjectArray arr)
 }
 
 export(void, Injector_call, jlong ptr, jstring a, jobjectArray arr){
-    callInjector<void>(env, (JniInjector*) ptr, a, arr);
+    callInjector<void*>(env, (JniInjector*) ptr, a, arr);
 }
 
 export(void, Injector_free, jlong ptr){

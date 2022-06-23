@@ -133,8 +133,9 @@ inline jobjectArray HookJava::getParameters(JNIEnv* env, std::vector<std::string
 class WopaArtema {
     
 };
-const ArgsBufferBuilder HookJava::getParameters(JNIEnv* env, std::vector<std::string> types, jobjectArray array){
+const ArgsBufferBuilder HookJava::getParameters(JNIEnv* env, void* self, std::vector<std::string> types, jobjectArray array){
     ArgsBufferBuilder builder;
+    builder.add<void*>(self);
     for (int i = 0;i < types.size();i++){
         jobject object = env->GetObjectArrayElement(array, i);
         std::string type = types[i];

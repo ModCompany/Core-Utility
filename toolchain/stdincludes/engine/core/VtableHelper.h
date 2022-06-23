@@ -58,6 +58,10 @@ class VtableHelper {
 				return callWithArgsBufferN<A, 128>(func, buff.data());
 			} else if (size <= 256) {
 				return callWithArgsBufferN<A, 256>(func, buff.data());
+			} else if (size <= 512) {
+				return callWithArgsBufferN<A, 512>(func, buff.data());
+			} else if (size <= 1024) {
+				return callWithArgsBufferN<A, 1024>(func, buff.data());
 			}
 			//auto a = (A(*)(void*,B&&...)) dlsym(handle, symbol);
 			//return a(this->original,std::forward<B>(args)...);

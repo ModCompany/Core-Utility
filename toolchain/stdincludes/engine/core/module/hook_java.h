@@ -42,7 +42,7 @@ class HookJava {
         }
 
         inline static jobjectArray getParameters(JNIEnv*, std::vector<std::string>, std::vector<jlong>, void*, void*, void*, void*, void*, void*, void*, void*, void*, void*);
-        static const ArgsBufferBuilder getParameters(JNIEnv*, std::vector<std::string>, jobjectArray);
+        static const ArgsBufferBuilder getParameters(JNIEnv*, void*, std::vector<std::string>, jobjectArray);
         
         static std::string getStringByObject(JNIEnv* env, jobject v){
             jstring t = (jstring) v;
