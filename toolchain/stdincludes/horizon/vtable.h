@@ -13,6 +13,8 @@ namespace VTableManager {
     bool __init_vtable(void*, std::string, std::string, const char*);
 
     void __override_virtual(void*, void*, const char*);
+
+    void* get_method(void*, int);
 };
 
 

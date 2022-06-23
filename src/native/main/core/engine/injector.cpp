@@ -24,9 +24,9 @@ void JniInjector::setArgsType(std::vector<std::string> types){
 }
 
 template<typename T>
-T JniInjector::call(const char* symbol, ArgsBufferBuilder args){
+T JniInjector::call(const char* symbol, ArgsBufferBuilder args, bool virt, const char* table){
     VtableHelper helper(this->table);
-    return helper.call<T>(symbol, args);
+    return helper.call<T>(symbol, args, virt, table);
 }
 
 void JniInjector::replace(const char* table, const char* symbol, const char* replace){
@@ -39,36 +39,36 @@ void JniInjector::free(){
 }
 
 template<typename T>
-T callInjector(JNIEnv* env, JniInjector* injector, jstring symbol, jobjectArray arr){
-    return injector->call<T>(JavaClass::toString(env,symbol).data(), HookJava::getParameters(env, injector->table, injector->types, arr));
+T callInjector(JNIEnv* env, JniInjector* injector, jstring symbol, jobjectArray arr, bool virt, jstring table){
+    return injector->call<T>(JavaClass::toString(env,symbol).data(), HookJava::getParameters(env, injector->table, injector->types, arr), virt, JavaClass::toString(env,table).data());
 }
 
 export(jlong, Injector_init_1injector, jlong ptr){
     return (jlong) new JniInjector(ptr);
 }
 
-export(jint, Injector_getIntResult, jlong ptr, jstring a, jobjectArray arr){
-    return (jint) callInjector<int>(env, (JniInjector*) ptr, a, arr);
+export(jint, Injector_getIntResult, jlong ptr, jstring a, jobjectArray arr, jboolean virt, jstring table){
+    return (jint) callInjector<int>(env, (JniInjector*) ptr, a, arr, (bool) (virt == JNI_TRUE), table);
 }
 
-export(jfloat, Injector_getFloatResult, jlong ptr,jstring a, jobjectArray arr){
-    return (jfloat) callInjector<float>(env, (JniInjector*) ptr, a, arr);
+export(jfloat, Injector_getFloatResult, jlong ptr,jstring a, jobjectArray arr, jboolean virt, jstring table){
+    return (jfloat) callInjector<float>(env, (JniInjector*) ptr, a, arr, (bool) (virt == JNI_TRUE), table);
 }
 
-export(jint, Injector_getBoolResult, jlong ptr,jstring a, jobjectArray arr){
-    return (jint) ((int) callInjector<bool>(env, (JniInjector*) ptr, a, arr));
+export(jint, Injector_getBoolResult, jlong ptr,jstring a, jobjectArray arr, jboolean virt, jstring table){
+    return (jint) ((int) callInjector<bool>(env, (JniInjector*) ptr, a, arr, (bool) (virt == JNI_TRUE), table));
 }
 
-export(jlong, Injector_getPointerResult, jlong ptr,jstring a, jobjectArray arr){
-    return (jlong) callInjector<void*>(env, (JniInjector*) ptr, a, arr);
+export(jlong, Injector_getPointerResult, jlong ptr,jstring a, jobjectArray arr, jboolean virt, jstring table){
+    return (jlong) callInjector<void*>(env, (JniInjector*) ptr, a, arr, (bool) (virt == JNI_TRUE), table);
 }
 
-export(jstring, Injector_getStringResult, jlong ptr,jstring a, jobjectArray arr){
-    return env->NewStringUTF(callInjector<stl::string&>(env, (JniInjector*) ptr, a, arr).c_str());
+export(jstring, Injector_getStringResult, jlong ptr,jstring a, jobjectArray arr, jboolean virt, jstring table){
+    return env->NewStringUTF(callInjector<stl::string&>(env, (JniInjector*) ptr, a, arr, (bool) (virt == JNI_TRUE), table).c_str());
 }
 
-export(void, Injector_call, jlong ptr, jstring a, jobjectArray arr){
-    callInjector<void*>(env, (JniInjector*) ptr, a, arr);
+export(void, Injector_call, jlong ptr, jstring a, jobjectArray arr, jboolean virt, jstring table){
+    callInjector<void*>(env, (JniInjector*) ptr, a, arr, (bool) (virt == JNI_TRUE), table);
 }
 
 export(void, Injector_free, jlong ptr){
