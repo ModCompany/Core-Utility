@@ -114,3 +114,19 @@ export(void, Injector_replace, jlong ptr,jstring table,jstring symbol,jstring re
     JniInjector* injector = (JniInjector*) ptr;
     injector->replace(JavaClass::toString(env,table).data(),JavaClass::toString(env,symbol).data(),JavaClass::toString(env,replace).data());
 }
+
+export(jlong, Injector_getOffset, jlong ptr){
+    return (jlong) ((JniInjector*) ptr)->getOffset();
+}
+
+export(jlong, Injector_getByOffset, jlong ptr,int offset){
+    return (jlong) ((JniInjector*) ptr)->getOffset(offset);
+}
+
+export(jboolean, DataOffset_getBool,jlong ptr){
+    return ((JniInjector::DataOffset*) ptr)->getBool();
+}
+
+export(jboolean, DataOffset_getBoolOffset,jlong ptr,int offset){
+    return ((JniInjector::DataOffset*) ptr)->getBool(offset);
+}

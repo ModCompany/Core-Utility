@@ -51,7 +51,8 @@ public class Injector {
     }
     
     public native static long init_injector(long ptr);
-
+    public native static long getOffset(long ptr);
+    public native static long getOffset(long ptr,int offset);
     public native static int getIntResult(long ptr,String symbol, Object[] args);
     public native static float getFloatResult(long ptr,String symbol, Object[] args);
     public native static int getBoolResult(long ptr,String symbol, Object[] args);

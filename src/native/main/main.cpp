@@ -30,6 +30,7 @@ typedef int content_id_t;
 #include <client/MinecraftGame.h>
 #include <core/effect_registry.h>
 #include <core/module/BlockLegacy.h>
+#include <core/world/FlatWorldOverrided.h>
 class PlayScreenController {
 	public:
 	void repopulateLevels();
@@ -46,7 +47,7 @@ struct Block {
 PlayScreenController* model;
 LevelListCache* cache;
 Core::FilePathManager* file_path_manager;
-
+FlatWorldOverrided* flat_world_overrided;
 
 class CoreUtility : public Module {
 public:
@@ -100,7 +101,6 @@ public:
 		},),HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
 		
 
-		
     }	
 };
 
@@ -134,7 +134,7 @@ class CoreGeneration : public Module {
 
 	virtual void initialize(){
 		
-		HookManager::addCallback(SYMBOL("mcpe", "_ZN25FlatWorldGeneratorOptions5_loadERKN4Json5ValueERK12BlockPalette"),LAMBDA((HookManager::CallbackController* controller,void* a,Json::Value const& json, void* settings),{
+		HookManager::addCallback(SYMBOL("mcpe", "_ZN25FlatWorldGeneratorOptionsC2ERKN4Json5ValueERK12BlockPalette"),LAMBDA((HookManager::CallbackController* controller,void* a,Json::Value const& json, void* settings),{
 			Json::Value root{};
 
 			root["biome_id"]          = 1;
@@ -142,24 +142,20 @@ class CoreGeneration : public Module {
 			Json::Value layers {};
 			Json::Value layer {};
 			layer["block_name"] = "minecraft:dirt";
-			layer["count"] = 80;
+			layer["count"] = 2;
 
 			layers.append(layer);
 			root["block_layers"] = layers;
 			root["encoding_version"]  = 5;
 
-			Json::Value structure {};
-			Json::Value str{};
-			Json::Value option{};
-			option["size"] = 32;
-			option["distance"] = 9;
-			option["structure_name"] = "village";
-			option["feature_name"] = "minecraft:village";			
-			structure.append(option);
-			root["structure_options"] = structure;
-
 			Logger::debug("FlatWorld", "%s", root.toStyledString().c_str());
 			Logger::flush();
+
+
+			Logger::flush();
+			if(flat_world_overrided->overrided){
+				return controller->call<bool>(a,flat_world_overrided->value,settings);
+			}
 			return controller->call<bool>(a,root,settings);
 
 		},),HookManager::CALL | HookManager::REPLACE | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
@@ -199,3 +195,10 @@ JS_EXPORT(PlayScreen, refresh,"V()", (JNIEnv* env){
 		}
 	  }
 });
+
+export(void,module_NativeAPI_setWorldGenerator, jstring json){
+	flat_world_overrided = new FlatWorldOverrided(JavaClass::toStlString(env,json).data());
+	Logger::debug("CoreTEst",flat_world_overrided->value.toStyledString().data());
+	Logger::flush();
+
+}
