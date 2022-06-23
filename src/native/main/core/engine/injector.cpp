@@ -1,7 +1,6 @@
 
 #include <java.h>
 #include <core/JniInjector.h>
-#include <core/VtableHelper.h>
 #include <core/JavaClass.h>
 #include <functional>
 #include <core/module/hook_java.h>
@@ -25,31 +24,9 @@ void JniInjector::setArgsType(std::vector<std::string> types){
 }
 
 template<typename T>
-T JniInjector::call(const char* symbol, std::vector<void*> args){
+T JniInjector::call(const char* symbol, ArgsBufferBuilder args){
     VtableHelper helper(this->table);
-    int size = args.size();
-    if(size == 0)
-        return helper.call<T>(symbol);
-    else if(size == 1){
-        return helper.call<T>(symbol, args[0]);
-    }else if(size == 2){
-        return helper.call<T>(symbol, args[0], args[1]);
-    }else if(size == 3)
-        return helper.call<T, void*&, void*&, void*&>(symbol, args[0], args[1], args[2]);
-    else if(size == 4)
-        return helper.call<T, void*&, void*&, void*&, void*&>(symbol, args[0], args[1], args[2], args[3]);
-    else if(size == 5)
-        return helper.call<T, void*&, void*&, void*&, void*&, void*&>(symbol, args[0], args[1], args[2], args[3], args[4]);
-    else if(size == 6)
-        return helper.call<T, void*&, void*&, void*&, void*&, void*&, void*&>(symbol, args[0], args[1], args[2], args[3], args[4], args[5]);
-    else if(size == 7)
-        return helper.call<T, void*&, void*&, void*&, void*&, void*&, void*&, void*&>(symbol, args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
-    else if(size == 8)
-        return helper.call<T, void*&, void*&, void*&, void*&, void*&, void*&, void*&, void*&>(symbol, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
-    else if(size == 9)
-        return helper.call<T, void*&, void*&, void*&, void*&, void*&, void*&, void*&, void*&, void*&>(symbol, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8]);
-    else if(size == 10)
-        return helper.call<T, void*&, void*&, void*&, void*&, void*&, void*&, void*&, void*&, void*&, void*&>(symbol, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9]);
+    return helper.call<T>(symbol, args);
 }
 
 void JniInjector::replace(const char* table, const char* symbol, const char* replace){

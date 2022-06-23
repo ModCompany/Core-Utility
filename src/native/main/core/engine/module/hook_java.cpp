@@ -130,27 +130,27 @@ inline jobjectArray HookJava::getParameters(JNIEnv* env, std::vector<std::string
 }
 #include <logger.h>
 #include <horizon/types.h>
-
-std::vector<void*> HookJava::getParameters(JNIEnv* env, std::vector<std::string> types, jobjectArray array){
-    std::vector<void*> result;
+class WopaArtema {
+    
+};
+const ArgsBufferBuilder HookJava::getParameters(JNIEnv* env, std::vector<std::string> types, jobjectArray array){
+    ArgsBufferBuilder builder;
     for (int i = 0;i < types.size();i++){
         jobject object = env->GetObjectArrayElement(array, i);
         std::string type = types[i];
         if(type == "int"){
-            result.push_back((void*) NativeAPI::getIntHookParameter(env, object));
+            builder.add<int>(NativeAPI::getIntHookParameter(env, object));
         }else if(type == "bool"){
-            result.push_back((void*) (NativeAPI::getIntHookParameter(env, object) == 1));
+            builder.add<int>(NativeAPI::getIntHookParameter(env, object) == 1);
         }else if(type == "stl::string"){
-            stl::string str = stl::string(NativeAPI::getStringHookParameter(env, object).c_str());
-            result.push_back((void*) &str);
+            builder.add<stl::string>(stl::string(NativeAPI::getStringHookParameter(env, object).c_str()));
         }else if(type == "float"){
-            float v = NativeAPI::getFloatHookParameter(env, object);
-            result.push_back((void*) &v);
+            builder.add<float>(NativeAPI::getFloatHookParameter(env, object));
         }else{
-            result.push_back(NativeAPI::getPointerHookParameter(env, object));
+            builder.add<void*>(NativeAPI::getPointerHookParameter(env, object));
         }
     }
-    return result;
+    return builder;
 }
 
 template<typename T>

@@ -5,6 +5,7 @@
 #include <stl/map>
 #include <functional>
 #include <typeinfo>
+#include <core/VtableHelper.h>
 
 #define stl std::__ndk1
 
@@ -19,7 +20,7 @@ class JniInjector {
         void replaceResult(const char*,const char*,void*);
         void setArgsType(std::vector<std::string> types);
         template<typename T>
-        T call(const char*, std::vector<void*>);
+        T call(const char*, ArgsBufferBuilder);
         void free();
         void replace(const char*,const char*,const char*);
 };

@@ -28,6 +28,7 @@ typedef int content_id_t;
 #include <core/JniHook.h>
 #include <Core.h>
 #include <client/MinecraftGame.h>
+#include <core/module/BlockLegacy.h>
 class PlayScreenController {
 	public:
 	void repopulateLevels();
@@ -64,6 +65,7 @@ public:
 		ToolTip::init();
 		NativeAPI::init();
 		HookJava::init();
+		BlockLegacyApi::init();
 
 		HookManager::addCallback(SYMBOL("mcpe","_ZN36EnchantingContainerManagerController13enchantResultEi"), LAMBDA((HookManager::CallbackController* controller, EnchantingContainerManagerController* a,int b),{
 
@@ -74,23 +76,6 @@ public:
 			return controller->call<void>(a,b);
 		},),HookManager::CALL | HookManager::REPLACE | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
 
-		HookManager::addCallback(SYMBOL("mcpe","_ZN11BlockSource16setBlockNoUpdateERK8BlockPosRK5Block"), LAMBDA((HookManager::CallbackController* controller, void*, BlockPos& pos, Block& block),{
-
-				Logger::debug("TEST", "%i %i %i", pos.x, pos.y, pos.z);
-			BlockLegacy* legacy = block.getBlockLegacy();
-			if(legacy != nullptr)
-				Logger::debug("TEST", "%i", legacy->getBlockItemId());
-			else
-				Logger::debug("TEST", "BlockLegacy = nullptr");
-		},),HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
-		/*
-		HookManager::addCallback(SYMBOL("mcpe","_ZN20ActorDefinitionGroup29loadActorDefinitionIdentifierERKN4Json5ValueERK10SemVersionRNSt6__ndk112basic_stringIcNS7_11char_traitsIcEENS7_9allocatorIcEEEE"), LAMBDA((HookManager::CallbackController* controller, Json::Value const& b,void* c,stl::string& d),{
-
-			//Logger::debug("Test",b.toStyledString().data());
-			//Logger::debug("Test",d.data());
-			return controller->call<void>(b,c,d);
-		},),HookManager::CALL |  HookManager::LISTENER | HookManager::REPLACE | HookManager::CONTROLLER | HookManager::RESULT);
-*/
 		HookManager::addCallback(SYMBOL("mcpe","_ZN20PlayScreenControllerC2ENSt6__ndk110shared_ptrI15PlayScreenModelEE20PlayScreenDefaultTabRKNS0_12basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE"), LAMBDA((HookManager::CallbackController* controller, PlayScreenController* a,void* b,void* c),{
 
 			model = a;

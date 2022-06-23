@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stl/string>
+#include <api/HashedString.h>
 #define stl std::__ndk1
 
 namespace mce {
@@ -16,6 +17,15 @@ namespace mce {
 
     class Color {
         public:
+    };
 
+    class MaterialPtr {
+        public:
+            HashedString& getHashKey() const;
+            HashedString& getHashedName() const;
+    };
+
+    class TexturePtr {
+        public:
     };
 }
