@@ -44,6 +44,9 @@ struct Block {
 
 PlayScreenController* model;
 LevelListCache* cache;
+Core::FilePathManager* file_path_manager;
+
+
 class CoreUtility : public Module {
 public:
 	CoreUtility(const char* id): Module(id) {};
@@ -89,10 +92,15 @@ public:
 
 		HookManager::addCallback(SYMBOL("mcpe","_ZN14LevelListCacheC2ER18LevelStorageSourceONSt6__ndk18functionIFbvEEE"), LAMBDA((HookManager::CallbackController* controller, LevelListCache* self,void* path),{
 			cache = self;
-
 		},),HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
 
-    }
+		HookManager::addCallback(SYMBOL("mcpe","_ZN4Core15FilePathManagerC2ERKNS_4PathEb"), LAMBDA((HookManager::CallbackController* controller, Core::FilePathManager* self,void* path,bool c),{
+			file_path_manager = self;
+		},),HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
+		
+
+		
+    }	
 };
 
 jclass CoreUtility::callback_class;
@@ -177,9 +185,16 @@ MAIN {
 #include <client/ClientIntance.h>
 
 
+
 JS_MODULE_VERSION(PlayScreen,1);
 
 JS_EXPORT(PlayScreen, refresh,"V()", (JNIEnv* env){
-	cache->_addToCache(Core::Path("/storage/emulated/0/games/horizon/packs/Inner_Core_Test/worlds/test"));
-	model->repopulateLevels();
+
+	  for(int x = 29; x!=-1; x--){
+		if(MobEffect::mMobEffects[x--]!=nullptr){
+			auto a = MobEffect::mMobEffects[x];
+			Logger::debug("CoreTest",a->getIconName().data());
+			Logger::flush();
+		}
+	  }
 });

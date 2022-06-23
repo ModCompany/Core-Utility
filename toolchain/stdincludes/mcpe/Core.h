@@ -23,4 +23,10 @@ namespace Core {
         stl::string path;
         Path(stl::string path) : path(path){}
     };
+
+    class FilePathManager {
+        public:
+
+    };
 }
+

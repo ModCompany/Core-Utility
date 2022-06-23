@@ -18,9 +18,8 @@ class Player;
 class ItemStackBase;
 class ItemStack;
 class ItemInstance;
-
 class Block;
-
+class MobEffectInstance;
 
 
 class Item {
@@ -78,7 +77,7 @@ class PickaxeItem : public DiggerItem {
 
 class ItemDescriptor {
     public:
-
+	ItemDescriptor(Item const&,int);
 };
 
 
@@ -114,4 +113,30 @@ public:
     FishingRodItem(stl::string const&, int);
 };//FishingRodItem
 
+class Potion {
+	public:
+	enum PotionType {
+		Regular,
+		Splash,
+		Lingering,
+	};
+	enum PotionVariant {
+
+	};
+	Potion(stl::string const&);
+	Potion(stl::string const&,stl::string const&);
+	Potion(stl::string const&,stl::string const&,MobEffectInstance const&,Potion::PotionVariant);
+};
+
+class PotionItem : public Item {
+	char filler[256];
+	public:
+	PotionItem(stl::string const&,int);
+	MobEffectInstance* getEffectId(ItemDescriptor const&) const;
+};
+
+class SplashPotionItem : public PotionItem {
+	public:
+	SplashPotionItem(stl::string const&,int);
+};
 #endif //HORIZON_ITEM_H
