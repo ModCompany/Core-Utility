@@ -141,7 +141,7 @@ const ArgsBufferBuilder HookJava::getParameters(JNIEnv* env, std::vector<std::st
         if(type == "int"){
             builder.add<int>(NativeAPI::getIntHookParameter(env, object));
         }else if(type == "bool"){
-            builder.add<int>(NativeAPI::getIntHookParameter(env, object) == 1);
+            builder.add<bool>(NativeAPI::getIntHookParameter(env, object) == 1);
         }else if(type == "stl::string"){
             builder.add<stl::string>(stl::string(NativeAPI::getStringHookParameter(env, object).c_str()));
         }else if(type == "float"){

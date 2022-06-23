@@ -28,6 +28,7 @@ typedef int content_id_t;
 #include <core/JniHook.h>
 #include <Core.h>
 #include <client/MinecraftGame.h>
+#include <core/effect_registry.h>
 #include <core/module/BlockLegacy.h>
 class PlayScreenController {
 	public:
