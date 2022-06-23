@@ -13,6 +13,8 @@ namespace VTableManager {
     bool __init_vtable(void*, std::string, std::string, const char*);
 
     void __override_virtual(void*, void*, const char*);
+
+    void* get_method(void*, int);
 };
 
 
@@ -114,7 +116,6 @@ inline int getVtableOffset(const char* vtableName, const char* functionName) {
     for (int i = 2; vtable[i]; i++) {
         if (vtable[i] == func) {
             i -= 2;
-            Logger::debug("InnerCoregetVtableOffset", "found offset %i of '%s' in '%s'", i, functionName, vtableName);
             return i;
         }
     }

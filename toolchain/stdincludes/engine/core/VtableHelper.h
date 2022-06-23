@@ -32,6 +32,9 @@ class ArgsBufferBuilder {
 		inline const unsigned char* data() const { return buffer.data(); }
 };
 
+
+
+
 class VtableHelper {
 	public:
 		void** vtable;
@@ -47,8 +50,13 @@ class VtableHelper {
 			auto* f = (A (*) (ArgsBuffer<N>)) func;
 			return f(*(ArgsBuffer<N>*) buffer);
 		}
-		template<typename A> A call(const char* symbol, ArgsBufferBuilder buff){
-			void* func = dlsym(dlopen("libminecraftpe.so", RTLD_LAZY), symbol);
+		template<typename A>
+		A call(const char* symbol, ArgsBufferBuilder buff, bool virt, const char* vtableName){
+			void* func;
+			if(virt)
+				func = (void*) VTableManager::get_method(this->original, getVtableOffset(vtableName, symbol));
+			else
+				func = dlsym(dlopen("libminecraftpe.so", RTLD_LAZY), symbol);
 			auto size = buff.size();
 			if (size <= 8) {
 				return callWithArgsBufferN<A, 8>(func, buff.data());
@@ -56,11 +64,9 @@ class VtableHelper {
 				return callWithArgsBufferN<A, 32>(func, buff.data());
 			} else if (size <= 128) {
 				return callWithArgsBufferN<A, 128>(func, buff.data());
-			} else if (size <= 256) {
-				return callWithArgsBufferN<A, 256>(func, buff.data());
 			} else if (size <= 512) {
 				return callWithArgsBufferN<A, 512>(func, buff.data());
-			} else if (size <= 1024) {
+			} else if (size <= 2048) {
 				return callWithArgsBufferN<A, 1024>(func, buff.data());
 			}
 			//auto a = (A(*)(void*,B&&...)) dlsym(handle, symbol);
