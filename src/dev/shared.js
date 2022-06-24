@@ -1,3 +1,4 @@
+let JsHelper = WRAP_JAVA("com.core.api.JsHelper");
 ModAPI.registerAPI("CoreUtility", {
     ToolTip: ToolTip,
     ConversionType: ConversionType,
@@ -8,7 +9,7 @@ ModAPI.registerAPI("CoreUtility", {
     Gui: Gui,
     TickingAreasManager: TickingAreasManager,
     GlobalContext: GlobalContext,
-    BlockPos: BlockPos,
+    BlockPos: JsHelper.getJs(BlockPos),
     BlockUtils: BlockUtils,
     requireGlobal(cmd){
         return eval(cmd);

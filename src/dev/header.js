@@ -12,10 +12,14 @@ Callback.addCallback("ItemUse", function(coords, item, state, is, player){
         ]);
         if(block_actor != 0){
             let tick = new Injector(block_actor).setArgsType(["ptr"]);
-            for(let i = 0;i < 500;i++)
+            let sum = 0;
+            for(let i = 0;i < 500;i++){
                 tick.call("_ZN10BlockActor4tickER11BlockSource", [
                     Parameter.getPointer(region)
                 ], "_ZTV10BlockActor", true);
+                sum += new Date().getTime();
+            }
+            Logger.Log("end: "+(new Date().getTime()-sum), "CORE");
             tick.free();
         }else
             Game.message("BlockActor nullptr")
