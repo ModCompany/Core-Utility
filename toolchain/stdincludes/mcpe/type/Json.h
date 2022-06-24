@@ -10,7 +10,6 @@
 #include <vector>
 
 
-
 namespace Json {
 
 class StaticString {
@@ -135,6 +134,7 @@ public:
     bits_.value_type_ = booleanValue;
     value_.bool_      = value;
   }
+
    Value(const Value &other);
    ~Value();
 

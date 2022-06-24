@@ -120,7 +120,7 @@
         "cfenv": "cpp",
         "cinttypes": "cpp",
         "__memory": "cpp",
-        "__functional_03": "cpp"
+        "cassert": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "java.project.referencedLibraries": [

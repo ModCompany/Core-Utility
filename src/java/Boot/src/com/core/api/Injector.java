@@ -51,13 +51,14 @@ public class Injector {
     }
     
     public native static long init_injector(long ptr);
-
-    public native static int getIntResult(long ptr,String symbol, Object[] args, boolean virt, String table);
-    public native static float getFloatResult(long ptr,String symbol, Object[] args, boolean virt, String table);
-    public native static int getBoolResult(long ptr,String symbol, Object[] args, boolean virt, String table);
-    public native static long getPointerResult(long ptr, String symbol, Object[] args, boolean virt, String table);
-    public native static String getStringResult(long ptr,String symbol, Object[] args, boolean virt, String table);
-    public native static void call(long ptr,String symbol, Object[] args, boolean virt, String table);
+    public native static long getOffset(long ptr);
+    public native static long getOffset(long ptr,int offset);
+    public native static int getIntResult(long ptr,String symbol, Object[] args);
+    public native static float getFloatResult(long ptr,String symbol, Object[] args);
+    public native static int getBoolResult(long ptr,String symbol, Object[] args);
+    public native static long getPointerResult(long ptr, String symbol, Object[] args);
+    public native static String getStringResult(long ptr,String symbol, Object[] args);
+    public native static void call(long ptr,String symbol, Object[] args);
 
     public native static void replace(long ptr,String table,String symbol,String replace);
     public native static void setArgsType(long ptr, String[] types);
