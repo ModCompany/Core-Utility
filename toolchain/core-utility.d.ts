@@ -91,6 +91,32 @@ declare interface INativeAPI {
 }
 declare var NativeAPI: INativeAPI;
 
+declare class PointerClass {
+    constructor(ptr: number);
+    getPointer(): number;
+}
+
+declare class IBlockPos extends PointerClass {
+    constructor(x: number, y: number, z: number);
+    getX(): number;
+    getY(): number;
+    getZ(): number;
+    setX(x: number): void;
+    setY(y: number): void;
+    setZ(z: number): void;
+    free(): void;
+}
+declare var BlockPos: IBlockPos;
+
+declare class IParameter {
+    static getInt(value: number): IParameter;
+    static getFloat(value: number): IParameter;
+    static getBool(value: Boolean): IParameter;
+    static getPointer(value: number): IParameter;
+    static getPointer(value: PointerClass): IParameter;
+}
+declare var Parameter: IParameter;
+
 declare class Injector {
     /**
      * create Injector
@@ -101,7 +127,7 @@ declare class Injector {
      * call c++ methot
      * @param symbol - methot symbol
      */
-    call(symbol): void;
+    call(symbol: string, args?: IParameter[], virtual?: Boolean): Injector;
     /**
      * return Java Injector
      */
@@ -110,27 +136,27 @@ declare class Injector {
      * call c++ methot, return result int
      * @param symbol - methot symbol
      */
-    getIntResult(symbol: string): number;
+    getIntResult(symbol: string, args?: IParameter[], virtual?: Boolean): number;
     /**
      * call c++ methot, return result float
      * @param symbol - methot symbol
      */
-    getFloatResult(symbol: string): number;
+    getFloatResult(symbol: string, args?: IParameter[], virtual?: Boolean): number;
     /**
      * call c++ methot, return result bool
      * @param symbol - methot symbol
      */
-    getBoolResult(symbol: string): Boolean;
+    getBoolResult(symbol: string, args?: IParameter[], virtual?: Boolean): Boolean;
     /**
      * call c++ methot, return result string
      * @param symbol - methot symbol
      */
-    getStringResult(symbol: string): string;
+    getStringResult(symbol: string, args?: IParameter[], virtual?: Boolean): string;
     /**
      * call c++ methot, return result pointer to class
      * @param symbol - methot symbol
      */
-    getPointerResult(symbol: string): number;
+    getPointerResult(symbol: string, args?: IParameter[], virtual?: Boolean): number;
 }
 
 declare interface IItemsUtil {
@@ -176,6 +202,40 @@ declare interface ITickingAreasManager {
 }
 declare var TickingAreasManager: ITickingAreasManager;
 
+declare class Random extends PointerClass {
+    nextInt(max: number): number;
+}
+declare class NativeLevel extends PointerClass {
+    getRandom(): Random;
+}
+declare class Dimension extends PointerClass {}
+declare class Player extends PointerClass {}
+declare class LocalPlayer extends Player {}
+declare class ServerPlayer extends Player {}
+declare class Options extends PointerClass {
+    getUiProfile(): number;
+}
+declare class GuiData extends PointerClass {
+    setTitle(text: string): void;
+    setSubtitle(text: string): void;
+    setActionMessage(text: string): void;
+}
+declare class ClientInstance extends PointerClass {
+    setCameraEntity(entity: number): void;
+    getOptions(): Options;
+    getGuiData(): GuiData;
+}
+
+declare interface IGlobalContext {
+    getClientInstance(): ClientInstance;
+    getServerLevel(): NativeLevel;
+    getLevel(): NativeLevel;
+    getLocalPlayer(): LocalPlayer;
+    getServerPlayer(): ServerPlayer;
+    getDimension: Dimension;
+}
+declare var GlobalContext: IGlobalContext;
+
 declare interface CoreUtilityAPI {
     NativeAPI: INativeAPI,
     ConversionType: IConversionType,
@@ -185,18 +245,11 @@ declare interface CoreUtilityAPI {
     EntityRegister: IEntityRegister,
     Gui: IGui,
     TickingAreasManager: ITickingAreasManager,
+    GlobalContext: IGlobalContext,
+    Parameter: IParameter,
+    IBlockPos: IBlockPos,
     requireGlobal(cmd: string): any;
 }
-declare class NativeLevel {}
-declare class Dimension {}
-declare class Player {}
-declare class LocalPlayer {}
-declare class ServerPlayer {}
-declare class ClientInstance {}
-
-declare namespace GlobalContext {
-}
-
 declare namespace ModAPI {
     export function addAPICallback(name: "CoreUtility", func: (api: CoreUtilityAPI) => void): void;
 }
