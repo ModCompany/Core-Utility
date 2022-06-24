@@ -82,7 +82,7 @@ class JniInjector {
         void replaceResult(const char*,const char*,void*);
         void setArgsType(std::vector<std::string> types);
         template<typename T>
-        T call(const char*, ArgsBufferBuilder);
+        T call(const char*, ArgsBufferBuilder, bool, const char*);
 
         DataOffset* getOffset(int offset){
             DataOffset _offset = DataOffset(this->table,offset);
