@@ -1,20 +1,27 @@
 let JsHelper = WRAP_JAVA("com.core.api.JsHelper");
+
 ModAPI.registerAPI("CoreUtility", {
     ToolTip: ToolTip,
     ConversionType: ConversionType,
     NativeAPI: NativeAPI,
-    Injector: Injector,
+    Injector: JsHelper.get(Injector, this),
     EntityRegister: EntityRegister,
     ItemsUtil: ItemsUtil,
     Gui: Gui,
     TickingAreasManager: TickingAreasManager,
     GlobalContext: GlobalContext,
-    BlockPos: JsHelper.getJs(BlockPos),
+    Parameter: JsHelper.get(Parameter, this),
+    BlockPos: JsHelper.get(BlockPos, this),
+    Vec3: JsHelper.get(Vec3, this),
+    Vec2: JsHelper.get(Vec2, this),
+    ChunkPos: JsHelper.get(ChunkPos, this),
     BlockUtils: BlockUtils,
     requireGlobal(cmd){
         return eval(cmd);
     }
 });
+
+
 
 var n = WRAP_NATIVE("PlayScreen");
 
