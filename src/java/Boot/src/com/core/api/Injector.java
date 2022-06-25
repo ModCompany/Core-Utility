@@ -1,5 +1,6 @@
 package com.core.api;
 
+import com.core.api.engine.DataOffset;
 import com.core.api.engine.PointerClass;
 
 public class Injector {
@@ -84,6 +85,13 @@ public class Injector {
 
     public void free(){
         free(this.pointer);
+    }
+
+    public DataOffset getOffset(){
+        return new DataOffset(getOffset(pointer));
+    }
+    public DataOffset getOffset(int offset){
+        return new DataOffset(getOffset(pointer, offset));
     }
     
     public native static long init_injector(long ptr);

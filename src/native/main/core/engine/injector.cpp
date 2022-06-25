@@ -123,10 +123,17 @@ export(jlong, Injector_getByOffset, jlong ptr,int offset){
     return (jlong) ((JniInjector*) ptr)->getOffset(offset);
 }
 
-export(jboolean, DataOffset_getBool,jlong ptr){
+export(jboolean, engine_DataOffset_getBool,jlong ptr){
     return ((JniInjector::DataOffset*) ptr)->getBool();
 }
 
-export(jboolean, DataOffset_getBoolOffset,jlong ptr,int offset){
+export(jboolean, engine_DataOffset_getBoolOffset,jlong ptr,int offset){
     return ((JniInjector::DataOffset*) ptr)->getBool(offset);
+}
+export(jint, engine_DataOffset_getInt,jlong ptr){
+    return ((JniInjector::DataOffset*) ptr)->getInt();
+}
+
+export(jint, engine_DataOffset_getIntOffset,jlong ptr,jint offset){
+    return ((JniInjector::DataOffset*) ptr)->getInt((int)offset);
 }
