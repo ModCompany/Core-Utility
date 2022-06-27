@@ -79,7 +79,7 @@ public class Injector {
         return getPointerResult(symbol, args, "", false);
     }
 
-    public void replace(String symbol,String table,String replace){
+    public void replace(String table,String symbol,String replace){
         replace(this.pointer, table, symbol, replace);
     }
 

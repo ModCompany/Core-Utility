@@ -9,7 +9,7 @@ let ToolTip = WRAP_JAVA("com.core.api.item.ToolTip");
 Callback.addCallback("ItemUse", function(coords, item){
     let pos = new BlockPos(coords.x, coords.y, coords.z);
     let offset = new Injector(pos).getOffset();
-    alert(offset.getInt(0)+" "+offset.getInt(1)+" "+offset.getInt(2));
+    alert(offset.getInt(0)+" "+offset.getInt(4)+" "+offset.getInt(8));
     pos.free();
     let ptr = ItemsUtil.getItemById(NativeAPI.staticToDynamic(item.id));
     alert(item.id+" "+ptr)
@@ -17,6 +17,6 @@ Callback.addCallback("ItemUse", function(coords, item){
     alert(injector.getIntResult("_ZNK4Item15getAttackDamageEv", [], "", true));
     injector.free();
 });
-ToolTip.addDynamicPre(VanillaItemID.netherite_sword, -1, function(item){
+/*ToolTip.addDynamicPre(VanillaItemID.netherite_sword, -1, function(item){
     return "data - "+item.data;
-});
+});*/

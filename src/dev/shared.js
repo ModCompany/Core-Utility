@@ -47,9 +47,5 @@ var container = new UI.Container();
 
 //container.openAs(window);
 
-Callback.addCallback("ItemUse",function(){
-    var a = WRAP_NATIVE("PlayScreen");
-    a.refresh();
-});
 
 //WRAP_JAVA("com.core.api.module.NativeAPI").setWorldGenerator("{'biome_id':1,'block_layers': [{'block_name': 'minecraft:dirt',count:80}],'encoding_version':5}");

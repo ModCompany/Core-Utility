@@ -185,16 +185,6 @@ MAIN {
 
 JS_MODULE_VERSION(PlayScreen,1);
 
-JS_EXPORT(PlayScreen, refresh,"V()", (JNIEnv* env){
-
-	  for(int x = 29; x!=-1; x--){
-		if(MobEffect::mMobEffects[x--]!=nullptr){
-			auto a = MobEffect::mMobEffects[x];
-			Logger::debug("CoreTest",a->getIconName().data());
-			Logger::flush();
-		}
-	  }
-});
 
 export(void,module_NativeAPI_setWorldGenerator, jstring json){
 	flat_world_overrided = new FlatWorldOverrided(JavaClass::toStlString(env,json).data());

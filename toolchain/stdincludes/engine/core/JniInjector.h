@@ -16,56 +16,53 @@ class JniInjector {
     class DataOffset {
         public:
 
-        void* table;
+        long table;
         int offset;
-        DataOffset(void* table,int offset) : table(table), offset(offset) {};
-        DataOffset(void* table) : table(table), offset(0) {};
-
-        void* getOffset(){
-            void** _offset = (void**) this->table + this->offset;
-            return (void*) _offset;
-        };
-
-        void* getOffset(int a){
-            void** _offset = (void**) this->table + a;
-            return (void*) _offset;
-        };
+        DataOffset(void* table,int offset) : table((long)table), offset(offset) {};
+        DataOffset(void* table) : table((long) table), offset(0) {};
+        DataOffset(long table,int offset) : table(table), offset(offset) {};
+        DataOffset(long table) : table(table), offset(0) {};
 
         stl::string& getString(){
-            stl::string* string = (stl::string*) this->getOffset();
-            return *string;
-
+            return *(stl::string*)((char*) table + this->offset); 
         };
+
+        stl::string& getString(int a){
+            return *(stl::string*)((char*) table + a); 
+        };
+
         int getInt(){
-            return (int) this->getOffset();
+            return *(int*)((void*) table + this->offset); 
         };
 
         int getInt(int a){
-            return (int) this->getOffset(a);
+            return *(int*)((char*) table + a); 
         };
 
         bool getBool(){
-            return (bool) this->getOffset();
+            return *(bool*)((char*) table + this->offset); 
         };
 
         bool getBool(int a){
-            return (bool) this->getOffset(a);
+            return *(bool*)((char*) table + a);
         };
 
         long getPointer(){
-            return (long) this->getOffset(); 
+            return *(long*)((char*) table + this->offset); 
         };
 
         long getPointer(int a){
-            return (long) this->getOffset(a); 
+            return *(long*)((char*) table + a); 
         };
 
         void* get(){
-            return (void*) this->getOffset();
+            long ptr = this->getPointer();
+            return (void*) ptr;
         };
 
         void* get(int a){
-            return (void*) this->getOffset(a);
+            long ptr = this->getPointer(a);
+            return (void*) ptr;
         };
 
         int setOffset(int offset){
@@ -88,7 +85,7 @@ class JniInjector {
             return new DataOffset(this->table,offset);
         };
 
-        DataOffset* getOffset(){
+        DataOffset* getOffset(){    
             return new DataOffset(this->table);
         };
 
