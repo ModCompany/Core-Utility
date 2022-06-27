@@ -1,5 +1,4 @@
 header.js
-api/ToolTip.js
 api/NativeAPI.js
 api/ItemsUtil.js
 api/CustomEntity.js

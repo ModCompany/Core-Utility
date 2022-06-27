@@ -85,13 +85,11 @@ class JniInjector {
         T call(const char*, ArgsBufferBuilder, bool, const char*);
 
         DataOffset* getOffset(int offset){
-            DataOffset _offset = DataOffset(this->table,offset);
-            return &_offset;
+            return new DataOffset(this->table,offset);
         };
 
         DataOffset* getOffset(){
-            DataOffset _offset = DataOffset(this->table);
-            return &_offset;
+            return new DataOffset(this->table);
         };
 
         DataOffset* getOffset(const char* a,const char* b){

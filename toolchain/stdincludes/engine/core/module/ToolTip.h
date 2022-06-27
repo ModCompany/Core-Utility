@@ -3,6 +3,7 @@
 struct ToolTip {
     public:
         int id, data;
+        static std::vector<int> items_dynamic;
         static std::map<ToolTip*, std::vector<std::string>> tool_tips;
         ToolTip(int id, int data): id(id), data(data){}
         
@@ -12,4 +13,5 @@ struct ToolTip {
         static void clearToolTips();
         static void clearToolTip(int id, int data);
         static void init();
+        static void setDynamicNameGeneration(int);
 };

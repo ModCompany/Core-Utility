@@ -1,7 +1,7 @@
 let JsHelper = WRAP_JAVA("com.core.api.JsHelper");
 
 ModAPI.registerAPI("CoreUtility", {
-    ToolTip: ToolTip,
+    ToolTip: JsHelper.get(ToolTip, this),
     ConversionType: ConversionType,
     NativeAPI: NativeAPI,
     Injector: JsHelper.get(Injector, this),

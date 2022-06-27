@@ -163,7 +163,7 @@ inline void registerHook(JNIEnv* env, Hook* hook, std::function<T(JNIEnv*,Hook*,
 	        ATTACH_JAVA(env, JNI_VERSION_1_6){
                 Controller ctr(controller);
                 jobjectArray array = HookJava::getParameters(env, hook->args, {(jlong) &ctr, (jlong) self}, a, b, c, d, e, k, l, f, t, p);
-                env->CallStaticObjectMethod(
+                env->CallStaticVoidMethod(
                     HookJava::HOOK, HookJava::ID, 
                     HookJava::getJavaString(env, hook->callback), 
                     HookJava::getJavaString(env, hook->returnType), 

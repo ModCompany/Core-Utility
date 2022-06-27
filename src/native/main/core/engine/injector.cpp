@@ -131,9 +131,9 @@ export(jboolean, engine_DataOffset_getBoolOffset,jlong ptr,int offset){
     return ((JniInjector::DataOffset*) ptr)->getBool(offset);
 }
 export(jint, engine_DataOffset_getInt,jlong ptr){
-    return ((JniInjector::DataOffset*) ptr)->getInt();
+    return (jint)((JniInjector::DataOffset*) ptr)->getInt();
 }
 
 export(jint, engine_DataOffset_getIntOffset,jlong ptr,jint offset){
-    return ((JniInjector::DataOffset*) ptr)->getInt((int)offset);
+    return (jint)((JniInjector::DataOffset*) ptr)->getInt((int)offset);
 }
