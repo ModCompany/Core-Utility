@@ -13,5 +13,4 @@ struct ToolTip {
         static void clearToolTips();
         static void clearToolTip(int id, int data);
         static void init();
-        static void setDynamicNameGeneration(int);
 };

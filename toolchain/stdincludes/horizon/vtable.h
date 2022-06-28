@@ -127,7 +127,6 @@ inline int getVtableOffset(void* a, const char* functionName) {
     void** vtable = *(void***) a;
     void* func = SYMBOL("mcpe", functionName);
     for (int i = 2; vtable[i]; i++) {
-        Logger::debug("TEST", (const char*) vtable[i]);
         if (vtable[i] == func) {
             i -= 2;
             return i;

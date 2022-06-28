@@ -17,6 +17,7 @@ class ItemStackBase;
 class Level {};
 struct Item {
     virtual void appendFormattedHovertext(ItemStackBase const& stack, Level& level, std::__ndk1::string& text, bool b) const;
+    virtual void* buildDescriptionName(ItemStackBase const& stack);
 };
 namespace ItemRegistry {
     Item* getItemById(int);
@@ -25,6 +26,9 @@ struct ItemStackBase {
     short getId() const;
     short getAuxValue() const;
     bool isBlock() const;
+    Item* getItem() const;
+    bool isNull() const;
+    int getDamageValue() const;
 };
 
 
@@ -61,7 +65,7 @@ void ToolTip::clearToolTip(int id, int data){
     delete tip;
 }
 namespace GlobalContext {
-    Level* getServerLevel();
+    Level* getLevel();
 };
 namespace ItemRegistry {
     Item* getItemById(int id);
@@ -94,40 +98,19 @@ const char* getString(JNIEnv* env, jstring value){
     env->ReleaseStringUTFChars(value, a);
     return b;
 }
+#include <logger.h>
 
-std::__ndk1::string buildName(Item* item,ItemStackBase const& base){
-    std::__ndk1::string result("");
-    Level* level = GlobalContext::getServerLevel();
-    VTABLE_FIND_OFFSET(Item_appendFormattedHovertext, _ZTV4Item, _ZNK4Item24appendFormattedHovertextERK13ItemStackBaseR5LevelRNSt6__ndk112basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEb);
-    VTABLE_CALL<void*>(Item_appendFormattedHovertext, item, base, *level, result, true);
-    return result;
-}
-
-void ToolTip::setDynamicNameGeneration(int id){
-    Item* item = ItemRegistry::getItemById(IdConversion::staticToDynamic(id, IdConversion::Scope::ITEM));
-    if(item != nullptr){
-        VtablePatcher patcher(VtableCache::VtableType::ITEM,id,item);
-		patcher.patch("_ZTV4Item", "_ZNK4Item20buildDescriptionNameERK13ItemStackBase",(void*) &buildName);
-    }
-}
 jclass ToolTipClass;
 jmethodID pre, post;
+
 void ToolTip::init(){
     JNIEnv* env;
 	ATTACH_JAVA(env, JNI_VERSION_1_6){
         ToolTipClass = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/item/ToolTip")));
-        pre = env->GetStaticMethodID(ToolTipClass, "generateBuildDynamicToolTipPre", "(J)Ljava/lang/String;");
-        post = env->GetStaticMethodID(ToolTipClass, "generateBuildDynamicToolTipPost", "(J)Ljava/lang/String;");
+        pre = env->GetStaticMethodID(ToolTipClass, "generateBuildDynamicToolTipPre", "(JI)Ljava/lang/String;");
+        post = env->GetStaticMethodID(ToolTipClass, "generateBuildDynamicToolTipPost", "(JI)Ljava/lang/String;");
     }
-    /*Callbacks::addCallback("postModItemsInit", CALLBACK([], (), {
-        for(int i = 0;i < items_dynamic.size();i++){
-            int id = items_dynamic[i];
-            //VtableHelper helper(ItemRegistry::getItemById(IdConversion::staticToDynamic(id, IdConversion::Scope::ITEM)));
-            //helper.patch("_ZTV4Item", "_ZNK4Item20buildDescriptionNameERK13ItemStackBase", (void*) &buildName);
-            VtablePatcher patcher(VtableCache::VtableType::ITEM,id,ItemRegistry::getItemById(IdConversion::staticToDynamic(id, IdConversion::Scope::ITEM)));
-		    patcher.patch("_ZTV4Item", "_ZNK4Item20buildDescriptionNameERK13ItemStackBase",(void*) &buildName);
-        }
-    }));*/
+    
     HookManager::addCallback(
         SYMBOL("mcpe", "_ZNK4Item24appendFormattedHovertextERK13ItemStackBaseR5LevelRNSt6__ndk112basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEb"), 
         LAMBDA((Item* item, ItemStackBase const& stack, Level& level, std::__ndk1::string& text, bool b), {
@@ -135,7 +118,7 @@ void ToolTip::init(){
             ATTACH_JAVA(env, JNI_VERSION_1_6){
                 jstring str = (jstring) env->CallStaticObjectMethod(
                     ToolTipClass, pre, 
-                    (jlong) &stack
+                    (jlong) &stack, (jint) stack.getDamageValue()
                 );
                 text += "\n"+std::__ndk1::string(getString(env, str));
                 ToolTip* key_tip = new ToolTip(IdConversion::dynamicToStatic(stack.getId(), IdConversion::Scope::ITEM), stack.getAuxValue());
@@ -144,7 +127,7 @@ void ToolTip::init(){
                     text += "\n"+std::__ndk1::string(tips[i].c_str());
                 str = (jstring) env->CallStaticObjectMethod(
                     ToolTipClass, post, 
-                    (jlong) &stack
+                    (jlong) &stack, (jint) stack.getDamageValue()
                 );
                 text += "\n"+std::__ndk1::string(getString(env, str));
                 delete key_tip;
@@ -155,9 +138,6 @@ void ToolTip::init(){
 
 export(void,item_ToolTip_addToolTip, jint id, jint data, jstring name) {
     ToolTip::addToolTip((int) id, (int) data, toString(env, name));
-}
-export(void,item_ToolTip_setDynamicNameGeneration, jint id) {
-    ToolTip::setDynamicNameGeneration((int) id);
 }
 export(void,item_ToolTip_clearToolTips) {
     ToolTip::clearToolTips();

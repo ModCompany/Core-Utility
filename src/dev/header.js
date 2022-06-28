@@ -12,11 +12,8 @@ Callback.addCallback("ItemUse", function(coords, item){
     alert(offset.getInt(0)+" "+offset.getInt(4)+" "+offset.getInt(8));
     pos.free();
     let ptr = ItemsUtil.getItemById(NativeAPI.staticToDynamic(item.id));
-    alert(item.id+" "+ptr)
+    alert(item.id+" "+ptr);
     let injector = new Injector(ptr);
-    alert(injector.getIntResult("_ZNK4Item15getAttackDamageEv", [], "", true));
+    //alert(injector.getIntResult("_ZNK4Item15getAttackDamageEv", [], "", true));
     injector.free();
 });
-/*ToolTip.addDynamicPre(VanillaItemID.netherite_sword, -1, function(item){
-    return "data - "+item.data;
-});*/
