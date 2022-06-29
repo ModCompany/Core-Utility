@@ -9,6 +9,18 @@ declare interface IToolTip {
      */
     addToolTip(id: number, data: number, name: string): void;
     /**
+     * add dynamic tool tip
+     * @param id - id item
+     * @param data - data item
+     */
+    addDynamicPre(id: number, data: number, func: (item: ItemInstance) => void): void;
+    /**
+     * add dynamic tool tip
+     * @param id - id item
+     * @param data - data item
+     */
+    addDynamicPost(id: number, data: number, func: (item: ItemInstance) => void): void;
+    /**
      * add tool tips item
      * @param id - id item
      * @param data - data item
@@ -69,21 +81,6 @@ declare interface INativeAPI {
      */  
     getActorID(ptr: number): number;
     /**
-     * returns x from BlockPos
-     * @param ptr - pointer BlockPos
-     */
-    getXBlockPos(ptr: number): number;
-    /**
-     * returns y from BlockPos
-     * @param ptr - pointer BlockPos
-     */
-    getYBlockPos(ptr: number): number;
-    /**
-     * returns z from BlockPos
-     * @param ptr - pointer BlockPos
-     */
-    getZBlockPos(ptr: number): number;
-    /**
      * returns Actor to unique identifier
      * @param ent - unique identifier
      */
@@ -116,6 +113,15 @@ declare class IParameter {
     static getPointer(value: PointerClass): IParameter;
 }
 declare var Parameter: IParameter;
+declare class Offset {
+    getInt(offset?: number): number;
+    getPointer(offset?: number): number;
+    getBool(offset?: number): number;
+    getString(offset?: number): number;
+    getFloat(offset?: number): number;
+    setOffset(offset: number): void;
+    free(): void;
+}
 
 declare class Injector {
     /**
@@ -123,11 +129,20 @@ declare class Injector {
      * @param ptr - pointer c++ class
      */
     constructor(ptr: number);
+    constructor(ptr: PointerClass);
+    /**
+     * get offset
+     */
+    getOffset(): Offset;
+    /**
+     * get offset
+     */
+    getOffset(offset: number): Offset;
     /**
      * call c++ methot
      * @param symbol - methot symbol
      */
-    call(symbol: string, args?: IParameter[], virtual?: Boolean): Injector;
+    call(symbol: string, args?: IParameter[], table?: string, virtual?: Boolean): Injector;
     /**
      * return Java Injector
      */
@@ -136,27 +151,38 @@ declare class Injector {
      * call c++ methot, return result int
      * @param symbol - methot symbol
      */
-    getIntResult(symbol: string, args?: IParameter[], virtual?: Boolean): number;
+    getIntResult(symbol: string, args?: IParameter[], table?: string, virtual?: Boolean): number;
     /**
      * call c++ methot, return result float
      * @param symbol - methot symbol
      */
-    getFloatResult(symbol: string, args?: IParameter[], virtual?: Boolean): number;
+    getFloatResult(symbol: string, args?: IParameter[], table?: string, virtual?: Boolean): number;
     /**
      * call c++ methot, return result bool
      * @param symbol - methot symbol
      */
-    getBoolResult(symbol: string, args?: IParameter[], virtual?: Boolean): Boolean;
+    getBoolResult(symbol: string, args?: IParameter[], table?: string, virtual?: Boolean): Boolean;
     /**
      * call c++ methot, return result string
      * @param symbol - methot symbol
      */
-    getStringResult(symbol: string, args?: IParameter[], virtual?: Boolean): string;
+    getStringResult(symbol: string, args?: IParameter[], table?: string, virtual?: Boolean): string;
     /**
      * call c++ methot, return result pointer to class
      * @param symbol - methot symbol
      */
-    getPointerResult(symbol: string, args?: IParameter[], virtual?: Boolean): number;
+    getPointerResult(symbol: string, args?: IParameter[], table?: string, virtual?: Boolean): number;
+    /**
+     * replaces a method in a class with another one
+     * @param table - table methot
+     * @param methot = replacement method
+     * @param symbol - method to be replaced
+     */
+    replace(table: string, methot: string, symbol: string): void;
+    /**
+     * clears from memory
+     */
+    free(): void;
 }
 
 declare interface IItemsUtil {
@@ -173,7 +199,7 @@ declare interface IItemsUtil {
      * @param name - new name item
      */
     overrideName(id: number, data: number, name: string);
-    overrideArmorValue(id: number, data: number, value: number)
+    overrideArmorValue(id: number, value: number)
 }
 declare var ItemsUtil: IItemsUtil;
 
@@ -188,6 +214,12 @@ declare interface IEntityRegister {
 declare var EntityRegister: IEntityRegister;
 
 declare interface IGui {
+    /**
+     * plays block breaking animation
+     * @param x - x coords
+     * @param y - y coords
+     * @param z - z coords
+     */
     animationDestroy(x: number, y: number, z: number);
 }
 declare var Gui: IGui;
@@ -213,6 +245,9 @@ declare class Player extends PointerClass {}
 declare class LocalPlayer extends Player {}
 declare class ServerPlayer extends Player {}
 declare class Options extends PointerClass {
+    /**
+     * returns the interface type
+     */
     getUiProfile(): number;
 }
 declare class GuiData extends PointerClass {
@@ -235,8 +270,17 @@ declare interface IGlobalContext {
     getDimension: Dimension;
 }
 declare var GlobalContext: IGlobalContext;
+declare class IBlockLegacy extends PointerClass {
+
+}
+declare interface IBlockUtils {
+    getBlockById(id: number): IBlockLegacy;
+    getBlockStateForIdData(id: number, data: number): PointerClass;
+}
+declare var BlockUtils: IBlockUtils;
 
 declare interface CoreUtilityAPI {
+    BlockUtils: IBlockUtils,
     NativeAPI: INativeAPI,
     ConversionType: IConversionType,
     ToolTip: IToolTip,
@@ -250,6 +294,7 @@ declare interface CoreUtilityAPI {
     IBlockPos: IBlockPos,
     requireGlobal(cmd: string): any;
 }
+
 declare namespace ModAPI {
     export function addAPICallback(name: "CoreUtility", func: (api: CoreUtilityAPI) => void): void;
 }

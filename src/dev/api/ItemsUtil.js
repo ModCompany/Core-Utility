@@ -7,7 +7,7 @@ let ItemsUtil = {
     overrideName:function(id,data, name){
         this.api.overrideName(id,data,name);
     },
-    overrideArmorValue:function(id){
-        this.api.overrideArmorValue(id);
+    overrideArmorValue:function(id, value){
+        this.api.overrideArmorValue(id, value);
     }
 };
