@@ -16,4 +16,4 @@ Callback.addCallback("ItemUse", function(coords, item){
     let injector = new Injector(ptr);
     //alert(injector.getIntResult("_ZNK4Item15getAttackDamageEv", [], "", true));
     injector.free();
-});/*
+});*/
