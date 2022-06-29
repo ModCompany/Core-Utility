@@ -93,7 +93,8 @@ declare class PointerClass {
     getPointer(): number;
 }
 
-declare class IBlockPos extends PointerClass {
+declare class BlockPos extends PointerClass {
+    constructor(ptr: number);
     constructor(x: number, y: number, z: number);
     getX(): number;
     getY(): number;
@@ -103,16 +104,47 @@ declare class IBlockPos extends PointerClass {
     setZ(z: number): void;
     free(): void;
 }
-declare var BlockPos: IBlockPos;
 
-declare class IParameter {
-    static getInt(value: number): IParameter;
-    static getFloat(value: number): IParameter;
-    static getBool(value: Boolean): IParameter;
-    static getPointer(value: number): IParameter;
-    static getPointer(value: PointerClass): IParameter;
+declare class Vec3 extends PointerClass {
+    constructor(ptr: number);
+    constructor(x: number, y: number, z: number);
+    getX(): number;
+    getY(): number;
+    getZ(): number;
+    setX(x: number): void;
+    setY(y: number): void;
+    setZ(z: number): void;
+    free(): void;
 }
-declare var Parameter: IParameter;
+
+declare class Vec2 extends PointerClass {
+    constructor(ptr: number);
+    constructor(x: number, y: number, z: number);
+    getX(): number;
+    getY(): number;
+    setX(x: number): void;
+    setY(y: number): void;
+    free(): void;
+}
+
+declare class ChuckPos extends PointerClass {
+    constructor(ptr: number);
+    constructor(x: number, z: number);
+    getX(): number;
+    getZ(): number;
+    setX(x: number): void;
+    setZ(z: number): void;
+    free(): void;
+}
+
+declare class Parameter {
+    static getInt(value: number): Parameter;
+    static getFloat(value: number): Parameter;
+    static getBool(value: Boolean): Parameter;
+    static getPointer(value: number): Parameter;
+    static getPointer(value: PointerClass): Parameter;
+}
+
 declare class Offset {
     getInt(offset?: number): number;
     getPointer(offset?: number): number;
@@ -142,7 +174,7 @@ declare class Injector {
      * call c++ methot
      * @param symbol - methot symbol
      */
-    call(symbol: string, args?: IParameter[], table?: string, virtual?: Boolean): Injector;
+    call(symbol: string, args?: Parameter[], table?: string, virtual?: Boolean): Injector;
     /**
      * return Java Injector
      */
@@ -151,27 +183,27 @@ declare class Injector {
      * call c++ methot, return result int
      * @param symbol - methot symbol
      */
-    getIntResult(symbol: string, args?: IParameter[], table?: string, virtual?: Boolean): number;
+    getIntResult(symbol: string, args?: Parameter[], table?: string, virtual?: Boolean): number;
     /**
      * call c++ methot, return result float
      * @param symbol - methot symbol
      */
-    getFloatResult(symbol: string, args?: IParameter[], table?: string, virtual?: Boolean): number;
+    getFloatResult(symbol: string, args?: Parameter[], table?: string, virtual?: Boolean): number;
     /**
      * call c++ methot, return result bool
      * @param symbol - methot symbol
      */
-    getBoolResult(symbol: string, args?: IParameter[], table?: string, virtual?: Boolean): Boolean;
+    getBoolResult(symbol: string, args?: Parameter[], table?: string, virtual?: Boolean): Boolean;
     /**
      * call c++ methot, return result string
      * @param symbol - methot symbol
      */
-    getStringResult(symbol: string, args?: IParameter[], table?: string, virtual?: Boolean): string;
+    getStringResult(symbol: string, args?: Parameter[], table?: string, virtual?: Boolean): string;
     /**
      * call c++ methot, return result pointer to class
      * @param symbol - methot symbol
      */
-    getPointerResult(symbol: string, args?: IParameter[], table?: string, virtual?: Boolean): number;
+    getPointerResult(symbol: string, args?: Parameter[], table?: string, virtual?: Boolean): number;
     /**
      * replaces a method in a class with another one
      * @param table - table methot
@@ -290,8 +322,11 @@ declare interface CoreUtilityAPI {
     Gui: IGui,
     TickingAreasManager: ITickingAreasManager,
     GlobalContext: IGlobalContext,
-    Parameter: IParameter,
-    IBlockPos: IBlockPos,
+    Parameter: Parameter,
+    BlockPos: BlockPos,
+    Vec3: Vec3,
+    Vec2: Vec2,
+    ChuckPos: ChuckPos,
     requireGlobal(cmd: string): any;
 }
 
