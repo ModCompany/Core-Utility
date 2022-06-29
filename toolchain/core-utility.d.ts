@@ -127,7 +127,7 @@ declare class Vec2 extends PointerClass {
     free(): void;
 }
 
-declare class ChuckPos extends PointerClass {
+declare class ChunkPos extends PointerClass {
     constructor(ptr: number);
     constructor(x: number, z: number);
     getX(): number;
@@ -222,7 +222,7 @@ declare interface IItemsUtil {
      * return pointer Item
      * @param id - item id
      */
-    getItemById(id: number): number;
+    getItemById(id: number): PointerClass;
 
     /**
      * replaces the name of an item
@@ -326,7 +326,7 @@ declare interface CoreUtilityAPI {
     BlockPos: BlockPos,
     Vec3: Vec3,
     Vec2: Vec2,
-    ChuckPos: ChuckPos,
+    ChuckPos: ChunkPos,
     requireGlobal(cmd: string): any;
 }
 
