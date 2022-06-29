@@ -1,4 +1,4 @@
-let BlockPos = WRAP_JAVA("com.core.api.mcpe.api.BlockPos");
+/*let BlockPos = WRAP_JAVA("com.core.api.mcpe.api.BlockPos");
 let Vec2 = WRAP_JAVA("com.core.api.mcpe.api.Vec2");
 let Vec3 = WRAP_JAVA("com.core.api.mcpe.api.Vec3");
 let ChunkPos = WRAP_JAVA("com.core.api.mcpe.api.ChunkPos");
@@ -16,4 +16,4 @@ Callback.addCallback("ItemUse", function(coords, item){
     let injector = new Injector(ptr);
     //alert(injector.getIntResult("_ZNK4Item15getAttackDamageEv", [], "", true));
     injector.free();
-});
+});/*
