@@ -8,6 +8,13 @@
 #include <symbol.h>
 #include <ui/Tessellator.h>
 #include <logger.h>
+#include <core/JavaClass.h>
+#include <core/VtableHelper.h>
+
+export(void, mcpe_block_BlockLegacy_addState, jlong pointer, jstring name, jint min, jint max, jint v) {
+
+    //((BlockLegacy*) pointer)->addState(*state, (int) v);
+}
 
 void BlockLegacyApi::init() {
     

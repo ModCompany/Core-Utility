@@ -1,5 +1,11 @@
 let JsHelper = WRAP_JAVA("com.core.api.JsHelper");
 
+BlockUtils.getBlockById(1).addState("test", 0, 3);
+BlockUtils.getBlockById(5).addState("test", 0, 3, 2);
+Callback.addCallback("ItemUse", function(coords, item, block, is, player){
+    Debug.m(BlockSource.getDefaultForActor(player).getBlock(coords.x, coords.y, coords.z));
+});
+
 ModAPI.registerAPI("CoreUtility", {
     ToolTip: JsHelper.get(ToolTip, this),
     ConversionType: ConversionType,

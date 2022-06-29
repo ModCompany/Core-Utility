@@ -54,7 +54,7 @@ class VtableHelper {
 		A call(const char* symbol, ArgsBufferBuilder buff, bool virt, const char* vtableName){
 			void* func;
 			if(virt)
-				func = VTableManager::get_method(this->original, getVtableOffset(this->original, symbol));
+				func = VTableManager::get_method(this->original, getVtableOffset(vtableName, symbol));
 			else
 				func = dlsym(dlopen("libminecraftpe.so", RTLD_LAZY), symbol);
 			auto size = buff.size();

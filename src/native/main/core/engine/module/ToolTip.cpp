@@ -120,16 +120,23 @@ void ToolTip::init(){
                     ToolTipClass, pre, 
                     (jlong) &stack, (jint) stack.getDamageValue()
                 );
-                text += "\n"+std::__ndk1::string(getString(env, str));
+                const char* res = getString(env, str);
+                if(strcmp(res, ""))
+                    text += "\n"+std::__ndk1::string(res);
+
                 ToolTip* key_tip = new ToolTip(IdConversion::dynamicToStatic(stack.getId(), IdConversion::Scope::ITEM), stack.getAuxValue());
                 std::vector<std::string> tips = ToolTip::get(key_tip);
                 for(int i = 0;i < tips.size();i++)
                     text += "\n"+std::__ndk1::string(tips[i].c_str());
+
                 str = (jstring) env->CallStaticObjectMethod(
                     ToolTipClass, post, 
                     (jlong) &stack, (jint) stack.getDamageValue()
                 );
-                text += "\n"+std::__ndk1::string(getString(env, str));
+                res = getString(env, str);
+                if(strcmp(res, ""))
+                    text += "\n"+ std::__ndk1::string(res);
+
                 delete key_tip;
             }
         }, ), HookManager::RETURN | HookManager::LISTENER

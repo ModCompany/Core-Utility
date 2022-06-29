@@ -1,12 +1,8 @@
 package com.core.api.item;
 
 import java.util.HashMap;
-import java.util.function.Consumer;
-import java.util.ArrayList;
 
-import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
-import org.mozilla.javascript.Scriptable;
 
 import com.core.api.JsHelper;
 import com.zhekasmirnov.horizon.runtime.logger.Logger;
