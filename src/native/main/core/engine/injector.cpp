@@ -137,3 +137,19 @@ export(jint, engine_DataOffset_getInt,jlong ptr){
 export(jint, engine_DataOffset_getIntOffset,jlong ptr,jint offset){
     return (jint)((JniInjector::DataOffset*) ptr)->getInt((int)offset);
 }
+
+export(jstring, engine_DataOffset_getString,jlong ptr){
+    return env->NewStringUTF(((JniInjector::DataOffset*) ptr)->getString().c_str());   
+}
+
+export(jstring, engine_DataOffset_getStringOffset,jlong ptr,jint offset){
+    return env->NewStringUTF(((JniInjector::DataOffset*) ptr)->getString((int)offset).c_str());      
+}
+
+export(jlong, engine_DataOffset_getPointer,jlong ptr){
+    return (jlong)((JniInjector::DataOffset*) ptr)->getPointer();   
+}
+
+export(jlong, engine_DataOffset_getPointerOffset,jlong ptr,jint offset){
+    return (jlong)((JniInjector::DataOffset*) ptr)->getPointer((int)offset);   
+}

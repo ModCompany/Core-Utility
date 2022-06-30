@@ -32,6 +32,14 @@ public class DataOffset {
         return getPointerOffset(pointer, offset);
     }
 
+    public String getString(){
+        return getString(pointer);
+    }
+
+    public String getString(int offset){
+        return getStringOffset(pointer, offset);
+    }
+    
     public void setOffset(int offset){
         setOffset(pointer,offset);
     }
@@ -47,4 +55,6 @@ public class DataOffset {
     public static native int getIntOffset(long ptr,int offset);
     public static native boolean getBool(long ptr);
     public static native boolean getBoolOffset(long ptr,int offset);
+    public static native String getString(long ptr);
+    public static native String getStringOffset(long ptr,int offset);
 }

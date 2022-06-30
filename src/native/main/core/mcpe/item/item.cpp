@@ -219,15 +219,15 @@ class ArrowItem : public Item {
 	};
 };
 
-
+/*
 JS_MODULE_VERSION(TestItem, 1);
 JS_EXPORT(TestItem, reg, "V(I)", (JNIEnv* env, int a){
 	/*ArrowFactory* factory = new ArrowFactory();
 	factory->initParameters(a, "test_shield", "arrow", "stick",0);
 
-	LegacyItemRegistry::registerItemFactory(factory);*/
+	LegacyItemRegistry::registerItemFactory(factory);
 });
-
+*/
 
 
 

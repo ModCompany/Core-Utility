@@ -6,6 +6,7 @@
 #include <innercore_callbacks.h>
 #include <nativejs.h>
 #include <vtable.h>
+#include <java.h>
 #include <stl/string>
 
 #define stl std::__ndk1
@@ -95,7 +96,17 @@ class DoorBlock : public BlockLegacy {
 	
 };
 
-class MyBlockFactory : public LegacyBlockRegistry::LegacyBlockFactoryBase {
+class DoorFactory : public LegacyBlockRegistry::LegacyBlockFactoryBase {
+	public:
+	std::string name;
+	std::string texture;
+	int texture_data;
+
+	DoorFactory(std::string name,std::string texture,int id) : LegacyBlockRegistry::LegacyBlockFactoryBase() {
+		this->name = name;
+		this->texture = texture;
+		this->texture_data = id;
+	}	
     virtual void registerBlock();
 	virtual void applyProperties(){
 		this->block->addState(VanillaStates::DoorHingeBit);
@@ -105,20 +116,15 @@ class MyBlockFactory : public LegacyBlockRegistry::LegacyBlockFactoryBase {
 	}
 };
 
-class LadderBlock : public BlockLegacy {
-	public:
-	LadderBlock(stl::string const&, int);
-};
-
-
-class MyBlockProvider : public LegacyBlockRegistry::LegacyBlockProviderBase {
+class DoorProvider : public LegacyBlockRegistry::LegacyBlockProviderBase {
 public:
-    MyBlockFactory* factory;
+    DoorFactory* factory;
  
-    MyBlockProvider(MyBlockFactory* factory) : LegacyBlockRegistry::LegacyBlockProviderBase() {
+    DoorProvider(DoorFactory* factory) : LegacyBlockRegistry::LegacyBlockProviderBase() {
         this->factory = factory;
 		this->factory->props.renderLayer = 7;
 		this->factory->props.renderType = 7;
+		this->factory->addVariant(this->factory->name,true)->textureData = {this->factory->texture,this->factory->texture_data};
     };
  
     virtual LegacyBlockRegistry::LegacyBlockFactoryBase* getFactory() {
@@ -144,9 +150,10 @@ public:
 	
 };
  
-void MyBlockFactory::registerBlock() {
+void DoorFactory::registerBlock() {
     if (id != 0) {
-        BlockRegistry::registerCustomBlock<DoorBlock>(new MyBlockProvider(this), IdConversion::staticToDynamic(id, IdConversion::BLOCK), nameId, *props.getMaterial(),DoorBlock::DoorType::LEFT);
+        BlockRegistry::registerCustomBlock<DoorBlock>(new DoorProvider(this), IdConversion::staticToDynamic(id, IdConversion::BLOCK), nameId, *props.getMaterial(),DoorBlock::DoorType::LEFT);
+
 		//BlockRegistry::registerCustomBlock<DoorBlock>(new MyBlockProvider(this), IdConversion::staticToDynamic(id, IdConversion::BLOCK), nameId, *props.getMaterial(),DoorBlock::DoorType::RIGHT);
     }
 }
@@ -155,3 +162,10 @@ void MyBlockFactory::registerBlock() {
 
 #include <block/Block.h>
 
+export(void,engine_BlockRegistry_registerDoorBlock,jint id,jstring uid,jstring name,jstring texture,jint data){
+	auto factory = new DoorFactory(JavaClass::toString(env,name),JavaClass::toString(env,texture),data);
+	factory->initParameters(id, JavaClass::toString(env,uid));
+	LegacyBlockRegistry::registerBlockFactory(factory);
+	LegacyItemRegistry::addItemToCreative(id, 1, 0, nullptr);
+	Logger::debug("test", "test block registered!");
+} 

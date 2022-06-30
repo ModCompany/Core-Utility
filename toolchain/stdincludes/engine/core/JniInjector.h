@@ -32,7 +32,7 @@ class JniInjector {
         };
 
         int getInt(){
-            return *(int*)((void*) table + this->offset); 
+            return *(int*)((char*) table + this->offset); 
         };
 
         int getInt(int a){
