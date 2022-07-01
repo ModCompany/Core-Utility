@@ -5,15 +5,12 @@ let ChunkPos = WRAP_JAVA("com.core.api.mcpe.api.ChunkPos");
 let Parameter = WRAP_JAVA("com.core.api.module.types.Parameter");
 let Injector = WRAP_JAVA("com.core.api.Injector");
 let ToolTip = WRAP_JAVA("com.core.api.item.ToolTip");
+let NativeSaver = WRAP_JAVA("com.core.api.engine.NativeSaver");
 
-/*Callback.addCallback("ItemUse", function(coords, item){
-    let pos = new BlockPos(coords.x, coords.y, coords.z);
-    let offset = new Injector(pos).getOffset();
-    alert(offset.getInt(0)+" "+offset.getInt(4)+" "+offset.getInt(8));
-    pos.free();
-    let ptr = ItemsUtil.getItemById(NativeAPI.staticToDynamic(item.id));
-    alert(item.id+" "+ptr);
-    let injector = new Injector(ptr);
-    //alert(injector.getIntResult("_ZNK4Item15getAttackDamageEv", [], "", true));
-    injector.free();
-});*/
+new NativeSaver("test")
+    .save(function(level, tag){
+        alert("SAVE - "+JSON.stringify(tag.toScriptable()));
+    })
+    .read(function(level, tag){
+        alert("READ - "+JSON.stringify(tag.toScriptable()));
+    });

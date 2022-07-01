@@ -33,6 +33,7 @@ typedef int content_id_t;
 #include <core/world/FlatWorldOverrided.h>
 
 #include <innercore/global_context.h>
+#include <core/NativeSaver.h>
 
 class PlayScreenController
 {
@@ -80,19 +81,20 @@ public:
 		NativeAPI::init();
 		HookJava::init();
 		BlockLegacyApi::init();
+		NativeSaver::init();
 
-		HookManager::addCallback(SYMBOL("mcpe", "_ZN36EnchantingContainerManagerController13enchantResultEi"), LAMBDA((HookManager::CallbackController * controller, EnchantingContainerManagerController * a, int b), {
-									 int id = IdConversion::dynamicToStatic(a->_getItem0(ContainerEnumName::Enchant).getId(), IdConversion::ITEM);
-
-									 JavaCallbacks::invokeControlledCallback(CoreUtility::callback_class, "onEnchant", "(I)V", controller, 0, id);
-
-									 return controller->call<void>(a, b);
-								 }, ),
-								 HookManager::CALL | HookManager::REPLACE | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
+		HookManager::addCallback(
+			SYMBOL("mcpe", "_ZN36EnchantingContainerManagerController13enchantResultEi"), 
+			LAMBDA((HookManager::CallbackController * controller, EnchantingContainerManagerController * a, int b), {
+				int id = IdConversion::dynamicToStatic(a->_getItem0(ContainerEnumName::Enchant).getId(), IdConversion::ITEM);
+				JavaCallbacks::invokeControlledCallback(CoreUtility::callback_class, "onEnchant", "(I)V", controller, 0, id);
+				return controller->call<void>(a, b);
+			}, 
+		), HookManager::CALL | HookManager::REPLACE | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
 
 		HookManager::addCallback(SYMBOL("mcpe", "_ZN20PlayScreenControllerC2ENSt6__ndk110shared_ptrI15PlayScreenModelEE20PlayScreenDefaultTabRKNS0_12basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE"), LAMBDA((HookManager::CallbackController * controller, PlayScreenController * a, void *b, void *c), {
-									 model = a;
-								 }, ),
+			model = a;
+		}, ),
 								 HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
 		HookManager::addCallback(SYMBOL("mcpe", "_ZN14LevelListCache11_addToCacheERKN4Core4PathE"), LAMBDA((HookManager::CallbackController * controller, LevelListCache * self, Core::Path const &path), {
 									 Logger::debug("CoreTest", path.path.data());

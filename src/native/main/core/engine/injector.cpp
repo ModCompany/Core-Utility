@@ -17,6 +17,7 @@ JniInjector::JniInjector(long pointer){
     this->table = (void*) pointer;
     this->pointer = pointer;
     this->types = std::vector<std::string>();
+    this->lib = "mcpe";
 };
 
 void JniInjector::setArgsType(std::vector<std::string> types){
@@ -26,7 +27,7 @@ void JniInjector::setArgsType(std::vector<std::string> types){
 template<typename T>
 T JniInjector::call(const char* symbol, ArgsBufferBuilder args, bool virt, const char* table){
     VtableHelper helper(this->table);
-    return helper.call<T>(symbol, args, virt, table);
+    return helper.call<T>(symbol, args, virt, table, this->lib.c_str());
 }
 
 void JniInjector::replace(const char* table, const char* symbol, const char* replace){
@@ -109,6 +110,9 @@ export(jobject, Injector_replace, jlong ptr,jstring a,jstring b, jobject value, 
     return NULL;
 }*/
 
+export(void, Injector_setLib, jlong ptr, jstring name){
+    ((JniInjector*) ptr)->lib = JavaClass::toString(env, name);
+}
 
 export(void, Injector_replace, jlong ptr,jstring table,jstring symbol,jstring replace){
     JniInjector* injector = (JniInjector*) ptr;

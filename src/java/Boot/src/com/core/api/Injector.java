@@ -96,6 +96,10 @@ public class Injector {
     public DataOffset getOffset(int offset){
         return new DataOffset(getOffset(pointer, offset));
     }
+
+    public void setLib(String name){
+        setLib(pointer, name);
+    }
     
     public native static long init_injector(long ptr);
 
@@ -111,6 +115,6 @@ public class Injector {
 
     public native static void replace(long ptr,String table,String symbol,String replace);
     public native static void setArgsType(long ptr, String[] types);
-    public native static void callArgs(long ptr,String symbol, Object[] a);
+    public native static void setLib(long ptr, String name);
     public static native void free(long ptr);
 }

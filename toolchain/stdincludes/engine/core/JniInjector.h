@@ -73,6 +73,7 @@ class JniInjector {
         void* table;
         long pointer;
         std::vector<std::string> types;
+        std::string lib;
         JniInjector(void*);
         JniInjector(long);
 

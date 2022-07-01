@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vtable.h>
 #include <cstring>
+#include <symbol.h>
 
 
 template<unsigned N>
@@ -51,12 +52,13 @@ class VtableHelper {
 			return f(*(ArgsBuffer<N>*) buffer);
 		}
 		template<typename A>
-		A call(const char* symbol, ArgsBufferBuilder buff, bool virt, const char* vtableName){
+		A call(const char* symbol, ArgsBufferBuilder buff, bool virt, const char* vtableName, const char* lib){
 			void* func;
 			if(virt)
 				func = VTableManager::get_method(this->original, getVtableOffset(vtableName, symbol));
 			else
-				func = dlsym(dlopen("libminecraftpe.so", RTLD_LAZY), symbol);
+				func = SYMBOL(lib, symbol);
+				//func = dlsym(dlopen("libminecraftpe.so", RTLD_LAZY), symbol);
 			auto size = buff.size();
 			if (size <= 8) {
 				return callWithArgsBufferN<A, 8>(func, buff.data());
