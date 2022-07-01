@@ -81,7 +81,7 @@ public:
 		NativeAPI::init();
 		HookJava::init();
 		BlockLegacyApi::init();
-		NativeSaver::init();
+		//NativeSaver::init();
 
 		HookManager::addCallback(
 			SYMBOL("mcpe", "_ZN36EnchantingContainerManagerController13enchantResultEi"), 

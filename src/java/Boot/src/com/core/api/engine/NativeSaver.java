@@ -16,23 +16,27 @@ public class NativeSaver {
     public NativeSaver(String name){
         this.name = name;
     }
-    public void read(Function read){
+    public NativeSaver read(Function read){
         this.read = read;
+        return this;
     }
-    public void save(Function save){
+    public NativeSaver save(Function save){
         this.save = save;
+        return this;
     }
 
-    public static void save(long levelData, long tag){
-        Logger.debug("SAVE");
-        Object[] args = {new LevelData(levelData), new NativeCompoundTag((long) tag)};
-        for (NativeSaver nativeSaver : savers)
-            if(nativeSaver.save != null)
-                JsHelper.callFunction(nativeSaver.save, args);
+    public static void saveCallback(long levelData, long tag){
+        Logger.debug("SAVE: "+tag);
+        if(tag != 0){
+            Object[] args = {new LevelData(levelData), new NativeCompoundTag(tag)};
+            for (NativeSaver nativeSaver : savers)
+                if(nativeSaver.save != null)
+                    JsHelper.callFunction(nativeSaver.save, args);
+        }
     }
-    public static void read(long levelData, long tag){
+    public static void readCallback(long levelData, long tag){
         Logger.debug("READ");
-        Object[] args = {new LevelData(levelData), new NativeCompoundTag((long) tag)};
+        Object[] args = {new LevelData(levelData), new NativeCompoundTag(tag)};
         for (NativeSaver nativeSaver : savers)
             if(nativeSaver.read != null)
                 JsHelper.callFunction(nativeSaver.read, args);

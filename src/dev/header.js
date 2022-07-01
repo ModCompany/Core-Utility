@@ -12,5 +12,5 @@ new NativeSaver("test")
         alert("SAVE - "+JSON.stringify(tag.toScriptable()));
     })
     .read(function(level, tag){
-        alert("READ - "+JSON.stringify(tag.toScriptable()));
+        //alert("READ - "+JSON.stringify(tag.toScriptable()));
     });
