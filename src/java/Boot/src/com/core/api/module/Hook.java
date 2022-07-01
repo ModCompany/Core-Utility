@@ -23,9 +23,14 @@ import org.json.JSONObject;
 
 public class Hook {
     public static final String file_name = "hooks.json";
+    public static final String file_name2 = "inits.json";
     private static ArrayList<JsonData> jsons = new ArrayList<>();
+    private static ArrayList<InitData> inits = new ArrayList<>();
     public static JsonData[] getJsons(){
         return jsons.toArray(new JsonData[jsons.size()]);
+    }
+    public static InitData[] getInits(){
+        return inits.toArray(new InitData[inits.size()]);
     }
     public static String readFile(String path) throws IOException{
         File file = new File(path);
@@ -48,6 +53,33 @@ public class Hook {
             return true;
         }
     }
+    private static void hookLoad(String path){
+        try{
+            JSONArray array = new JSONArray(readFile(path));
+            for(int j = 0;j < array.length();j++){
+                JSONObject object = array.getJSONObject(j);
+                String[] args;
+                if(!object.isNull("args")){
+                    JSONArray arr = object.getJSONArray("args");
+                    args = new String[arr.length()];
+                    for(int v = 0;v < arr.length();v++)
+                        args[v] = arr.getString(v);
+                }else
+                    args = new String[] {};
+                            
+                jsons.add(new JsonData(object.getString("symbol"), object.getString("callback"), !object.isNull("priority") ? object.getString("priority") : "post", !object.isNull("return") ? object.getString("return") : "void", args, !object.isNull("lib") ? object.getString("lib") : "mcpe"));
+            }
+        }catch (Exception e) {
+            Logger.error(e.getMessage());
+        }
+    }
+    public static void initLibrary(String path)  throws Exception{
+        JSONArray array = new JSONArray(readFile(path));
+        for(int j = 0;j < array.length();j++){
+            JSONObject object = array.getJSONObject(j);
+            inits.add(new InitData(object.getString("name"), object.getString("lib")));
+        }
+    }
     public static void jsonLoad(){
         List<ApparatusMod> mods = ApparatusModLoader.getSingleton().getAllMods();
         for(int i = 0;i < mods.size();i++){
@@ -55,19 +87,30 @@ public class Hook {
             String path = mod.getInfo().getProperty("directory_root", String.class, null);
             try {
                 if(isEnableMod(path)){
-                    JSONArray array = new JSONArray(readFile(path + file_name));
-                    for(int j = 0;j < array.length();j++){
-                        JSONObject object = array.getJSONObject(j);
-                        String[] args;
-                        if(!object.isNull("args")){
-                            JSONArray arr = object.getJSONArray("args");
-                            args = new String[arr.length()];
-                            for(int v = 0;v < arr.length();v++)
-                                args[v] = arr.getString(v);
-                        }else
-                            args = new String[] {};
-                        
-                        jsons.add(new JsonData(object.getString("symbol"), object.getString("callback"), !object.isNull("priority") ? object.getString("priority") : "post", !object.isNull("return") ? object.getString("return") : "void", args));
+                    JSONObject object = new JSONObject(readFile(path+"build.config"));
+                    if(!object.isNull("CoreUtility")){
+                        JSONObject CoreUtility = object.getJSONObject("CoreUtility");
+                        if(!CoreUtility.isNull("hooks")){
+                            JSONArray array = CoreUtility.getJSONArray("hooks");
+                            for (int j = 0; j < array.length(); j++) {
+                                JSONObject description = array.getJSONObject(j);
+                                hookLoad(path+description.getString("path"));
+                            }
+                        }else{
+                            hookLoad(path+file_name);
+                        }
+                        if(!CoreUtility.isNull("initilization")){
+                            JSONArray array = CoreUtility.getJSONArray("initilization");
+                            for (int j = 0; j < array.length(); j++) {
+                                JSONObject description = array.getJSONObject(j);
+                                initLibrary(path+description.getString("path"));
+                            }
+                        }else{
+                            initLibrary(path+file_name2);
+                        }
+                    }else{
+                        hookLoad(path+file_name);
+                        initLibrary(path+file_name2);
                     }
                 }
             } catch (Exception e) {

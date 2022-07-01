@@ -9,16 +9,22 @@
 
 class Hook {
     public:
-        std::string symbol, callback, priority, returnType;
+        std::string symbol, callback, priority, returnType, lib;
         std::vector<std::string> args;
-        Hook(std::string symbol, std::string callback, std::string priority, std::string returnType, std::vector<std::string> args): symbol(symbol), callback(callback), priority(priority), returnType(returnType), args(args){}
+        Hook(std::string symbol, std::string callback, std::string priority, std::string returnType, std::vector<std::string> args, std::string lib): symbol(symbol), callback(callback), priority(priority), returnType(returnType), args(args), lib(lib){}
+};
+
+class Init {
+    public:
+        std::string name, lib;
+        Init(std::string name, std::string lib): name(name), lib(lib){}
 };
 
 class HookJava {
     private:
         static std::map<std::string, jstring> cache;
     public:
-        static jclass HOOK, DATA, OBJECT;
+        static jclass HOOK, DATA, OBJECT, INIT;
         static jmethodID ID;
         static jmethodID ID_INTAS;
         static jmethodID ID_FLOATAS;
@@ -51,6 +57,7 @@ class HookJava {
         }
 
         static std::vector<Hook*> getHooks(JNIEnv*);
+        static std::vector<Init*> getInits(JNIEnv*);
         static void init();
         static jstring& getJavaString(JNIEnv* env, std::string n){
             if(cache.find(n) != cache.end())

@@ -13,6 +13,9 @@ public class Injector {
     public Injector(PointerClass v){
         this.pointer = init_injector(v.getPointer());
     }
+    public Injector(){
+        this(0);
+    }
 
     public Injector setArgsType(String[] types){
         setArgsType(pointer, types);

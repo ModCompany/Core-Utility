@@ -11,6 +11,7 @@
 jclass HookJava::HOOK;
 jclass HookJava::DATA;
 jclass HookJava::OBJECT;
+jclass HookJava::INIT;
 jmethodID HookJava::ID;
 jmethodID HookJava::ID_INTAS;
 jmethodID HookJava::ID_FLOATAS;
@@ -24,6 +25,7 @@ std::vector<Hook*> HookJava::getHooks(JNIEnv* env){
     const jmethodID getCallback = env->GetMethodID(HookJava::DATA, "getCallback", "()Ljava/lang/String;");
     const jmethodID getPriority = env->GetMethodID(HookJava::DATA, "getPriority", "()Ljava/lang/String;");
     const jmethodID getReturn = env->GetMethodID(HookJava::DATA, "getReturn", "()Ljava/lang/String;");
+    const jmethodID getLib = env->GetMethodID(HookJava::DATA, "getLib", "()Ljava/lang/String;");
     const jmethodID getArgs = env->GetMethodID(HookJava::DATA, "getArgs", "()[Ljava/lang/String;");
 	const jobjectArray array = (jobjectArray) env->CallStaticObjectMethod(HookJava::HOOK, getJsons);
 
@@ -34,6 +36,7 @@ std::vector<Hook*> HookJava::getHooks(JNIEnv* env){
         jstring callback = (jstring) env->CallObjectMethod(json, getCallback);
         jstring priority = (jstring) env->CallObjectMethod(json, getPriority);
         jstring returnType = (jstring) env->CallObjectMethod(json, getReturn);
+        jstring lib = (jstring) env->CallObjectMethod(json, getLib);
         jobjectArray arr = (jobjectArray) env->CallObjectMethod(json, getArgs);
         std::vector<std::string> args;
         for(int j=0;j<env->GetArrayLength(arr);j++) {
@@ -44,10 +47,25 @@ std::vector<Hook*> HookJava::getHooks(JNIEnv* env){
             JavaClass::toString(env, callback),
             JavaClass::toString(env, priority),
             JavaClass::toString(env, returnType),
-            args
+            args,
+            JavaClass::toString(env, lib)
         ));
     }
     return hooks;
+}
+
+std::vector<Init*> HookJava::getInits(JNIEnv* env){
+    const jmethodID getInits = env->GetStaticMethodID(HookJava::HOOK, "getInits", "()[Lcom/core/api/module/InitData;");
+    const jmethodID getName = env->GetMethodID(HookJava::INIT, "getName", "()Ljava/lang/String;");
+    const jmethodID getLib = env->GetMethodID(HookJava::INIT, "getLib", "()Ljava/lang/String;");
+    const jobjectArray array = (jobjectArray) env->CallStaticObjectMethod(HookJava::HOOK, getInits);
+
+    std::vector<Init*> result;
+    for(int i=0;i<env->GetArrayLength(array);i++){
+        jobject object = env->GetObjectArrayElement(array, i);
+        result.push_back(new Init(JavaClass::toString(env, (jstring) env->CallObjectMethod(object, getName)), JavaClass::toString(env, (jstring) env->CallObjectMethod(object, getLib))));
+    }
+    return result;
 }
 
 class Controller {
@@ -130,12 +148,11 @@ inline jobjectArray HookJava::getParameters(JNIEnv* env, std::vector<std::string
 }
 #include <logger.h>
 #include <horizon/types.h>
-class WopaArtema {
-    
-};
+
 const ArgsBufferBuilder HookJava::getParameters(JNIEnv* env, void* self, std::vector<std::string> types, jobjectArray array){
     ArgsBufferBuilder builder;
-    builder.add<void*>(self);
+    if(self != nullptr)
+        builder.add<void*>(self);
     for (int i = 0;i < types.size();i++){
         jobject object = env->GetObjectArrayElement(array, i);
         std::string type = types[i];
@@ -157,7 +174,7 @@ const ArgsBufferBuilder HookJava::getParameters(JNIEnv* env, void* self, std::ve
 template<typename T>
 inline void registerHook(JNIEnv* env, Hook* hook, std::function<T(JNIEnv*,Hook*,Controller)> func, int v){
     HookManager::addCallback(
-        SYMBOL("mcpe",hook->symbol.c_str()), 
+        SYMBOL(hook->lib.c_str(),hook->symbol.c_str()), 
         LAMBDA((HookManager::CallbackController* controller, void* self, void* a, void* b, void* c, void* d, void* e, void* k, void* l, void* f, void* t, void* p),{
             JNIEnv* env;
 	        ATTACH_JAVA(env, JNI_VERSION_1_6){
@@ -185,6 +202,7 @@ void HookJava::init(){
 	ATTACH_JAVA(env, JNI_VERSION_1_6){
 		HookJava::HOOK = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/module/Hook")));
         HookJava::DATA = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/module/JsonData")));
+        HookJava::INIT = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/module/InitData")));
         HookJava::OBJECT = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("java/lang/Object")));
         HookJava::ID = env->GetStaticMethodID(HookJava::HOOK, "hookCallback", "(Ljava/lang/String;Ljava/lang/String;[Lcom/core/api/module/types/Parameter;)V");
         jclass Double = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("java/lang/Double")));
@@ -193,7 +211,11 @@ void HookJava::init(){
         HookJava::ID_LongAS = env->GetMethodID(Double, "longValue", "()J");
 
         HookJava::obj = NativeAPI::createHookParameter(env, (jlong) 0, HookJava::getJavaString(env, "ptr"));
-        
+
+        std::vector<Init*> inits = HookJava::getInits(env);
+        for(int i = 0;i < inits.size();i++)
+            DLHandleManager::initializeHandle(inits[i]->lib.c_str(), inits[i]->name.c_str());
+
         std::vector<Hook*> hooks = HookJava::getHooks(env);
         for(int i = 0;i < hooks.size();i++){
             Hook* hook = hooks[i];
