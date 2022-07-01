@@ -6,18 +6,7 @@
 
 #include "block_registry.h"
 
-
-namespace LegacyBlockRegistry {
-    class BlockVariant {
-    public:
-        struct AABB {
-            float aabb[6];
-        } shape;
-        bool isFullCubeShape = true;
-
-        int variant = 0;
-        std::string nameToDisplay;
-        struct FaceTextureData {
+struct FaceTextureData {
         char filler[72];
 
         public:
@@ -32,9 +21,22 @@ namespace LegacyBlockRegistry {
         stl_vector<TextureUVCoordinateSet>* getAllSides();
 
         FaceTextureData& operator=(FaceTextureData const& other);
-        } textureData;
-        bool addToCreative = true;
+};
 
+namespace LegacyBlockRegistry {
+    class BlockVariant {
+    public:
+        struct AABB {
+            float aabb[6];
+        } shape;
+
+        bool isFullCubeShape = true;
+
+        int variant = 0;
+        std::string nameToDisplay;
+
+        bool addToCreative = true;
+        FaceTextureData textureData;
         BlockVariant();
         BlockVariant(int variant, std::string const& name, bool addToCreative);
         void setShape(AABB& aabb);

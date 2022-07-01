@@ -22,6 +22,7 @@ ModAPI.registerAPI("CoreUtility", {
     Vec2: JsHelper.get(Vec2, this),
     ChunkPos: JsHelper.get(ChunkPos, this),
     BlockUtils: BlockUtils,
+    BlockRegistry: BlockRegistry,
     requireGlobal(cmd){
         return eval(cmd);
     }
@@ -55,3 +56,20 @@ var container = new UI.Container();
 
 
 //WRAP_JAVA("com.core.api.module.NativeAPI").setWorldGenerator("{'biome_id':1,'block_layers': [{'block_name': 'minecraft:dirt',count:80}],'encoding_version':5}");
+/*
+let block_id = IDRegistry.genBlockID("test_block");
+BlockRegistry.registerDoorBlock("test_block","Test Glass Door",{name:"glass"});
+
+Item.registerUseFunctionForID(280, function(coords,item,block){
+    var source = BlockSource.getDefaultForActor(Player.get());
+    var down_door = new BlockState(BlockID["test_block"],0).addStates({
+        open_bit:0, direction: 0, door_hinge_bit: 0, upper_block_bit: 0, color:0
+    });
+    var upper_door = new BlockState(BlockID["test_block"],0).addStates({
+        open_bit:0, direction: 0, door_hinge_bit: 0, upper_block_bit: 1, color:0
+     });
+    source.setBlock(coords.x,coords.y + 1, coords.z, down_door);
+    source.setBlock(coords.x,coords.y + 2,coords.z, upper_door);
+   // Debug.m(source.getBlock(coords.x,coords.y +1,coords.z));
+   // Debug.m(source.getBlock(coords.x,coords.y +2,coords.z));
+})*/

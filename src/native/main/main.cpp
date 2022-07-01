@@ -31,36 +31,45 @@ typedef int content_id_t;
 #include <core/effect_registry.h>
 #include <core/module/BlockLegacy.h>
 #include <core/world/FlatWorldOverrided.h>
-class PlayScreenController {
-	public:
+
+#include <innercore/global_context.h>
+
+class PlayScreenController
+{
+public:
 	void repopulateLevels();
 	int _getLocalWorldsCount() const;
 };
-struct BlockLegacy {
+struct BlockLegacy
+{
 	int getBlockItemId() const;
 };
 
-struct Block {
-	BlockLegacy* getBlockLegacy() const;
+struct Block
+{
+	BlockLegacy *getBlockLegacy() const;
 };
 
-PlayScreenController* model;
-LevelListCache* cache;
-Core::FilePathManager* file_path_manager;
-FlatWorldOverrided* flat_world_overrided;
+PlayScreenController *model;
+LevelListCache *cache;
+Core::FilePathManager *file_path_manager;
+FlatWorldOverrided *flat_world_overrided;
 
-class CoreUtility : public Module {
+class CoreUtility : public Module
+{
 public:
-	CoreUtility(const char* id): Module(id) {};
+	CoreUtility(const char *id) : Module(id){};
 	static jclass callback_class;
 
-	virtual void initialize() {	
+	virtual void initialize()
+	{
 		Logger::debug("Core Utility", "Initialize core");
 		DLHandleManager::initializeHandle("libminecraftpe.so", "mcpe");
 		Logger::flush();
 
-		JNIEnv* env;
-		ATTACH_JAVA(env, JNI_VERSION_1_6){
+		JNIEnv *env;
+		ATTACH_JAVA(env, JNI_VERSION_1_6)
+		{
 			jclass a = env->FindClass("com/core/api/NativeCallback");
 			CoreUtility::callback_class = reinterpret_cast<jclass>(env->NewGlobalRef(a));
 		}
@@ -72,123 +81,117 @@ public:
 		HookJava::init();
 		BlockLegacyApi::init();
 
-		HookManager::addCallback(SYMBOL("mcpe","_ZN36EnchantingContainerManagerController13enchantResultEi"), LAMBDA((HookManager::CallbackController* controller, EnchantingContainerManagerController* a,int b),{
+		HookManager::addCallback(SYMBOL("mcpe", "_ZN36EnchantingContainerManagerController13enchantResultEi"), LAMBDA((HookManager::CallbackController * controller, EnchantingContainerManagerController * a, int b), {
+									 int id = IdConversion::dynamicToStatic(a->_getItem0(ContainerEnumName::Enchant).getId(), IdConversion::ITEM);
 
-			int id = IdConversion::dynamicToStatic(a->_getItem0(ContainerEnumName::Enchant).getId(), IdConversion::ITEM);
-			
-			JavaCallbacks::invokeControlledCallback(CoreUtility::callback_class, "onEnchant", "(I)V", controller, 0,id);
+									 JavaCallbacks::invokeControlledCallback(CoreUtility::callback_class, "onEnchant", "(I)V", controller, 0, id);
 
-			return controller->call<void>(a,b);
-		},),HookManager::CALL | HookManager::REPLACE | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
+									 return controller->call<void>(a, b);
+								 }, ),
+								 HookManager::CALL | HookManager::REPLACE | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
 
-		HookManager::addCallback(SYMBOL("mcpe","_ZN20PlayScreenControllerC2ENSt6__ndk110shared_ptrI15PlayScreenModelEE20PlayScreenDefaultTabRKNS0_12basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE"), LAMBDA((HookManager::CallbackController* controller, PlayScreenController* a,void* b,void* c),{
+		HookManager::addCallback(SYMBOL("mcpe", "_ZN20PlayScreenControllerC2ENSt6__ndk110shared_ptrI15PlayScreenModelEE20PlayScreenDefaultTabRKNS0_12basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE"), LAMBDA((HookManager::CallbackController * controller, PlayScreenController * a, void *b, void *c), {
+									 model = a;
+								 }, ),
+								 HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
+		HookManager::addCallback(SYMBOL("mcpe", "_ZN14LevelListCache11_addToCacheERKN4Core4PathE"), LAMBDA((HookManager::CallbackController * controller, LevelListCache * self, Core::Path const &path), {
+									 Logger::debug("CoreTest", path.path.data());
+									 Logger::flush();
+								 }, ),
+								 HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
 
-			model = a;
+		HookManager::addCallback(SYMBOL("mcpe", "_ZN14LevelListCacheC2ER18LevelStorageSourceONSt6__ndk18functionIFbvEEE"), LAMBDA((HookManager::CallbackController * controller, LevelListCache * self, void *path), {
+									 cache = self;
+								 }, ),
+								 HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
 
-		},),HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
-		HookManager::addCallback(SYMBOL("mcpe","_ZN14LevelListCache11_addToCacheERKN4Core4PathE"), LAMBDA((HookManager::CallbackController* controller, LevelListCache* self,Core::Path const& path),{
+		HookManager::addCallback(SYMBOL("mcpe", "_ZN4Core15FilePathManagerC2ERKNS_4PathEb"), LAMBDA((HookManager::CallbackController * controller, Core::FilePathManager * self, void *path, bool c), {
+									 file_path_manager = self;
+								 }, ),
+								 HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
 
-			Logger::debug("CoreTest",path.path.data());
-			Logger::flush();
-		},),HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
-
-		HookManager::addCallback(SYMBOL("mcpe","_ZN14LevelListCacheC2ER18LevelStorageSourceONSt6__ndk18functionIFbvEEE"), LAMBDA((HookManager::CallbackController* controller, LevelListCache* self,void* path),{
-			cache = self;
-		},),HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
-
-		HookManager::addCallback(SYMBOL("mcpe","_ZN4Core15FilePathManagerC2ERKNS_4PathEb"), LAMBDA((HookManager::CallbackController* controller, Core::FilePathManager* self,void* path,bool c),{
-			file_path_manager = self;
-		},),HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
-		
-
-    }	
+	}
 };
 
 jclass CoreUtility::callback_class;
 
-class CoreItems : public Module {
+class CoreItems : public Module
+{
 public:
-	CoreItems(Module* parent, const char* id) : Module(parent, id) {};
-	virtual void initialize(){
+	CoreItems(Module *parent, const char *id) : Module(parent, id){};
+	virtual void initialize()
+	{
 		Logger::debug("Core Utility", "Initialize CoreItems for working with mods");
 		Logger::flush();
 	}
 };
 
-class WorldGenerator {
-	public:
-	Json::Value root;
 
-};
 
 class RandomScatteredLargeFeature;
 
-class FlatWorldGenerator {
-	public:
+#include <level/Generator.h>
+#include <level/Level.h>
+#include <Core.h>
 
-	template<typename A> void addHardcodedSpawnsForFeature();
-};
-class CoreGeneration : public Module {
-	public:
-	CoreGeneration(Module* parent, const char* id) : Module(parent, id) {};
+class CoreGeneration : public Module
+{
+public:
+	CoreGeneration(Module *parent, const char *id) : Module(parent, id){};
 
-	virtual void initialize(){
-		
-		HookManager::addCallback(SYMBOL("mcpe", "_ZN25FlatWorldGeneratorOptionsC2ERKN4Json5ValueERK12BlockPalette"),LAMBDA((HookManager::CallbackController* controller,void* a,Json::Value const& json, void* settings),{
-			Json::Value root{};
+	virtual void initialize()
+	{
 
-			root["biome_id"]          = 1;
+		/*HookManager::addCallback(SYMBOL("mcpe", "_ZN25FlatWorldGeneratorOptionsC2ERKN4Json5ValueERK12BlockPalette"), LAMBDA((HookManager::CallbackController * controller, void *a, Json::Value const &json, void *settings), {
+									 Json::Value root{};
 
-			Json::Value layers {};
-			Json::Value layer {};
-			layer["block_name"] = "minecraft:dirt";
-			layer["count"] = 2;
+									 root["biome_id"] = 1;
 
-			layers.append(layer);
-			root["block_layers"] = layers;
-			root["encoding_version"]  = 5;
+									 Json::Value layers{};
+									 Json::Value layer{};
+									 layer["block_name"] = "minecraft:dirt";
+									 layer["count"] = 2;
 
-			Logger::debug("FlatWorld", "%s", root.toStyledString().c_str());
-			Logger::flush();
+									 layers.append(layer);
+									 root["block_layers"] = layers;
+									 root["encoding_version"] = 5;
 
+									 Logger::debug("FlatWorld", "%s", root.toStyledString().c_str());
+									 Logger::flush();
 
-			Logger::flush();
-			if(flat_world_overrided->overrided){
-				return controller->call<bool>(a,flat_world_overrided->value,settings);
-			}
-			return controller->call<bool>(a,root,settings);
+									 Logger::flush();
+									 if (flat_world_overrided->overrided)
+									 {
+										 return controller->call<bool>(a, flat_world_overrided->value, settings);
+									 }
+									 return controller->call<bool>(a,root,settings);
+									 
+								 }, ),
+								 HookManager::CALL | HookManager::REPLACE | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);*/
 
-		},),HookManager::CALL | HookManager::REPLACE | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
+							
 
-
+		 
 	}
 };
 
-
-MAIN {
-	Module* main_module = new CoreUtility("core_utility");
-	//new CoreItems(main_module, "core_utility.items");
-	//new CoreGeneration(main_module, "core_utility.generation");
+MAIN
+{
+	Module *main_module = new CoreUtility("core_utility");
+	// new CoreItems(main_module, "core_utility.items");
+	new CoreGeneration(main_module, "core_utility.generation");
 	new SoundModule(main_module, "core_utility.sound");
+}
 
-
-}	
-
-
-
-#include <innercore/global_context.h>
 
 
 #include <client/ClientIntance.h>
 
+JS_MODULE_VERSION(PlayScreen, 1);
 
-
-JS_MODULE_VERSION(PlayScreen,1);
-
-
-export(void,module_NativeAPI_setWorldGenerator, jstring json){
-	flat_world_overrided = new FlatWorldOverrided(JavaClass::toStlString(env,json).data());
-	Logger::debug("CoreTEst",flat_world_overrided->value.toStyledString().data());
+export(void, module_NativeAPI_setWorldGenerator, jstring json)
+{
+	flat_world_overrided = new FlatWorldOverrided(JavaClass::toStlString(env, json).data());
+	Logger::debug("CoreTEst", flat_world_overrided->value.toStyledString().data());
 	Logger::flush();
-
 }

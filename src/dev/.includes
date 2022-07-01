@@ -6,4 +6,6 @@ api/Gui.js
 api/TickingAreasManager.js
 api/GlobalContext.js
 api/BlockUtils.js
+api/ItemRegistry.js
+api/BlockRegistry.js
 shared.js
