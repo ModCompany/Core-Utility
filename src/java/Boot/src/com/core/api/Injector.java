@@ -82,8 +82,9 @@ public class Injector {
         return getPointerResult(symbol, args, "", false);
     }
 
-    public void replace(String table,String symbol,String replace){
+    public Injector replace(String table,String symbol,String replace){
         replace(this.pointer, table, symbol, replace);
+        return this;
     }
 
     public void free(){
@@ -97,8 +98,9 @@ public class Injector {
         return new DataOffset(getOffset(pointer, offset));
     }
 
-    public void setLib(String name){
+    public Injector setLib(String name){
         setLib(pointer, name);
+        return this;
     }
     
     public native static long init_injector(long ptr);

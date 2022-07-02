@@ -32,7 +32,7 @@ T JniInjector::call(const char* symbol, ArgsBufferBuilder args, bool virt, const
 
 void JniInjector::replace(const char* table, const char* symbol, const char* replace){
     VtablePatcher patcher(this->pointer,this->table);
-    patcher.replace(table,symbol,replace);
+    patcher.replace(table,symbol,this->lib.c_str(),replace);
 }
 
 void JniInjector::free(){

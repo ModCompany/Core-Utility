@@ -44,6 +44,7 @@ class VtableHelper {
 		VtableHelper(void*);
 		void resize();
 		void patch(const char*, const char*, void*);
+		void patch(const char*, const char*, const char*, void*);
 
     public:
 		template<typename A, unsigned N >
@@ -114,5 +115,6 @@ class VtablePatcher {
 	VtablePatcher(long, void*);
 	void patch(const char*, const char*, void*);
 	void replace(const char*, const char*,const char*);
+	void replace(const char*, const char*, const char*,const char*);
 	template<typename...A> void call(int, A...);
 };

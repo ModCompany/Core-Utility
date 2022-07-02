@@ -123,6 +123,20 @@ inline int getVtableOffset(const char* vtableName, const char* functionName) {
     return -1;
 }
 
+inline int getVtableOffset(const char* vtableName, const char* functionName, const char* lib) {
+    void** vtable = (void**) SYMBOL(lib, vtableName);
+    void* func = SYMBOL(lib, functionName);
+    for (int i = 2; vtable[i]; i++) {
+        if (vtable[i] == func) {
+            i -= 2;
+            return i;
+        }
+    }
+    Logger::error("InnerCoregetVtableOffset", "failed to find '%s' in '%s'", functionName, vtableName);
+    return -1;
+}
+
+
 inline int getVtableOffset(void* a, const char* functionName) {
     void** vtable = *(void***) a;
     void* func = SYMBOL("mcpe", functionName);

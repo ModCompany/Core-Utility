@@ -42,6 +42,10 @@ void VtableHelper::patch(const char* table, const char* symbol, void* func){
 	int index = getVtableOffset(table, symbol);
 	this->get()[index] = func;
 };
+void VtableHelper::patch(const char* table, const char* symbol, const char* lib, void* func){
+	int index = getVtableOffset(table, symbol, lib);
+	this->get()[index] = func;
+};
 
 void* VtableHelper::getAdreess(const char* table, const char* symbol){
 	return SYMBOL(table, symbol);
@@ -125,4 +129,8 @@ void VtablePatcher::patch(const char* table, const char* symbol, void* func){
 void VtablePatcher::replace(const char* table, const char* symbol, const char* replace){
 	void* handle = dlopen("libminecraftpe.so", RTLD_LAZY);
 	this->helper.patch(table,symbol,dlsym(handle, replace));
+};
+
+void VtablePatcher::replace(const char* table, const char* symbol, const char* lib, const char* replace){
+	this->helper.patch(table,symbol,(void*) SYMBOL(lib, replace));
 };
