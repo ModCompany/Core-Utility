@@ -14,9 +14,11 @@ export(void, mcpe_client_GuiData_setTitle,jlong pointer,jstring title){
 }
 
 export(void, mcpe_client_GuiData_setSubtitle,jlong pointer,jstring title){
-
+    return ((GuiData*) pointer)->setSubtitle(JavaClass::toStlString(env,title));    
 }
 
 export(void, mcpe_client_GuiData_setActionMessage,jlong pointer,jstring message){
+    return ((GuiData*) pointer)->setActionBarMessage(JavaClass::toStlString(env,message));    
 
 }
+

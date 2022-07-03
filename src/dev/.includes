@@ -8,4 +8,5 @@ api/GlobalContext.js
 api/BlockUtils.js
 api/ItemRegistry.js
 api/BlockRegistry.js
+api/World.js
 shared.js

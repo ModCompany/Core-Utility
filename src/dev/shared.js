@@ -7,6 +7,7 @@ ModAPI.registerAPI("CoreUtility", {
     Injector: JsHelper.get(Injector, this),
     EntityRegister: EntityRegister,
     ItemsUtil: ItemsUtil,
+    FileUtils: JsHelper.get(FileUtils,this),
     Gui: Gui,
     TickingAreasManager: TickingAreasManager,
     GlobalContext: GlobalContext,
@@ -67,3 +68,6 @@ Item.registerUseFunctionForID(280, function(coords,item,block){
    // Debug.m(source.getBlock(coords.x,coords.y +1,coords.z));
    // Debug.m(source.getBlock(coords.x,coords.y +2,coords.z));
 })*/
+
+
+

@@ -6,7 +6,7 @@ let Parameter = WRAP_JAVA("com.core.api.module.types.Parameter");
 let Injector = WRAP_JAVA("com.core.api.Injector");
 let ToolTip = WRAP_JAVA("com.core.api.item.ToolTip");
 let NativeSaver = WRAP_JAVA("com.core.api.engine.NativeSaver");
-
+let FileUtils = WRAP_JAVA("com.core.api.engine.FileUtils");
 new NativeSaver("test")
     .save(function(level, tag){
         alert("SAVE - "+JSON.stringify(tag.toScriptable()));

@@ -9,5 +9,6 @@ public class NativeAPI {
     native public static int getZBlockPos(long ptr);
     native public static long getActorById(long id);
 
-    native public static void setWorldGenerator(String json);
+
+
 }

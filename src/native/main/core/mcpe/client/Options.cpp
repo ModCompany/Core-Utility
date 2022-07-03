@@ -15,26 +15,6 @@ export(void, client_Options_setRenderMobInfoState, jboolean a){
    // option->set
 }
 
-JS_MODULE_VERSION(Govno, 1);
-
-
-
-JS_EXPORT(Govno, debug, "V()",(JNIEnv* env){
-    Options* option = GlobalContext::getMinecraftClient()->getOptions();
-    option->setDevRenderMobInfoState(true);
-    option->setDevRenderBoundingBoxes(true);
-    option->setDevRenderPaths(true);
-
-});
-
-
-
-JS_EXPORT(Govno, setDebug, "V()",(JNIEnv* env, int debug){
-    Options* option = GlobalContext::getMinecraftClient()->getOptions();
-    option->setRenderDebug((DebugHudOptions) debug);
-
-});
-
 export(jint,mcpe_client_Options_getUiProfilePointer,jlong pointer) {
 	return (jint) ((int) ((Options*) pointer)->getUIProfile());
 }
