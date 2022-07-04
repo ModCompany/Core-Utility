@@ -26,3 +26,11 @@ export(void, mcpe_World_updateWorlds){
 export(jint, mcpe_World_getWorldsCount){
     return Global::getWorldsController()->_getLocalWorldsCount();
 }
+
+export(jlong, mcpe_World_getLevelData,jstring maybe_uid){
+    return Global::getWorldsCache()->getLevelData(JavaClass::toStlString(env,maybe_uid));
+}
+
+export(void, mcpe_World_createLevel, jstring uid,jstring path){
+    return Global::getWorldsCache()->_createAndAddToCache(JavaClass::toStlString(env,uid),Core::Path(JavaClass::toStlString(env,path)));
+}
