@@ -1,7 +1,6 @@
 package com.core.api.engine;
 
 public class FileUtils {
-    
     public static native void deleteDirectory(String path);
     public static native void deleteDirectoryContents(String path);
     public static native void deleteEmptyDirectory(String dir);
@@ -16,6 +15,4 @@ public class FileUtils {
     public static native boolean isExists(String path_or_file);
     public static native void createDirectory(String path);
     public static native void createDirectoryForFile(String path);
-
-
 }

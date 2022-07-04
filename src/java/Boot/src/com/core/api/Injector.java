@@ -21,65 +21,65 @@ public class Injector {
         setArgsType(pointer, types);
         return this;
     }
-    public Injector call(String symbol, Object[] args, String table, boolean virt){
-        call(this.pointer, symbol, args, virt, table);
+    public Injector call(String symbol, Object[] args, String table){
+        call(this.pointer, symbol, args, table != "", table);
         return this;
     }
     public Injector call(String symbol){
-        return call(symbol, new Object[] {}, "", false);
+        return call(symbol, new Object[] {}, "");
     }
     public Injector call(String symbol, Object[] args){
-        return call(symbol, args, "", false);
+        return call(symbol, args, "");
     }
 
-    public int getIntResult(String symbol, Object[] args, String table, boolean virt){
-        return getIntResult(this.pointer, symbol, args, virt, table);
+    public int getIntResult(String symbol, Object[] args, String table){
+        return getIntResult(this.pointer, symbol, args, table != "", table);
     }
     public int getIntResult(String symbol){
-        return getIntResult(symbol, new Object[] {}, "", false);
+        return getIntResult(symbol, new Object[] {}, "");
     }
     public int getIntResult(String symbol, Object[] args){
-        return getIntResult(symbol, args, "", false);
+        return getIntResult(symbol, args, "");
     }
 
-    public float getFloatResult(String symbol, Object[] args, String table, boolean virt){
-        return getFloatResult(this.pointer, symbol, args, virt, table);
+    public float getFloatResult(String symbol, Object[] args, String table){
+        return getFloatResult(this.pointer, symbol, args, table != "", table);
     }
     public float getFloatResult(String symbol){
-        return getFloatResult(symbol, new Object[] {}, "", false);
+        return getFloatResult(symbol, new Object[] {}, "");
     }
     public float getFloatResult(String symbol, Object[] args){
-        return getFloatResult(symbol, args, "", false);
+        return getFloatResult(symbol, args, "");
     }
 
-    public boolean getBoolResult(String symbol, Object[] args, String table, boolean virt){
-        return getBoolResult(this.pointer, symbol, args, virt, table) == 1;
+    public boolean getBoolResult(String symbol, Object[] args, String table){
+        return getBoolResult(this.pointer, symbol, args, table != "", table) == 1;
     }
     public boolean getBoolResult(String symbol){
-        return getBoolResult(symbol, new Object[] {}, "", false);
+        return getBoolResult(symbol, new Object[] {}, "");
     }
     public boolean getBoolResult(String symbol, Object[] args){
-        return getBoolResult(symbol, args, "", false);
+        return getBoolResult(symbol, args, "");
     }
 
-    public String getStringResult(String symbol, Object[] args, String table, boolean virt){
-        return getStringResult(this.pointer, symbol, args, virt, table);
+    public String getStringResult(String symbol, Object[] args, String table){
+        return getStringResult(this.pointer, symbol, args, table != "", table);
     }
     public String getStringResult(String symbol){
-        return getStringResult(symbol, new Object[] {}, "", false);
+        return getStringResult(symbol, new Object[] {}, "");
     }
     public String getStringResult(String symbol, Object[] args){
-        return getStringResult(symbol, args, "", false);
+        return getStringResult(symbol, args, "");
     }
 
-    public long getPointerResult(String symbol, Object[] args, String table, boolean virt){
-        return getPointerResult(this.pointer, symbol, args, virt, table);
+    public long getPointerResult(String symbol, Object[] args, String table){
+        return getPointerResult(this.pointer, symbol, args, table != "", table);
     }
     public long getPointerResult(String symbol){
-        return getPointerResult(symbol, new Object[] {}, "", false);
+        return getPointerResult(symbol, new Object[] {}, "");
     }
     public long getPointerResult(String symbol, Object[] args){
-        return getPointerResult(symbol, args, "", false);
+        return getPointerResult(symbol, args, "");
     }
 
     public Injector replace(String table,String symbol,String replace){
