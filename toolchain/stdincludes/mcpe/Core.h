@@ -43,7 +43,7 @@ namespace Core {
 
         void renameDirectory(Path const&,Path const&);
         void renameFile(Path const&,Path const&);
-        void copyDirectoryAndContentsRecursively(Path const&,Path const&);
+        void copyDirectoryAndContentsRecursivelyWithLimit(Path const&,Path const&);
         void createDirectoryRecursively(Path const&);
         void createDirectoryForFile(Path const&);
 

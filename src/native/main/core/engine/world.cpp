@@ -8,18 +8,15 @@
 #include <core/JavaClass.h>
 
 export(void, mcpe_World_addWorldToCache,jstring world){
-    Core::Path path = Core::Path(JavaClass::toStlString(env,world));
-    if(Global::getFileSystem()->directoryExists(path)){
-        Global::getWorldsCache()->_addToCache(path);
-        Logger::debug("CoreUtility-World","Succesful add world to cache");
-        Logger::flush();
-    }else{
-        Logger::error("CoreUtility-World-Error","directory not exist");
-        Logger::flush();
-    }
+    Logger::debug("CoreUtility-World","new world added to cache");
+    Logger::debug("CoreUtility-World",JavaClass::toStlString(env,world).data());
+    Logger::flush();
+        Global::getWorldsCache()->_addToCache(Core::Path(JavaClass::toStlString(env,world)));
 }
 
 export(void, mcpe_World_updateWorlds){
+    Logger::debug("CoreUtility-World","Update Local Worlds");
+    Logger::flush();
     return Global::getWorldsController()->repopulateLevels();
 }
 
@@ -28,7 +25,7 @@ export(jint, mcpe_World_getWorldsCount){
 }
 
 export(jlong, mcpe_World_getLevelData,jstring maybe_uid){
-    return Global::getWorldsCache()->getLevelData(JavaClass::toStlString(env,maybe_uid));
+    return (jlong) Global::getWorldsCache()->getLevelData(JavaClass::toStlString(env,maybe_uid));
 }
 
 export(void, mcpe_World_createLevel, jstring uid,jstring path){

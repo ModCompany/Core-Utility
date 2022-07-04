@@ -6,7 +6,7 @@
 
 
 export(void, engine_FileUtils_copyDirectory,jstring from,jstring to){
-    return Global::getFileSystem()->copyDirectoryAndContentsRecursively(Core::Path(JavaClass::toStlString(env,from)),Core::Path(JavaClass::toStlString(env,to)));
+    return Global::getFileSystem()->copyDirectoryAndContentsRecursivelyWithLimit(Core::Path(JavaClass::toStlString(env,from)),Core::Path(JavaClass::toStlString(env,to)));
 } 
 
 export(jboolean, engine_FileUtils_directoryExists,jstring file){
