@@ -18,6 +18,7 @@ ModAPI.registerAPI("CoreUtility", {
     ChunkPos: JsHelper.get(ChunkPos, this),
     BlockUtils: BlockUtils,
     BlockRegistry: BlockRegistry,
+    Scales: Scales,
     version: 2,
     requireGlobal(cmd){
         return eval(cmd);

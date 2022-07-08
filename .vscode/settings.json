@@ -120,7 +120,19 @@
         "cfenv": "cpp",
         "cinttypes": "cpp",
         "__memory": "cpp",
-        "cassert": "cpp"
+        "cassert": "cpp",
+        "xfacet": "cpp",
+        "xhash": "cpp",
+        "xiosbase": "cpp",
+        "xlocale": "cpp",
+        "xlocinfo": "cpp",
+        "xlocnum": "cpp",
+        "xmemory": "cpp",
+        "xstddef": "cpp",
+        "xstring": "cpp",
+        "xtr1common": "cpp",
+        "xtree": "cpp",
+        "xutility": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "java.project.referencedLibraries": [

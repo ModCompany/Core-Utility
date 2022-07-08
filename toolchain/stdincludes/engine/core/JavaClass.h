@@ -23,5 +23,8 @@ class JavaClass {
     static const char* release(JNIEnv* env,jstring);
     static std::string toString(JNIEnv* env,jstring);
     static stl::string toStlString(JNIEnv* env,jstring);
+    static jstring toString(JNIEnv* env, const std::string& nativeString) {
+        return env->NewStringUTF(nativeString.c_str());
+    }
     static void init();
 };
