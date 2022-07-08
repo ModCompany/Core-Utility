@@ -9,5 +9,8 @@ let ItemsUtil = {
     },
     overrideArmorValue:function(id, value){
         this.api.overrideArmorValue(id, value);
+    },
+    overrideColor:function(id,data,hex){
+        this.api.overrideColorHex(id,data,hex);
     }
 };

@@ -78,6 +78,8 @@ class PickaxeItem : public DiggerItem {
 class ItemDescriptor {
     public:
 	ItemDescriptor(Item const&,int);
+	int getAuxValue() const;
+	int getId() const;
 };
 
 

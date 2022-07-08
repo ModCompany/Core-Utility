@@ -1,5 +1,5 @@
 #pragma once
-
+#include <mce.h>
 class OverridedItem {
 	public:
 	class OverridedName {
@@ -19,6 +19,18 @@ class OverridedItem {
 		static std::map<int, float> items;
 		static void addArmorForId(int,float);
 		static float getArmorForId(int);
+		static bool isExist(int);
+	};
+	class OverridedColor {
+		public:
+		class OverridedData {
+			public:
+			std::map<int,mce::Color> colors;
+			OverridedData(int,mce::Color);
+		};
+		static std::map<int, OverridedColor::OverridedData> items;
+		static void addColorForId(int,int,mce::Color);
+		static mce::Color getColor(int,int);
 		static bool isExist(int);
 	};
 };

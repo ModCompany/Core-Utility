@@ -48,6 +48,11 @@ public class DataOffset {
         return this.pointer;
     }
 
+    public void free(){
+        free(this.pointer);
+    }
+    
+    public static native void free(long ptr);
     public static native void setOffset(long ptr,int offset);
     public static native long getPointer(long ptr);
     public static native long getPointerOffset(long ptr,int offset);

@@ -71,5 +71,8 @@ Item.registerUseFunctionForID(280, function(coords,item,block){
    // Debug.m(source.getBlock(coords.x,coords.y +2,coords.z));
 })*/
 
+Callback.addCallback("LevelLoaded",function(){
+    ItemsUtil.overrideColor(280,0,"#ADFF2F");
+});
 
 

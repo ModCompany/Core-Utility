@@ -157,3 +157,7 @@ export(jlong, engine_DataOffset_getPointer,jlong ptr){
 export(jlong, engine_DataOffset_getPointerOffset,jlong ptr,jint offset){
     return (jlong)((JniInjector::DataOffset*) ptr)->getPointer((int)offset);   
 }
+
+export(void, engine_DataOffset_free,jlong ptr){
+    return ((JniInjector::DataOffset*) ptr)->free();
+}
