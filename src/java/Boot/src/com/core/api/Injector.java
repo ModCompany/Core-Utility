@@ -91,10 +91,10 @@ public class Injector {
         free(this.pointer);
     }
 
-    public DataOffset getOffset(){
+    public DataOffset getData(){
         return new DataOffset(getOffset(pointer));
     }
-    public DataOffset getOffset(int offset){
+    public DataOffset getData(int offset){
         return new DataOffset(getOffset(pointer, offset));
     }
 

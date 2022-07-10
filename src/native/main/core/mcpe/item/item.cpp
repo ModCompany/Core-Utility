@@ -263,12 +263,7 @@ int getAttackDamage(Item *item)
 	return OverridedItem::OverridedArmor::getArmorForId(id);
 };
 
-mce::Color getColorItem(Item *item, ItemStackBase const& stack, mce::Color const& color)
-{
-	int id = IdConversion::dynamicToStatic(stack.getId(), IdConversion::ITEM);
-//	return OverridedItem::OverridedColor::getColor(id,stack.getAuxValue());
-	return mce::Color::BLACK;
-}
+
 export(void, mcpe_item_Item_overrideName, int id, int data, jstring name)
 {
 	Item *item = ItemRegistry::getItemById(IdConversion::staticToDynamic(id, IdConversion::ITEM));
@@ -292,16 +287,6 @@ export(void, mcpe_item_Item_overrideArmorValue, int id, float value)
 	}
 }
 
-export(void, mcpe_item_Item_overrideColorHex, int id, int data, jstring hex)
-{
-	Item *item = ItemRegistry::getItemById(IdConversion::staticToDynamic(id, IdConversion::ITEM));
-	if (item)
-	{
-		//OverridedItem::OverridedColor::addColorForId(id, data, mce::Color::WHITE.fromHexString(JavaClass::toStlString(env,hex)));
-		VtablePatcher patcher(VtableCache::VtableType::ITEM,id,item);
-		patcher.patch("_ZTV4Item","_ZNK4Item8setColorER13ItemStackBaseRKN3mce5ColorE",(void*) &getColorItem);
-	}
-}
 
 #include <core/JniInjector.h>
 #include <innercore/global_context.h>

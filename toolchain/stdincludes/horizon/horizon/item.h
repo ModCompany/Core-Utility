@@ -4,7 +4,7 @@
 
 #ifndef HORIZON_ITEM_H
 #define HORIZON_ITEM_H
-
+#include <mce.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stl/vector>
@@ -24,6 +24,7 @@ class MobEffectInstance;
 
 class Item {
 	public:
+	mce::Color const& color;
 	char filler[256];
 	Item(stl::string const&, short);
 

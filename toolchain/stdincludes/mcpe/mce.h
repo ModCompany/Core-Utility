@@ -20,6 +20,7 @@ namespace mce {
         Color fromHexString(stl::string const&);
         static Color const& WHITE;
         static Color const& BLACK;
+        stl::string const& toHexString() const;         
     };
 
     class MaterialPtr {
