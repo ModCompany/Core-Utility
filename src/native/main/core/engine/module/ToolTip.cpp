@@ -50,10 +50,9 @@ std::vector<std::string> ToolTip::get(int id, int data){
 }
 void ToolTip::addToolTip(int id, int data, std::string name){
     ToolTip* key = new ToolTip(id, data);
-    if(tool_tips.find(key) == tool_tips.end())
-        tool_tips[key] = {name};
-    else
-        tool_tips[key].push_back(name);
+    std::vector<std::string> result = get(key);
+    result.push_back(name);
+    tool_tips[key] = result;
 }
 void ToolTip::clearToolTips(){
     for(auto it = tool_tips.begin(); it != tool_tips.end(); ++it)

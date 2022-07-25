@@ -54,7 +54,7 @@ public class ToolTip {
         String[] tips = getToolTips(id, data);
         clearToolTip(id, data);
         for(String tip : tips){
-            if(tip != name)
+            if(!tip.equals(name))
                 addToolTip(id, data, tip);
         }
     }

@@ -14,3 +14,33 @@ new NativeSaver("test")
     .read(function(level, tag){
         //alert("READ - "+JSON.stringify(tag.toScriptable()));
     });
+let CustomWarp = WRAP_JAVA("com.core.api.engine.CustomWarp");
+let Warp = CustomWarp.init();
+
+let BlockSource_ = BlockSource;
+BlockSource = new Warp("com.zhekasmirnov.apparatus.mcpe.NativeBlockSource");
+function createBlockSource(region){
+    try {
+        let object = new CustomWarp.JsObject(region);
+        object.test = function(){
+            alert("hello");
+        };
+        return object;
+    } catch (error) {
+        Logger.error(error.toString());
+        return region;
+    }
+}
+try {
+    BlockSource.staticTest = function(player){
+        alert("createBlockSource");
+        return createBlockSource(BlockSource_.getDefaultForActor(player));
+    };
+} catch (error) {
+    Logger.error(error.toString());
+}
+
+Callback.addCallback("ItemUse", function(coords, item, block, is, player){
+    let region = BlockSource.staticTest(player);
+    //region.test(); крч почти работает, статичный метод удалось добовить, а...
+});
