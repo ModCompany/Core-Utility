@@ -10,6 +10,7 @@
 
 #include <innercore/common.h>
 
+#include <mce.h>
 #include <core/Overrided.h>
 
 OverridedItem::OverridedName::OverridedData::OverridedData(int id, std::string name){
@@ -52,5 +53,30 @@ bool OverridedItem::OverridedArmor::isExist(int id){
 	}else return false;
 };
 
-std::map<int, OverridedItem::OverridedName::OverridedData> OverridedItem::OverridedName::items;
+OverridedItem::OverridedColor::OverridedData::OverridedData(int id,mce::Color color){
+	this->colors[id] = color;
+}
+
+void OverridedItem::OverridedColor::addColorForId(int id,int data,mce::Color color){
+	if(OverridedColor::isExist(id)){
+		auto it = items.find(id);
+		it->second.colors[data] = color;
+	}else{
+		items.insert(std::pair<int, OverridedColor::OverridedData>(id,OverridedColor::OverridedData(data,color)));
+	}
+}
+
+bool OverridedItem::OverridedColor::isExist(int id){
+	if(items.count(id) > 0){
+		return true;
+	}else return false;
+}
+
+mce::Color OverridedItem::OverridedColor::getColor(int id,int data){
+	auto it = items.find(id);
+	return it->second.colors[data];
+}
+
 std::map<int, float> OverridedItem::OverridedArmor::items;
+std::map<int, OverridedItem::OverridedName::OverridedData> OverridedItem::OverridedName::items;
+std::map<int,OverridedItem::OverridedColor::OverridedData> OverridedItem::OverridedColor::items;

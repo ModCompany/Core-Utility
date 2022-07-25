@@ -109,9 +109,9 @@ inline void registerParameter(JNIEnv* env, void* paramter, jobjectArray& array, 
         env->SetObjectArrayElement(array, i, NativeAPI::createHookParameter(env, (jint) ((int)((bool)paramter)), HookJava::getJavaString(env, type)));
     }else if(type == "float"){
         env->SetObjectArrayElement(array, i, NativeAPI::createHookParameter(env, (jfloat) ((float&) paramter), HookJava::getJavaString(env, type)));
+    }else if(type == "const char"){
+        env->SetObjectArrayElement(array,i,NativeAPI::createHookParameter(env,HookJava::getJavaString(env,(const char*) paramter),HookJava::getJavaString(env,type)));
     }else if(type == "stl::string"){
-        Logger::debug("HookParameter",((const stl::string*)paramter)->c_str());
-        Logger::flush();
         env->SetObjectArrayElement(array, i, NativeAPI::createHookParameter(env, HookJava::getJavaString(env, ((const stl::string*) paramter)->c_str()), HookJava::getJavaString(env, type)));
     }else{
         env->SetObjectArrayElement(array, i, NativeAPI::createHookParameter(env, (jlong) paramter, HookJava::getJavaString(env, type)));

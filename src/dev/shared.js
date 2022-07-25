@@ -25,30 +25,6 @@ ModAPI.registerAPI("CoreUtility", {
     }
 });
 
-
-
-var n = WRAP_NATIVE("PlayScreen");
-
-var window = new UI.Window({
-    location:{
-        x:0,
-        y:0,
-        width:20,
-        height:20,
-    },
-    elements:{
-        "govno":{type:"button",bitmap:"button",scale: 20,x:0,y:0,clicker:{
-            onClick:function(){
-                alert("work");
-                n.refresh();
-            }
-        }}
-    },
-
-});
-
-var container = new UI.Container();
-
 //container.openAs(window);
 
 
@@ -70,6 +46,5 @@ Item.registerUseFunctionForID(280, function(coords,item,block){
    // Debug.m(source.getBlock(coords.x,coords.y +1,coords.z));
    // Debug.m(source.getBlock(coords.x,coords.y +2,coords.z));
 })*/
-
 
 

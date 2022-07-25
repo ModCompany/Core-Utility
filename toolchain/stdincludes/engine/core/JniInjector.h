@@ -65,6 +65,10 @@ class JniInjector {
             return (void*) ptr;
         };
 
+        void free(){
+            delete this;
+        };
+        
         int setOffset(int offset){
             this->offset = offset;
         };

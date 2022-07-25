@@ -9,5 +9,5 @@ let ItemsUtil = {
     },
     overrideArmorValue:function(id, value){
         this.api.overrideArmorValue(id, value);
-    }
+    },
 };

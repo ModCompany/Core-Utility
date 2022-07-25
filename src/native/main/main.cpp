@@ -22,7 +22,6 @@ typedef int content_id_t;
 #include <core/module/hook_java.h>
 #include <core/module/NativeAPI.h>
 #include <core/JavaClass.h>
-#include <core/JniHook.h>
 #include <core/Global.h>
 #include <core/effect_registry.h>
 #include <core/module/BlockLegacy.h>
