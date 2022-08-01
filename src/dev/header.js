@@ -39,8 +39,3 @@ try {
 } catch (error) {
     Logger.error(error.toString());
 }
-
-Callback.addCallback("ItemUse", function(coords, item, block, is, player){
-    let region = BlockSource.staticTest(player);
-    //region.test(); крч почти работает, статичный метод удалось добовить, а...
-});

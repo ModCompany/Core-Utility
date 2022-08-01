@@ -87,7 +87,6 @@ namespace LegacyBlockRegistry {
             void applyGraphics(BlockLegacy* block, int variantCount);
 
             Properties();
-            ~Properties();
         };
 
 		// currently registered block
