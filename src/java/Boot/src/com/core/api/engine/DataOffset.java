@@ -24,6 +24,14 @@ public class DataOffset {
         return getIntOffset(pointer,offset);
     }
 
+    public float getFloat(){
+        return getFloat(pointer);
+    }
+
+    public float getFloat(int offset){
+        return getFloatOffset(pointer,offset);
+    }
+
     public long getPointer(){
         return getPointer(pointer);
     }
@@ -58,6 +66,8 @@ public class DataOffset {
     public static native long getPointerOffset(long ptr,int offset);
     public static native int getInt(long ptr);
     public static native int getIntOffset(long ptr,int offset);
+    public static native float getFloat(long ptr);
+    public static native float getFloatOffset(long ptr,int offset);
     public static native boolean getBool(long ptr);
     public static native boolean getBoolOffset(long ptr,int offset);
     public static native String getString(long ptr);

@@ -55,6 +55,14 @@ class JniInjector {
             return *(long*)((char*) table + a); 
         };
 
+        float getFloat(){
+            return *(float*)((char*) table + this->offset);
+        }
+
+        float getFloat(int a){
+            return *(float*)((char*) table + a);
+        }
+
         void* get(){
             long ptr = this->getPointer();
             return (void*) ptr;
@@ -101,7 +109,6 @@ class JniInjector {
         void replace(const char*,const char*,const char*);
 
         ~JniInjector(){
-            Logger::debug("JniInjector","Deleted");
-            Logger::flush();
+
         };
 };

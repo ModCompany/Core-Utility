@@ -143,6 +143,14 @@ export(jint, engine_DataOffset_getIntOffset,jlong ptr,jint offset){
     return (jint)((JniInjector::DataOffset*) ptr)->getInt((int)offset);
 }
 
+export(jfloat, engine_DataOffset_getFloat,jlong ptr,jint offset){
+    return (jfloat)((JniInjector::DataOffset*) ptr)->getFloat();
+}
+
+export(jfloat, engine_DataOffset_getFloatOffset,jlong ptr,jint offset){
+    return (jfloat)((JniInjector::DataOffset*) ptr)->getFloat((int)offset);
+}
+
 export(jstring, engine_DataOffset_getString,jlong ptr){
     return env->NewStringUTF(((JniInjector::DataOffset*) ptr)->getString().c_str());   
 }

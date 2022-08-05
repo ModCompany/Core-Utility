@@ -16,10 +16,12 @@ public class Injector {
     public Injector(){
         this(0);
     }
-
     public Injector setArgsType(String[] types){
         setArgsType(pointer, types);
         return this;
+    }
+    public Injector setArgsTypes(String...types){
+       return setArgsType(types);
     }
     public Injector call(String symbol, Object[] args, String table){
         call(this.pointer, symbol, args, table != "", table);
