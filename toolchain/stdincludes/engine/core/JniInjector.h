@@ -99,4 +99,9 @@ class JniInjector {
 
         void free();
         void replace(const char*,const char*,const char*);
+
+        ~JniInjector(){
+            Logger::debug("JniInjector","Deleted");
+            Logger::flush();
+        };
 };

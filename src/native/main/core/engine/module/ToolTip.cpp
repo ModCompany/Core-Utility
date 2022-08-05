@@ -115,27 +115,27 @@ void ToolTip::init(){
         LAMBDA((Item* item, ItemStackBase const& stack, Level& level, std::__ndk1::string& text, bool b), {
             JNIEnv* env;
             ATTACH_JAVA(env, JNI_VERSION_1_6){
-                jstring str = (jstring) env->CallStaticObjectMethod(
+               /* jstring str = (jstring) env->CallStaticObjectMethod(
                     ToolTipClass, pre, 
                     (jlong) &stack, (jint) stack.getDamageValue()
                 );
                 const char* res = getString(env, str);
                 if(strcmp(res, ""))
                     text += "\n"+std::__ndk1::string(res);
-
+*/
                 ToolTip* key_tip = new ToolTip(IdConversion::dynamicToStatic(stack.getId(), IdConversion::Scope::ITEM), stack.getAuxValue());
                 std::vector<std::string> tips = ToolTip::get(key_tip);
                 for(int i = 0;i < tips.size();i++)
                     text += "\n"+std::__ndk1::string(tips[i].c_str());
 
-                str = (jstring) env->CallStaticObjectMethod(
+                /*str = (jstring) env->CallStaticObjectMethod(
                     ToolTipClass, post, 
                     (jlong) &stack, (jint) stack.getDamageValue()
                 );
                 res = getString(env, str);
                 if(strcmp(res, ""))
                     text += "\n"+ std::__ndk1::string(res);
-
+*/
                 delete key_tip;
             }
         }, ), HookManager::RETURN | HookManager::LISTENER

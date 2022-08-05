@@ -119,7 +119,7 @@ namespace LegacyBlockRegistry {
     class LegacyBlockProviderBase : public BlockProvider {
     public:
         LegacyBlockProviderBase();
-        ~LegacyBlockProviderBase();
+        ~LegacyBlockProviderBase() = default;
 
         void _setupFactory();
         virtual void setupBlock();
@@ -138,6 +138,7 @@ namespace LegacyBlockRegistry {
         
 		virtual LegacyBlockFactoryBase* getFactory();
         std::vector<BlockVariant>& getVariants();
+
     };
 
     class LegacyBlockProvider : public LegacyBlockProviderBase {

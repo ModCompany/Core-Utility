@@ -36,7 +36,7 @@ void JniInjector::replace(const char* table, const char* symbol, const char* rep
 }
 
 void JniInjector::free(){
-    delete this;
+
 }
 
 template<typename T>
@@ -45,6 +45,7 @@ T callInjector(JNIEnv* env, JniInjector* injector, jstring symbol, jobjectArray 
 }
 
 export(jlong, Injector_init_1injector, jlong ptr){
+
     return (jlong) new JniInjector(ptr);
 }
 
@@ -73,7 +74,7 @@ export(void, Injector_call, jlong ptr, jstring a, jobjectArray arr, jboolean vir
 }
 
 export(void, Injector_free, jlong ptr){
-    return ((JniInjector*) ptr)->free();
+    ((JniInjector*) ptr)->~JniInjector();
 }
 
 
