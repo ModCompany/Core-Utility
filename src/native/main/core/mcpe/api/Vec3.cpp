@@ -24,5 +24,5 @@ export(jfloat, mcpe_api_Vec3_getZ, jlong ptr){
     return (jfloat) ((Vec3*) ptr)->z;
 }
 export(void, mcpe_api_Vec3_free, jlong ptr){
-    delete ((Vec3*) ptr);
+    ((Vec3*) ptr)->~Vec3();
 }

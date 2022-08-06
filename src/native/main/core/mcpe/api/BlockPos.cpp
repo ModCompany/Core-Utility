@@ -15,5 +15,5 @@ export(void, mcpe_api_BlockPos_setZ, jlong ptr, jint x){
     ((BlockPos*) ptr)->z = (int) x;
 }
 export(void, mcpe_api_BlockPos_free, jlong ptr){
-    delete ((BlockPos*) ptr);
+    ((BlockPos*) ptr)->~BlockPos();
 }

@@ -18,5 +18,5 @@ export(jfloat, mcpe_api_Vec2_getY, jlong ptr){
     return (jfloat) ((Vec2*) ptr)->y;
 }
 export(void, mcpe_api_Vec2_free, jlong ptr){
-    delete ((Vec2*) ptr);
+    ((Vec2*) ptr)->~Vec2();
 }

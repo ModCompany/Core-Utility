@@ -93,8 +93,16 @@ public class Injector {
         setDebug(this.pointer, value);
         return this;
     }
+    boolean isFree = false;
     public void free(){
-        free(this.pointer);
+        if(!isFree)
+            free(this.pointer);
+        isFree = true;
+    }
+
+    @Override
+    public void finalize() {
+        free();
     }
 
     public DataOffset getData(){

@@ -10,11 +10,14 @@ public class Vec2 extends PointerClass{
     native public static float getY(long ptr);
     native public static void free(long ptr);
 
+    boolean freeEnable;
     public Vec2(float x, float y){
         super(newClass(x, y));
+        freeEnable = true;
     }
     public Vec2(long ptr){
         super(ptr);
+        freeEnable = false;
     }
 
     public float getX(){
@@ -32,7 +35,16 @@ public class Vec2 extends PointerClass{
         setX(pointer, x);
     }
 
+    boolean isFree = false;
     public void free(){
-        free(pointer);
+        if(!isFree)
+            free(this.pointer);
+        isFree = true;
+    }
+
+    @Override
+    public void finalize() {
+        if(freeEnable)
+            free();
     }
 }

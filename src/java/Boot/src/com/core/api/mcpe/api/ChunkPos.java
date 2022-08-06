@@ -10,11 +10,14 @@ public class ChunkPos extends PointerClass {
     native public static int getZ(long ptr);
     native public static void free(long ptr);
 
+    boolean freeEnable;
     public ChunkPos(int x, int y){
         super(newClass(x, y));
+        freeEnable = true;
     }
     public ChunkPos(long ptr){
         super(ptr);
+        freeEnable = false;
     }
 
     public int getX(){
@@ -32,7 +35,16 @@ public class ChunkPos extends PointerClass {
         setX(pointer, x);
     }
 
+    boolean isFree = false;
     public void free(){
-        free(pointer);
+        if(!isFree)
+            free(this.pointer);
+        isFree = true;
+    }
+
+    @Override
+    public void finalize() {
+        if(freeEnable)
+            free();
     }
 }
