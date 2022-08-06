@@ -89,6 +89,10 @@ public class Injector {
         return this;
     }
 
+    public Injector setDebug(boolean value){
+        setDebug(this.pointer, value);
+        return this;
+    }
     public void free(){
         free(this.pointer);
     }
@@ -106,7 +110,7 @@ public class Injector {
     }
     
     public native static long init_injector(long ptr);
-
+    public native static void setDebug(long ptr,boolean value);
     public native static long getOffset(long ptr);
     public native static long getOffset(long ptr,int offset);
 

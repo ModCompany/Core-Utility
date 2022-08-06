@@ -74,20 +74,24 @@ class JniInjector {
         };
 
         void free(){
-            delete this;
+            this->~DataOffset();
         };
         
         int setOffset(int offset){
             this->offset = offset;
         };
-    };
 
+        ~DataOffset(){
+
+        }
+    };
+        bool isDebug = false;
         void* table;
         long pointer;
         std::vector<std::string> types;
         std::string lib;
         JniInjector(void*);
-        JniInjector(long);
+        JniInjector(long long);
 
         void replaceResult(const char*,const char*,void*);
         void setArgsType(std::vector<std::string> types);

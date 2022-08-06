@@ -31,7 +31,7 @@ class Actor {
     bool isSneaking() const;
 	bool wasHurt();
     ActorDefinitionIdentifier* getActorIdentifier() const;
-    ActorUniqueID* getUniqueID() const;
+    ActorUniqueID getUniqueID() const;
     BlockSource* getRegion() const;
     Vec3 getPos() const;
     void setPos(Vec3 const&);

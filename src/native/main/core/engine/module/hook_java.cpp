@@ -167,7 +167,7 @@ const ArgsBufferBuilder HookJava::getParameters(JNIEnv* env, void* self, std::ve
         }else if(type == "float"){
             builder.add<float>(NativeAPI::getFloatHookParameter(env, object));
         }else if(type=="long"){
-            builder.add<long>(NativeAPI::getLongHookParameter(env,object));
+            builder.add<long long>(NativeAPI::getLongHookParameter(env,object));
         }else{
             builder.add<void*>(NativeAPI::getPointerHookParameter(env, object));
         }

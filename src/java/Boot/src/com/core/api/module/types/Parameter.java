@@ -38,7 +38,6 @@ public class Parameter {
         return new Parameter(v,"long");
     }
 
-
     String type; Object v;
 
     public Parameter(long v, String type){

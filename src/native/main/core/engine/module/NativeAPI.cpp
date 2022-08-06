@@ -29,8 +29,8 @@ void* NativeAPI::getPointerHookParameter(JNIEnv* env, jobject obj){
     return (void*) env->CallLongMethod(obj, NativeAPI::getParameterLong);
 }
 
-long NativeAPI::getLongHookParameter(JNIEnv* env, jobject obj){
-    return (long) env->CallLongMethod(obj, NativeAPI::getParameterLong);
+long long NativeAPI::getLongHookParameter(JNIEnv* env, jobject obj){
+    return (long long) env->CallLongMethod(obj, NativeAPI::getParameterLong);
 }
 
 int NativeAPI::getIntHookParameter(JNIEnv* env, jobject obj){
@@ -77,7 +77,7 @@ export(jint,module_NativeAPI_staticToDynamic, jint id, jint type) {
     return (jint) IdConversion::staticToDynamic((int) id, (IdConversion::Scope) ((int) type));
 }
 export(jlong,module_NativeAPI_getActorID, jlong ptr) {
-    return (jlong) ((Actor*) ptr)->getUniqueID()->getId();
+    return (jlong) ((Actor*) ptr)->getUniqueID().getId();
 }
 export(jint,module_NativeAPI_getXBlockPos, jlong ptr) {
     return (jint) ((BlockPos*) ptr)->x;

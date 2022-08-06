@@ -15,6 +15,6 @@ class NativeAPI {
         static int getIntHookParameter(JNIEnv*, jobject);
         static float getFloatHookParameter(JNIEnv*, jobject);
         static std::string getStringHookParameter(JNIEnv*, jobject);
-        static long getLongHookParameter(JNIEnv*,jobject);
+        static long long getLongHookParameter(JNIEnv*,jobject);
         static void init();
 };

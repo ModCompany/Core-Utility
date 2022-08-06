@@ -64,7 +64,7 @@ void CustomEntity::init(){
         SYMBOL("mcpe","_ZN5Actor4tickER11BlockSource"), 
         LAMBDA((HookManager::CallbackController* controller, Actor* thas, BlockSource& region),{
             if(CustomEntity::isTick(std::string(thas->getActorIdentifier()->getFullName().c_str())))
-                JavaCallbacks::invokeControlledCallback(CustomEntity::customEntity, "tickEntity", "(J)V", controller, 0, (jlong) thas->getUniqueID()->id);
+                JavaCallbacks::invokeControlledCallback(CustomEntity::customEntity, "tickEntity", "(J)V", controller, 0, (jlong) thas->getUniqueID().id);
 	    },
     ), HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
 

@@ -12,8 +12,8 @@ JniInjector::JniInjector(void* a){
     this->types = std::vector<std::string>();
 };
 
-JniInjector::JniInjector(long pointer){
-    Logger::debug("Mod-Test", "Pointer of table: %p", pointer);
+JniInjector::JniInjector(long long pointer){
+    if(isDebug) Logger::debug("JniInjector-Debug", "Init Pointer of table: %p", pointer);
     this->table = (void*) pointer;
     this->pointer = pointer;
     this->types = std::vector<std::string>();
@@ -27,6 +27,7 @@ void JniInjector::setArgsType(std::vector<std::string> types){
 template<typename T>
 T JniInjector::call(const char* symbol, ArgsBufferBuilder args, bool virt, const char* table){
     VtableHelper helper(this->table);
+    if(this->isDebug) Logger::debug("JniInjector-Debug", "Injector with: %p called symbol by address: %s is virtual: %b",this->pointer,symbol,virt);
     return helper.call<T>(symbol, args, virt, table, this->lib.c_str());
 }
 
@@ -35,16 +36,14 @@ void JniInjector::replace(const char* table, const char* symbol, const char* rep
     patcher.replace(table,symbol,this->lib.c_str(),replace);
 }
 
-void JniInjector::free(){
 
-}
 
 template<typename T>
 T callInjector(JNIEnv* env, JniInjector* injector, jstring symbol, jobjectArray arr, bool virt, jstring table){
     return injector->call<T>(JavaClass::toString(env,symbol).data(), HookJava::getParameters(env, injector->table, injector->types, arr), virt, JavaClass::toString(env,table).data());
 }
 
-export(jlong, Injector_init_1injector, jlong ptr){
+export(jlong, Injector_init_1injector, long long ptr){
 
     return (jlong) new JniInjector(ptr);
 }
@@ -77,39 +76,12 @@ export(void, Injector_free, jlong ptr){
     ((JniInjector*) ptr)->~JniInjector();
 }
 
-
 export(void, Injector_setArgsType, jlong ptr, jobjectArray arr){
     std::vector<std::string> types;
     for(int i=0;i<env->GetArrayLength(arr);i++)
         types.push_back(JavaClass::toString(env,(jstring) env->GetObjectArrayElement(arr, i)));
     ((JniInjector*) ptr)->setArgsType(types);
 }
-
-
-/* ЗАМОРОЖЕННО ДО ЛУЧШИХ ВРЕМЁН ДА ИЛЬЯ? Да-да
-export(jobject, Injector_replace, jlong ptr,jstring a,jstring b, jobject value, jobjectArray arr){
-    jobject func = env->NewGlobalRef(value);
-    std::vector<std::string>* types = new std::vector<std::string>();
-    for(int j=0;j<env->GetArrayLength(arr);j++)
-        types->push_back(JavaClass::toString(env,(jstring) env->GetObjectArrayElement(arr, j)));
-    JniInjector* injector = ((JniInjector*) ptr);
-    JavaClass* java = new JavaClass(env, NULL);
-    auto newFunc = ([java, types, env, func](void* a){
-        Logger::debug("TEST", "table");
-        java->runJsFunction(func, HookJava::getParameters(env, *types, {}, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr));
-        
-        Logger::debug("TEST", "end run");
-        return stl::string("popa");
-    });
-    injector->replaceResult(JavaClass::toString(env,a).data(), JavaClass::toString(env,b).data(), LAMBDA((void* a, void* b), {
-        Logger::debug("TEST", "table");
-        java->runJsFunction(func, HookJava::getParameters(env, *types, {}, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr));
-        
-        Logger::debug("TEST", "end run");
-        return stl::string("popa");
-    }, java, types, env, func));
-    return NULL;
-}*/
 
 export(void, Injector_setLib, jlong ptr, jstring name){
     ((JniInjector*) ptr)->lib = JavaClass::toString(env, name);
@@ -119,6 +91,11 @@ export(void, Injector_replace, jlong ptr,jstring table,jstring symbol,jstring re
     JniInjector* injector = (JniInjector*) ptr;
     injector->replace(JavaClass::toString(env,table).data(),JavaClass::toString(env,symbol).data(),JavaClass::toString(env,replace).data());
 }
+
+export(void, Injector_setDebug, jlong ptr,jboolean value){
+    ((JniInjector*) ptr)->isDebug = value;
+}
+
 
 export(jlong, Injector_getOffset, jlong ptr){
     return (jlong) ((JniInjector*) ptr)->getOffset();
