@@ -39,9 +39,3 @@ try {
 } catch (error) {
     Logger.error(error.toString());
 }
-Callback.addCallback("ItemUse", function(coords){
-    let pos = new BlockPos(coords.x, coords.y, coords.z);
-    alert(pos.getX()+" "+pos.getY()+" "+pos.getZ());
-    pos.free();
-    alert(pos.getX()+" "+pos.getY()+" "+pos.getZ());
-});
