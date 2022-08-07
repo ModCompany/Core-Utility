@@ -7,17 +7,11 @@ let Injector = WRAP_JAVA("com.core.api.Injector");
 let ToolTip = WRAP_JAVA("com.core.api.item.ToolTip");
 let NativeSaver = WRAP_JAVA("com.core.api.engine.NativeSaver");
 let FileUtils = WRAP_JAVA("com.core.api.engine.FileUtils");
-new NativeSaver("test")
-    .save(function(level, tag){
-        alert("SAVE - "+JSON.stringify(tag.toScriptable()));
-    })
-    .read(function(level, tag){
-        //alert("READ - "+JSON.stringify(tag.toScriptable()));
-    });
+
 let CustomWarp = WRAP_JAVA("com.core.api.engine.CustomWarp");
 let Warp = CustomWarp.init();
 
-let BlockSource_ = BlockSource;
+/*let BlockSource_ = BlockSource;
 BlockSource = new Warp("com.zhekasmirnov.apparatus.mcpe.NativeBlockSource");
 function createBlockSource(region){
     try {
@@ -38,4 +32,4 @@ try {
     };
 } catch (error) {
     Logger.error(error.toString());
-}
+}*/

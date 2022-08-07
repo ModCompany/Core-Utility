@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import org.mozilla.javascript.Function;
 
 import com.core.api.JsHelper;
-import com.core.api.mcpe.level.LevelData;
 import com.zhekasmirnov.horizon.runtime.logger.Logger;
+import com.zhekasmirnov.innercore.api.log.DialogHelper;
 import com.zhekasmirnov.innercore.api.nbt.NativeCompoundTag;
 
 public class NativeSaver {
@@ -25,20 +25,44 @@ public class NativeSaver {
         return this;
     }
 
-    public static void saveCallback(long levelData, long tag){
-        Logger.debug("SAVE: "+tag);
-        if(tag != 0){
-            Object[] args = {new LevelData(levelData), new NativeCompoundTag(tag)};
-            for (NativeSaver nativeSaver : savers)
+    private static NativeCompoundTag getSaverTag(String name, NativeCompoundTag tag){
+        if(!tag.contains(name)){
+            NativeCompoundTag _tag = new NativeCompoundTag();
+            _tag.setFinalizable(false);
+            tag.putCompoundTag(name, _tag);
+        }
+        return tag.getCompoundTag(name);
+    }
+
+    public static void saveCallback(long player, long tag){
+        Logger.debug(player+" "+tag, "Test");
+        NativeCompoundTag _tag = new NativeCompoundTag(tag);
+        _tag.setFinalizable(false);
+        Object[] args = {player, null};
+        for (NativeSaver nativeSaver : savers){
+            try {
+                args[1] = getSaverTag(nativeSaver.name, _tag);
                 if(nativeSaver.save != null)
                     JsHelper.callFunction(nativeSaver.save, args);
+            } catch (Exception e) {
+                
+                //Logger.error("NativeSaver, save: "+nativeSaver.name, e.getCause());
+                DialogHelper.reportNonFatalError("NativeSaver, save: "+nativeSaver.name, e.getCause());
+            }
         }
     }
-    public static void readCallback(long levelData, long tag){
-        Logger.debug("READ");
-        Object[] args = {new LevelData(levelData), new NativeCompoundTag(tag)};
-        for (NativeSaver nativeSaver : savers)
-            if(nativeSaver.read != null)
-                JsHelper.callFunction(nativeSaver.read, args);
+    public static void readCallback(long player, long tag){
+        NativeCompoundTag _tag = new NativeCompoundTag(tag);
+        _tag.setFinalizable(false);
+        Object[] args = {player, null};
+        for (NativeSaver nativeSaver : savers){
+            try {
+                args[1] = getSaverTag(nativeSaver.name, _tag);
+                if(nativeSaver.read != null)
+                    JsHelper.callFunction(nativeSaver.read, args);
+            } catch (Exception e) {
+                DialogHelper.reportNonFatalError("NativeSaver, read: "+nativeSaver.name, e.getCause());
+            }
+        }
     }
 }

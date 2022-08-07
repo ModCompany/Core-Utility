@@ -10,7 +10,7 @@ class Vec2 {
     float x,y;
     Vec2(float x,float y) : x(x), y(y) {};
     ~Vec2(){
-        delete this;
+        
     };
 };
 class Vec3 {
@@ -18,7 +18,7 @@ class Vec3 {
     float x, y, z;
     Vec3(float x,float y,float z) : x(x), y(y), z(z) {};
     ~Vec3(){
-        delete this;
+        
     };
 };
 
@@ -27,7 +27,7 @@ class BlockPos {
     int x, y, z;
     BlockPos(int x,int y,int z) : x(x), y(y), z(z) {};
     ~BlockPos(){
-        delete this;
+        
     };
 };
 
@@ -38,7 +38,7 @@ class ChunkPos {
     ChunkPos(Vec3 const&);
     ChunkPos(BlockPos const&);
     ~ChunkPos(){
-        delete this;
+        
     };
     BlockPos getMiddleBlockPosition(int) const;
 };

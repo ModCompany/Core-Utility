@@ -18,5 +18,5 @@ export(jint, mcpe_api_ChunkPos_getZ, jlong ptr){
     return (jint) ((ChunkPos*) ptr)->z;
 }
 export(void, mcpe_api_ChunkPos_free, jlong ptr){
-    ((ChunkPos*) ptr)->~ChunkPos();
+    delete ((ChunkPos*) ptr);
 }

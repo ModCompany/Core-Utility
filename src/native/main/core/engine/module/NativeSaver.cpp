@@ -14,9 +14,9 @@ void NativeSaver::init(){
         NativeSaver::NativeSaverClass = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/engine/NativeSaver")));
         NativeSaver::readID = env->GetStaticMethodID(NativeSaver::NativeSaverClass, "readCallback", "(JJ)V");
         NativeSaver::saveID = env->GetStaticMethodID(NativeSaver::NativeSaverClass, "saveCallback", "(JJ)V");
-        HookManager::addCallback(
-            SYMBOL("mcpe", "_ZN12LevelStorage8saveDataERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEERK11CompoundTag"), 
-            LAMBDA((void* self, void* str, CompoundTag const& tag), {
+        /*HookManager::addCallback(
+            SYMBOL("mcpe", "_ZN5Actor4saveER11CompoundTag"), 
+            LAMBDA((void* self, CompoundTag const& tag), {
                 JNIEnv* env;
                 ATTACH_JAVA(env, JNI_VERSION_1_6){
                     env->CallStaticVoidMethod(
@@ -26,16 +26,16 @@ void NativeSaver::init(){
                     );
                 }
             }, 
-        ), HookManager::CALL | HookManager::LISTENER);
+        ), HookManager::CALL | HookManager::LISTENER);*/
         /*HookManager::addCallback(
-            SYMBOL("mcpe", "_ZN9LevelData10getTagDataERK11CompoundTag"), 
-            LAMBDA((void* self, void* tag), {
+            SYMBOL("mcpe", "_ZN5Actor4loadERK11CompoundTagR14DataLoadHelper"), 
+            LAMBDA((void* self, CompoundTag& tag), {
                 JNIEnv* env;
                 ATTACH_JAVA(env, JNI_VERSION_1_6){
                     env->CallStaticVoidMethod(
                         NativeSaver::NativeSaverClass, NativeSaver::readID, 
                         (jlong) self,
-                        (jlong) tag
+                        (jlong) &tag
                     );
                 }
             }, 
