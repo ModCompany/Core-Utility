@@ -98,7 +98,7 @@ namespace LegacyBlockRegistry {
         Properties props;
 
         LegacyBlockFactoryBase();
-        ~LegacyBlockFactoryBase();
+        ~LegacyBlockFactoryBase() = default;
         
 		virtual void registerBlock();
 		void initParameters(int id, std::string nameId);

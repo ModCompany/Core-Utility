@@ -31,6 +31,7 @@ typedef int content_id_t;
 #include <client/ui/Container.h>
 #include <client/Sound.h>
 #include <core/scales.h>
+#include <core/module/NativeVar.h>
 
 #include <Core.h>
 #include <innercore/global_context.h>
@@ -76,6 +77,7 @@ public:
 		NativeAPI::init();
 		HookJava::init();
 		BlockLegacyApi::init();
+		NativeVar::init();
 		//NativeSaver::init();
 
 		HookManager::addCallback(
