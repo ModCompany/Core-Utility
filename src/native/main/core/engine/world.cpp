@@ -6,6 +6,9 @@
 #include <client/controller/PlayScreenController.h>
 #include <core/Global.h>
 #include <core/JavaClass.h>
+#include <stl/string>
+#define stl std::__ndk1
+
 
 export(void, mcpe_World_addWorldToCache,jstring world){
     Logger::debug("CoreUtility-World","new world added to cache");
@@ -30,4 +33,16 @@ export(jlong, mcpe_World_getLevelData,jstring maybe_uid){
 
 export(void, mcpe_World_createLevel, jstring uid,jstring path){
     return Global::getWorldsCache()->_createAndAddToCache(JavaClass::toStlString(env,uid),Core::Path(JavaClass::toStlString(env,path)));
+}
+
+#include <type/Json_new.h>
+
+
+export(void, mcpe_World_setFlatGenerator, jstring json){
+    Json::Value value;
+    Json::Reader reader;
+
+    reader.parse(JavaClass::toStlString(env,json),value,false);
+    Logger::debug("Json",value.toStyledString().c_str());
+    Logger::flush();
 }
