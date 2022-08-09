@@ -61,8 +61,8 @@ void NativeVar::init(){
     }
 
     NativeVar::registerType("int", new NativeTypeInt());
-    NativeVar::registerType("float", new NativeTypeInt());
-    NativeVar::registerType("double", new NativeTypeInt());
+    NativeVar::registerType("float", new NativeTypeFloat());
+    NativeVar::registerType("double", new NativeTypeDouble());
 }
 
 void NativeVar::registerType(std::string name, NativeType* type){
@@ -125,7 +125,7 @@ inline NativeVar* getPointer(JNIEnv* env, jobject obj){
 #define _export(TYPE, CLZ, ...) extern "C" JNIEXPORT TYPE JNICALL Java_com_core_api_##CLZ (JNIEnv* env, jobject self, ##__VA_ARGS__)
 
 _export(jlong,engine_NativeVar_init) {
-    return (jlong) new NativeVar(env, (new TypeBuilder())->set(556), "int");
+    return (jlong) new NativeVar();
 }
 _export(void,engine_NativeVar_setType, jstring type) {
     getPointer(env, self)->setType(JavaClass::toString(env, type));

@@ -9,6 +9,7 @@ public class NativeVar extends PointerClass {
     public NativeVar(Object value, String type){
         this(init());
         setType(type);
+        set(value);
     }
 
     native private void setType(String name); 
