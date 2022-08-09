@@ -12,14 +12,13 @@ let CustomWarp = WRAP_JAVA("com.core.api.engine.CustomWarp");
 let Warp = CustomWarp.init();
 
 let NativeVar = WRAP_JAVA("com.core.api.engine.NativeVar");
-/*Callback.addCallback("ItemUse", function(){
-    alert("use");
-    let value = new NativeVar(1, "int");
-    alert("use 2");
+
+Callback.addCallback("ItemUse", function(){
+    let value = new NativeVar(6, "int");
     alert(value.get());
     value.set(Number(value.get()) * 2);
     alert(value.get());
-});*/
+});
 
 /*let BlockSource_ = BlockSource;
 BlockSource = new Warp("com.zhekasmirnov.apparatus.mcpe.NativeBlockSource");

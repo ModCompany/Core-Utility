@@ -33,9 +33,6 @@ class ArgsBufferBuilder {
 		inline const unsigned char* data() const { return buffer.data(); }
 };
 
-
-
-
 class VtableHelper {
 	public:
 		void** vtable;
