@@ -11,14 +11,13 @@ let FileUtils = WRAP_JAVA("com.core.api.engine.FileUtils");
 let CustomWarp = WRAP_JAVA("com.core.api.engine.CustomWarp");
 let Warp = CustomWarp.init();
 
-let NativeVar = WRAP_JAVA("com.core.api.engine.NativeVar");
+let Actor = WRAP_JAVA("com.core.api.mcpe.entity.Actor");
+let Mob = WRAP_JAVA("com.core.api.mcpe.entity.Mob");
+let NativePlayer = WRAP_JAVA("com.core.api.mcpe.entity.Player");
+let LocalPlayer = WRAP_JAVA("com.core.api.mcpe.entity.LocalPlayer");
+let ServerPlayer = WRAP_JAVA("com.core.api.mcpe.entity.ServerPlayer");
 
-Callback.addCallback("ItemUse", function(){
-    let value = new NativeVar(6, "int");
-    alert(value.get());
-    value.set(Number(value.get()) * 2);
-    alert(value.get());
-});
+let NativeVar = WRAP_JAVA("com.core.api.engine.NativeVar");
 
 /*let BlockSource_ = BlockSource;
 BlockSource = new Warp("com.zhekasmirnov.apparatus.mcpe.NativeBlockSource");

@@ -1,10 +1,12 @@
 package com.core.api.mcpe.level;
 
 import com.core.api.mcpe.api.Random;
+import com.core.api.mcpe.entity.Actor;
+import com.core.api.module.NativeAPI;
 import com.zhekasmirnov.apparatus.mcpe.NativeBlockSource;
 import com.core.api.engine.PointerClass;
 
-public class Level extends PointerClass{
+public class Level extends PointerClass {
     public static native int getCurrentTick(long pointer);
     public static native int getCurrentServerTick(long pointer);
     public static native int getChunkTickRange(long pointer);
@@ -13,6 +15,10 @@ public class Level extends PointerClass{
 
     public Level(long pointer){
         super(pointer);
+    }
+
+    public Actor fetchEntity(long id){
+        return new Actor(NativeAPI.getActorById(id));
     }
 
     public void addEntity(NativeBlockSource region, float x, float y, float z, String name){
