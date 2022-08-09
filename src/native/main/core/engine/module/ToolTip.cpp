@@ -125,7 +125,8 @@ void ToolTip::init(){
                 const char* res = getString(env, str);
                 if(strcmp(res, ""))
                     text += "\n"+std::__ndk1::string(res);
-
+                Logger::debug("ToolTip pre",text.c_str());
+                Logger::debug("ToolTip pre",res);
                 ToolTip* key_tip = new ToolTip(IdConversion::dynamicToStatic(stack.getId(), IdConversion::Scope::ITEM), stack.getAuxValue());
                 std::vector<std::string> tips = ToolTip::get(key_tip);
                 for(int i = 0;i < tips.size();i++)
@@ -135,10 +136,13 @@ void ToolTip::init(){
                     ToolTipClass, post, 
                     (jlong) &stack, (jint) stack.getDamageValue()
                 );
+                
                 res = getString(env, str);
+
                 if(strcmp(res, ""))
                     text += "\n"+ std::__ndk1::string(res);
-
+                Logger::debug("ToolTip post",text.c_str());
+                Logger::debug("ToolTip post",res);
                 delete key_tip;
                 key_tip = nullptr;
             }
