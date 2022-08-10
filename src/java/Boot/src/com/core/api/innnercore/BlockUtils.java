@@ -32,6 +32,5 @@ public class BlockUtils {
     public static void renderModelBlock(long mesh, long bl, long po){
         Block block = new Block(bl);
         BlockPos pos = new BlockPos(po);
-        BlockRenderer.mapAtCoords(pos.getX(), pos.getY(), pos.getZ(), arg3, arg4);
     }
 }
