@@ -32,6 +32,7 @@ typedef int content_id_t;
 #include <client/Sound.h>
 #include <core/scales.h>
 #include <core/module/NativeVar.h>
+#include <core/module/ActorDamageCause.h>
 
 #include <Core.h>
 #include <innercore/global_context.h>
@@ -78,6 +79,7 @@ public:
 		HookJava::init();
 		BlockLegacyApi::init();
 		NativeVar::init();
+		RegisterDamageCause::init();
 		//NativeSaver::init();
 
 		HookManager::addCallback(

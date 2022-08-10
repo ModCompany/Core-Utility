@@ -26,7 +26,7 @@ class NativeTypeInt : public NativeType {
             return env->NewObject(NativeVar::Double, NativeVar::constructorDouble, (jdouble) ((double) value->get<int>()));
         }
         TypeBuilder* getCpp(JNIEnv* env, jobject value, NativeVar* self) override {
-            return TypeBuilder().set<int>((int) ((double) env->CallDoubleMethod(NativeVar::Double, NativeVar::doubleValue)));
+            return TypeBuilder().set<int>((int) ((double) env->CallDoubleMethod(value, NativeVar::doubleValue)));
         }
 };
 
@@ -36,7 +36,7 @@ class NativeTypeDouble : public NativeType {
             return env->NewObject(NativeVar::Double, NativeVar::constructorDouble, (jdouble) value->get<double>());
         }
         TypeBuilder* getCpp(JNIEnv* env, jobject value, NativeVar* self) override {
-            return TypeBuilder().set<double>((double) env->CallDoubleMethod(NativeVar::Double, NativeVar::doubleValue));
+            return TypeBuilder().set<double>((double) env->CallDoubleMethod(value, NativeVar::doubleValue));
         }
 };
 
@@ -46,7 +46,7 @@ class NativeTypeFloat : public NativeType {
             return env->NewObject(NativeVar::Double, NativeVar::constructorDouble, (jfloat) ((float) value->get<int>()));
         }
         TypeBuilder* getCpp(JNIEnv* env, jobject value, NativeVar* self) override {
-            return TypeBuilder().set<float>((float) ((jfloat) env->CallDoubleMethod(NativeVar::Double, NativeVar::doubleValue)));
+            return TypeBuilder().set<float>((float) ((jfloat) env->CallDoubleMethod(value, NativeVar::doubleValue)));
         }
 };
 

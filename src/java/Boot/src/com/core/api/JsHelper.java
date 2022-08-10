@@ -1,12 +1,9 @@
 package com.core.api;
 
-import org.mozilla.javascript.Callable;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.Wrapper;
 import org.mozilla.javascript.NativeJavaClass;
-import org.mozilla.javascript.NativeJavaObject;
 
 import com.core.api.module.types.Parameter;
 
