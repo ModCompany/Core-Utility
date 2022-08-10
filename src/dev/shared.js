@@ -23,7 +23,7 @@ ModAPI.registerAPI("CoreUtility", {
     LocalPlayer: JsHelper.get(LocalPlayer, this),
     ServerPlayer: JsHelper.get(ServerPlayer, this),
 
-    Actor: JsHelper.get(ActorDamageCause, this),
+    ActorDamageCause: JsHelper.get(ActorDamageCause, this),
 
     BlockUtils: BlockUtils,
     BlockRegistry: BlockRegistry,
