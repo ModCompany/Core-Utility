@@ -67,13 +67,6 @@ void CustomEntity::init(){
                 JavaCallbacks::invokeControlledCallback(CustomEntity::customEntity, "tickEntity", "(J)V", controller, 0, (jlong) thas->getUniqueID().id);
 	    },
     ), HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
-
-    /*HookManager::addCallback(
-        SYMBOL("mcpe","_ZN12ActorFactory21registerEntityMappingERK9ActorTypebRKPFNSt6__ndk110unique_ptrI5ActorNS3_14default_deleteIS5_EEEEP20ActorDefinitionGroupRK25ActorDefinitionIdentifierEN6nonstd13optional_lite8optionalIiEE"),
-        LAMBDA((ActorFactory* thas, ActorType const& type, bool v, stl::unique_ptr<Actor> (* const&)(ActorDefinitionGroup*, ActorDefinitionIdentifier const&), nonstd::optional_lite::optional<int>),{
-            
-	    },
-    ), HookManager::CALL | HookManager::LISTENER  | HookManager::RESULT);*/
 }
 
 export(void,api_entity_CustomEntity_setTick,jstring name, jboolean value) {

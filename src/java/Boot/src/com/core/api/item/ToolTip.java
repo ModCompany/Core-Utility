@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.mozilla.javascript.Function;
 
 import com.core.api.JsHelper;
+import com.core.api.mcpe.item.ItemStack;
 import com.zhekasmirnov.horizon.runtime.logger.Logger;
 import com.zhekasmirnov.innercore.api.NativeItemInstance;
 import com.zhekasmirnov.innercore.api.commontypes.ItemInstance;
@@ -25,28 +26,24 @@ public class ToolTip {
         mapsPre.put(id+":"+data, func);
     }
     
-    public static String generateBuildDynamicToolTipPost(long item, int data){
+    public static String generateBuildDynamicToolTipPost(ItemStack item){
         try {
-            NativeItemInstance instance = new NativeItemInstance(item);
-            Function func = mapsPost.get(instance.id+":"+instance.data);
-            instance.data = data;
+            Function func = mapsPost.get(item.id+":"+item.data);
             if(func == null)
-                func = mapsPost.get(instance.id+":-1");
+                func = mapsPost.get(item.id+":-1");
             if(func != null)
-                return (String) JsHelper.callFunction(func, new Object[]{new ItemInstance(instance)});
-        } catch (Exception e) {Logger.error(e.getLocalizedMessage(), "Core");}
+                return (String) JsHelper.callFunction(func, new Object[]{item});
+        } catch (Exception e) {Logger.error("Core", e.getLocalizedMessage());}
         return "";
     }
-    public static String generateBuildDynamicToolTipPre(long item, int data){
+    public static String generateBuildDynamicToolTipPre(ItemStack item){
         try {
-            NativeItemInstance instance = new NativeItemInstance(item);
-            Function func = mapsPre.get(instance.id+":"+instance.data);
-            instance.data = data;
+            Function func = mapsPre.get(item.id+":"+item.data);
             if(func == null)
-                func = mapsPre.get(instance.id+":-1");
+                func = mapsPre.get(item.id+":-1");
             if(func != null)
-                return (String) JsHelper.callFunction(func, new Object[]{new ItemInstance(instance)});
-        } catch (Exception e) {Logger.error(e.getLocalizedMessage(), "Core");}
+                return (String) JsHelper.callFunction(func, new Object[]{item});
+        } catch (Exception e) {Logger.error("Core", e.getLocalizedMessage());}
         return "";
     }
     

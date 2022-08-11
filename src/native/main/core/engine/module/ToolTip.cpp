@@ -100,15 +100,18 @@ const char* getString(JNIEnv* env, jstring value){
 }
 #include <logger.h>
 
-jclass ToolTipClass;
-jmethodID pre, post;
+jclass ToolTipClass, ItemStack;
+jmethodID pre, post, constructorItemStack;
 
 void ToolTip::init(){
     JNIEnv* env;
 	ATTACH_JAVA(env, JNI_VERSION_1_6){
         ToolTipClass = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/item/ToolTip")));
-        pre = env->GetStaticMethodID(ToolTipClass, "generateBuildDynamicToolTipPre", "(JI)Ljava/lang/String;");
-        post = env->GetStaticMethodID(ToolTipClass, "generateBuildDynamicToolTipPost", "(JI)Ljava/lang/String;");
+        ItemStack = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/mcpe/item/ItemStack")));
+
+        pre = env->GetStaticMethodID(ToolTipClass, "generateBuildDynamicToolTipPre", "(Lcom/core/api/mcpe/item/ItemStack;)Ljava/lang/String;");
+        post = env->GetStaticMethodID(ToolTipClass, "generateBuildDynamicToolTipPost", "(Lcom/core/api/mcpe/item/ItemStack;)Ljava/lang/String;");
+        constructorItemStack = env->GetMethodID(ItemStack, "<init>", "(J)V");
     }
     
     HookManager::addCallback(
@@ -118,9 +121,10 @@ void ToolTip::init(){
                 return;
             JNIEnv* env;
             ATTACH_JAVA(env, JNI_VERSION_1_6){
+                jobject itemStack = env->NewLocalRef(env->NewObject(ItemStack, constructorItemStack, (jlong) &stack));
                 jstring str = (jstring) env->CallStaticObjectMethod(
                     ToolTipClass, pre, 
-                    (jlong) &stack, (jint) stack.getDamageValue()
+                    itemStack
                 );
                 std::__ndk1::string res = std::__ndk1::string(getString(env, str));
                 env->DeleteLocalRef(str);
@@ -134,8 +138,9 @@ void ToolTip::init(){
 
                 str = (jstring) env->CallStaticObjectMethod(
                     ToolTipClass, post, 
-                    (jlong) &stack, (jint) stack.getDamageValue()
+                    itemStack
                 );
+                env->DeleteLocalRef(itemStack);
                 
                 res = std::__ndk1::string(getString(env, str));
                 env->DeleteLocalRef(str);

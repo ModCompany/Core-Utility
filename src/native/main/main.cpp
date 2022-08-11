@@ -64,6 +64,7 @@ public:
 	{
 		Logger::debug("Core Utility", "Initialize core");
 		DLHandleManager::initializeHandle("libminecraftpe.so", "mcpe");
+		DLHandleManager::initializeHandle("libinnercore.so", "innercore");
 		Logger::flush();
 
 		JNIEnv *env;

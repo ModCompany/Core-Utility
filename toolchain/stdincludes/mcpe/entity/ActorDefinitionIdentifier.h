@@ -16,8 +16,8 @@ class ActorDefinitionIdentifier {
 
 class ActorFactory {
     public:
-    stl::unique_ptr<Actor> createEntity(stl::string const&, ActorDefinitionIdentifier const&, Actor* actor, Vec3 const&, Vec2 const&);
-    stl::unique_ptr<Actor> createSpawnedEntity(ActorDefinitionIdentifier const&, Actor* actor, Vec3 const&, Vec2 const&);
-    stl::unique_ptr<Actor> createSummonedEntity(ActorDefinitionIdentifier const&, Actor* actor, Vec3 const&);
-    stl::unique_ptr<Actor> createBornEntity(ActorDefinitionIdentifier const&, BlockPos const&);
+        stl::unique_ptr<Actor> createEntity(stl::string const&, ActorDefinitionIdentifier const&, Actor* actor, Vec3 const&, Vec2 const&);
+        stl::unique_ptr<Actor> createSpawnedEntity(ActorDefinitionIdentifier const&, Actor* actor, Vec3 const&, Vec2 const&);
+        stl::unique_ptr<Actor> createSummonedEntity(ActorDefinitionIdentifier const&, Actor* actor, Vec3 const&);
+        stl::unique_ptr<Actor> createBornEntity(ActorDefinitionIdentifier const&, BlockPos const&);
 };

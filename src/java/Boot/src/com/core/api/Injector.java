@@ -23,6 +23,9 @@ public class Injector {
     public Injector setArgsTypes(String...types){
        return setArgsType(types);
     }
+    public Injector setArgsTypes(){
+        return setArgsType(new String[] {});
+     }
     public Injector call(String symbol, Object[] args, String table){
         call(this.pointer, symbol, args, table != "", table);
         return this;
