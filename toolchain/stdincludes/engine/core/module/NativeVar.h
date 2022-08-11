@@ -38,8 +38,8 @@ class NativeVar {
         jobject value;
         static std::map<std::string, NativeType*> types;
     public:
-        static jclass PointerClass, Double;
-        static jmethodID getPointerPointerClass, constructorDouble, doubleValue;
+        static jclass PointerClass, Double, Long;
+        static jmethodID getPointerPointerClass, constructorDouble, doubleValue, constructorLong, longValue;
         std::string type;
         bool isFinalize;
         static void init();

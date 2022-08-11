@@ -5,8 +5,8 @@
 #include <vector>
 
 std::map<std::string, NativeType*> NativeVar::types;
-jclass NativeVar::PointerClass, NativeVar::Double;
-jmethodID NativeVar::getPointerPointerClass, NativeVar::constructorDouble, NativeVar::doubleValue;
+jclass NativeVar::PointerClass, NativeVar::Double, NativeVar::Long;
+jmethodID NativeVar::getPointerPointerClass, NativeVar::constructorDouble, NativeVar::doubleValue, NativeVar::constructorLong, NativeVar::longValue;
 
 template<typename T>
 TypeBuilder* TypeBuilder::set(const T& v){
@@ -50,6 +50,26 @@ class NativeTypeFloat : public NativeType {
         }
 };
 
+class NativeTypeLong : public NativeType {
+    public:
+        jobject getJava(JNIEnv* env, TypeBuilder* value, NativeVar* self) override {
+            return env->NewObject(NativeVar::Long, NativeVar::constructorLong, (jlong)  value->get<long long>());
+        }
+        TypeBuilder* getCpp(JNIEnv* env, jobject value, NativeVar* self) override {
+            return TypeBuilder().set<long long>((long long) ((jlong) env->CallLongMethod(value, NativeVar::longValue)));
+        }
+};
+#include <stl/string>
+class NativeTypeString : public NativeType {
+    public:
+        jobject getJava(JNIEnv* env, TypeBuilder* value, NativeVar* self) override {
+            return (jobject) env->NewStringUTF(value->get<std::__ndk1::string>().c_str());
+        }
+        TypeBuilder* getCpp(JNIEnv* env, jobject value, NativeVar* self) override {
+            return TypeBuilder().set<std::__ndk1::string>(JavaClass::toStlString(env, (jstring) value));
+        }
+};
+
 void NativeVar::init(){
     JNIEnv* env;
 	ATTACH_JAVA(env, JNI_VERSION_1_6){
@@ -58,11 +78,17 @@ void NativeVar::init(){
         NativeVar::Double = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("java/lang/Double")));
         NativeVar::constructorDouble = env->GetMethodID(NativeVar::Double, "<init>", "(D)V");
         NativeVar::doubleValue = env->GetMethodID(NativeVar::Double, "doubleValue", "()D");
+
+        NativeVar::Long = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("java/lang/Long")));
+        NativeVar::constructorLong = env->GetMethodID(NativeVar::Long, "<init>", "(J)V");
+        NativeVar::longValue = env->GetMethodID(NativeVar::Long, "longValue", "()J");
     }
 
     NativeVar::registerType("int", new NativeTypeInt());
     NativeVar::registerType("float", new NativeTypeFloat());
     NativeVar::registerType("double", new NativeTypeDouble());
+    NativeVar::registerType("ptr", new NativeTypeLong());
+    NativeVar::registerType("stl::string", new NativeTypeString());
 }
 
 void NativeVar::registerType(std::string name, NativeType* type){

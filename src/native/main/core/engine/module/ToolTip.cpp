@@ -138,7 +138,7 @@ void ToolTip::init(){
                 );
                 
                 res = std::__ndk1::string(getString(env, str));
-                env->DeleteLocalRef(str)
+                env->DeleteLocalRef(str);
                 if(res != "")
                     text += "\n"+ std::__ndk1::string(res);
 
