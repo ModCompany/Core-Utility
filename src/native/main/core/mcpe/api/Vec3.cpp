@@ -23,6 +23,9 @@ export(jfloat, mcpe_api_Vec3_getY, jlong ptr){
 export(jfloat, mcpe_api_Vec3_getZ, jlong ptr){
     return (jfloat) ((Vec3*) ptr)->z;
 }
+export(jlong, mcpe_api_Vec3_lerp, jlong ptr,jlong ptr2,jlong ptr3,jfloat value){
+    return (jlong) ((Vec3*) ptr)->lerpTo(*(Vec3*) ptr2,*(Vec3*) ptr3,value);
+}
 export(void, mcpe_api_Vec3_free, jlong ptr){
     delete ((Vec3*) ptr);
 }

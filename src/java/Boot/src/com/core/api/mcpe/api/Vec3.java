@@ -11,7 +11,7 @@ public class Vec3 extends PointerClass {
     native public static float getY(long ptr);
     native public static float getZ(long ptr);
     native public static void free(long ptr);
-
+    native public static long lerpTo(long ptr,long vec1,long vec2, float value);
     boolean freeEnable;
     public Vec3(float x, float y, float z){
         super(newClass(x, y, z));
@@ -42,6 +42,12 @@ public class Vec3 extends PointerClass {
 
     public void setZ(float x){
         setZ(pointer, x);
+    }
+
+    public Vec3 lerpTo(Vec3 vec1,Vec3 vec2,float speed){
+        Vec3 vec = new Vec3(lerpTo(pointer,vec1.getPointer(),vec2.getPointer(),speed));
+        this.free();
+        return vec;
     }
 
     boolean isFree = false;

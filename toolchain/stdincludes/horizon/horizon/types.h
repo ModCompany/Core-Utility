@@ -20,6 +20,8 @@ class Vec3 {
     ~Vec3(){
         
     };
+
+    Vec3 lerpTo(Vec3 const&, Vec3 const&,float);
 };
 
 class BlockPos {
