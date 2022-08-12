@@ -13,6 +13,7 @@
 #include <core/module/ToolTip.h>
 
 #include <vtable.h>
+#include <core/JavaClass.h>
 class ItemStackBase;
 class Level {};
 struct Item {
@@ -75,29 +76,6 @@ namespace ItemRegistry {
 #include <core/VtableHelper.h>
 std::vector<int> ToolTip::items_dynamic;
 
-
-//Артём, тот метод иногда выдовал какуя-то хуйню)
-std::string toString(JNIEnv* env, jstring jStr) {
-	if (!jStr)
-		return "";
-	const jclass stringClass = env->GetObjectClass(jStr);
-	const jmethodID getBytes = env->GetMethodID(stringClass, "getBytes", "(Ljava/lang/String;)[B");
-	const jbyteArray stringJbytes = (jbyteArray) env->CallObjectMethod(jStr, getBytes, env->NewStringUTF("UTF-8"));
-	size_t length = (size_t) env->GetArrayLength(stringJbytes);
-	jbyte* pBytes = env->GetByteArrayElements(stringJbytes, NULL);
-	std::string ret = std::string((char *)pBytes, length);
-	env->ReleaseByteArrayElements(stringJbytes, pBytes, JNI_ABORT);
-	env->DeleteLocalRef(stringJbytes); env->DeleteLocalRef(stringClass);
-	return ret;
-}
-
-const char* getString(JNIEnv* env, jstring value){
-    const char* a = env->GetStringUTFChars(value, 0);
-    const char* b;
-    b = a;
-    env->ReleaseStringUTFChars(value, a);
-    return b;
-}
 #include <logger.h>
 
 jclass ToolTipClass, ItemStack;
@@ -121,12 +99,12 @@ void ToolTip::init(){
                 return;
             JNIEnv* env;
             ATTACH_JAVA(env, JNI_VERSION_1_6){
-                jobject itemStack = env->NewLocalRef(env->NewObject(ItemStack, constructorItemStack, (jlong) &stack));
+                jobject itemStack = env->NewObject(ItemStack, constructorItemStack, (jlong) &stack);
                 jstring str = (jstring) env->CallStaticObjectMethod(
                     ToolTipClass, pre, 
                     itemStack
                 );
-                std::__ndk1::string res = std::__ndk1::string(getString(env, str));
+                std::__ndk1::string res = JavaClass::toStlString(env, str);
                 env->DeleteLocalRef(str);
                 if(res != "")
                     text += "\n"+res;
@@ -141,12 +119,11 @@ void ToolTip::init(){
                     itemStack
                 );
                 env->DeleteLocalRef(itemStack);
-                
-                res = std::__ndk1::string(getString(env, str));
+                res = JavaClass::toStlString(env, str);
                 env->DeleteLocalRef(str);
                 if(res != "")
-                    text += "\n"+ std::__ndk1::string(res);
-
+                    text += "\n"+res;
+                
                 delete key_tip;
                 key_tip = nullptr;
             }
@@ -155,7 +132,7 @@ void ToolTip::init(){
 }
 
 export(void,item_ToolTip_addToolTip, jint id, jint data, jstring name) {
-    ToolTip::addToolTip((int) id, (int) data, toString(env, name));
+    ToolTip::addToolTip((int) id, (int) data, JavaClass::toString(env, name));
 }
 export(void,item_ToolTip_clearToolTips) {
     ToolTip::clearToolTips();

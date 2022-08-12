@@ -1,34 +1,34 @@
 let JsHelper = WRAP_JAVA("com.core.api.JsHelper");
 
 ModAPI.registerAPI("CoreUtility", {
-    ToolTip: JsHelper.get(ToolTip, this),
+    ToolTip: JsHelper.get(ToolTip),
     ConversionType: ConversionType,
     NativeAPI: NativeAPI,
-    Injector: JsHelper.get(Injector, this),
+    Injector: JsHelper.get(Injector),
     EntityRegister: EntityRegister,
     ItemsUtil: ItemsUtil,
-    FileUtils: JsHelper.get(FileUtils,this),
+    FileUtils: JsHelper.get(FileUtils),
     Gui: Gui,
     TickingAreasManager: TickingAreasManager,
     GlobalContext: GlobalContext,
-    Parameter: JsHelper.get(Parameter, this),
-    BlockPos: JsHelper.get(BlockPos, this),
-    Vec3: JsHelper.get(Vec3, this),
-    Vec2: JsHelper.get(Vec2, this),
-    ChunkPos: JsHelper.get(ChunkPos, this),
+    Parameter: JsHelper.get(Parameter),
+    BlockPos: JsHelper.get(BlockPos),
+    Vec3: JsHelper.get(Vec3),
+    Vec2: JsHelper.get(Vec2),
+    ChunkPos: JsHelper.get(ChunkPos),
     
-    Actor: JsHelper.get(Actor, this),
-    Mob: JsHelper.get(Mob, this),
-    NativePlayer: JsHelper.get(NativePlayer, this),
-    LocalPlayer: JsHelper.get(LocalPlayer, this),
-    ServerPlayer: JsHelper.get(ServerPlayer, this),
+    Actor: JsHelper.get(Actor),
+    Mob: JsHelper.get(Mob),
+    NativePlayer: JsHelper.get(NativePlayer),
+    LocalPlayer: JsHelper.get(LocalPlayer),
+    ServerPlayer: JsHelper.get(ServerPlayer),
 
-    ActorDamageCause: JsHelper.get(ActorDamageCause, this),
+    ActorDamageCause: JsHelper.get(ActorDamageCause),
 
     BlockUtils: BlockUtils,
     BlockRegistry: BlockRegistry,
     Scales: Scales,
-    version: 2,
+    version: 3,
     requireGlobal(cmd){
         return eval(cmd);
     }

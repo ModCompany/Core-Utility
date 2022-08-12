@@ -3,6 +3,8 @@ package com.core.api.entity;
 import java.util.HashMap;
 
 import com.core.api.JsHelper;
+import com.zhekasmirnov.horizon.runtime.logger.Logger;
+import com.zhekasmirnov.innercore.api.log.DialogHelper;
 import com.zhekasmirnov.innercore.api.mod.adaptedscript.AdaptedScriptAPI.Entity;
 
 import org.mozilla.javascript.Function;
@@ -18,6 +20,12 @@ public class CustomEntity {
     }
 
     public static void tickEntity(long ent){
-        JsHelper.callFunction(handlers.get(Entity.getTypeName(ent)), new Object[] {ent});
+        try{
+            JsHelper.callFunction(handlers.get(Entity.getTypeName(ent)), new Object[] {ent});
+        }catch(Exception e){
+            Logger.error("Core", e.getLocalizedMessage());
+            DialogHelper.reportNonFatalError("Core", e.getCause());
+        }
+        
     }
 };

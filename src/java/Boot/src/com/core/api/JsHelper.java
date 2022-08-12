@@ -16,8 +16,8 @@ public class JsHelper {
         return function.call(context, scriptable, that, args);
     }
 
-    public static Object get(Class<?> _class, Scriptable self){
-        NativeJavaClass nativeClass = new NativeJavaClass(self, _class, true);
+    public static Object get(Class<?> _class){
+        NativeJavaClass nativeClass = new NativeJavaClass(scriptable, _class, true);
         return new Function(){
             @Override
             public Scriptable construct(Context context, Scriptable self, Object[] args) {
