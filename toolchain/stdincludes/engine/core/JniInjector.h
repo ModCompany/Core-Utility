@@ -113,6 +113,6 @@ class JniInjector {
         void replace(const char*,const char*,const char*);
 
         ~JniInjector(){
-
+            if(isDebug) Logger::debug("JniInjector-Debug", "delete injector");
         };
 };

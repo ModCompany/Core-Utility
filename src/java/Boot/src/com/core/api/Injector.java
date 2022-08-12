@@ -104,7 +104,8 @@ public class Injector {
     }
 
     @Override
-    public void finalize() {
+    public void finalize() throws Throwable {
+        super.finalize();
         free();
     }
 
