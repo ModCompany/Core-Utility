@@ -158,7 +158,7 @@ public:
 MAIN
 {
 	Module *main_module = new CoreUtility("core_utility");
-	new CoreGeneration(main_module, "core_utility.generation");
+	///new CoreGeneration(main_module, "core_utility.generation");
 	new SoundModule(main_module, "core_utility.sound");
 	new ScalesModule();
 }
