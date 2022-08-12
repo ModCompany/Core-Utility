@@ -34,6 +34,10 @@ public class Parameter {
         return new Parameter(v, "stl::string");
     }
 
+    public static Parameter getChar(String v){
+        return new Parameter(v, "char*");
+    }
+
     public static Parameter getLong(long v){
         return new Parameter(v,"long");
     }

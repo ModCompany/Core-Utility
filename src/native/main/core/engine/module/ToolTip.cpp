@@ -99,7 +99,7 @@ void ToolTip::init(){
                 return;
             JNIEnv* env;
             ATTACH_JAVA(env, JNI_VERSION_1_6){
-                jobject itemStack = env->NewObject(ItemStack, constructorItemStack, (jlong) &stack);
+                jobject itemStack = env->NewLocalRef(env->NewObject(ItemStack, constructorItemStack, (jlong) &stack));
                 jstring str = (jstring) env->CallStaticObjectMethod(
                     ToolTipClass, pre, 
                     itemStack

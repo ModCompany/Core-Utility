@@ -20,7 +20,15 @@ let ServerPlayer = WRAP_JAVA("com.core.api.mcpe.entity.ServerPlayer");
 let NativeVar = WRAP_JAVA("com.core.api.engine.NativeVar");
 let ActorDamageCause = WRAP_JAVA("com.core.api.entity.ActorDamageCause");
 
-/*let BlockSource_ = BlockSource;
+/*Callback.addCallback("ItemUse", function(){
+    let injector = new Injector("_ZN12HashedStringC2EPKc", ["char*"], [
+        Parameter.getChar("WopaArtema")
+    ])
+});*/
+
+/*
+Любопытной варваре нос аторвали
+let BlockSource_ = BlockSource;
 BlockSource = new Warp("com.zhekasmirnov.apparatus.mcpe.NativeBlockSource");
 function createBlockSource(region){
     try {

@@ -16,6 +16,18 @@ public class Injector {
     public Injector(){
         this(0);
     }
+    public Injector(String symbol, String lib, String[] types, Object[] args){
+        this(constructor(symbol, lib, types, args));
+    }
+    public Injector(String symbol, String lib){
+        this(symbol, lib, new String[] {}, new Object[] {});
+    }
+    public Injector(String symbol, String[] types, Object[] args){
+        this(symbol, "mcpe", types, args);
+    }
+    public Injector(String symbol){
+        this(symbol, "mcpe", new String[] {}, new Object[] {});
+    }
     public Injector setArgsType(String[] types){
         setArgsType(pointer, types);
         return this;
@@ -122,6 +134,7 @@ public class Injector {
     }
     
     public native static long init_injector(long ptr);
+    public native static long constructor(String symbol, String lib, String[] types, Object[] args);
     public native static void setDebug(long ptr,boolean value);
     public native static long getOffset(long ptr);
     public native static long getOffset(long ptr,int offset);

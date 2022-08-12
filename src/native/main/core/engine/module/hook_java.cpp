@@ -153,7 +153,7 @@ inline jobjectArray HookJava::getParameters(JNIEnv* env, std::vector<std::string
 
 const ArgsBufferBuilder HookJava::getParameters(JNIEnv* env, void* self, std::vector<std::string> types, jobjectArray array){
     ArgsBufferBuilder builder;
-    if(self != nullptr)
+    if(self == nullptr)
         builder.add<void*>(self);
     for (int i = 0;i < types.size();i++){
         jobject object = env->GetObjectArrayElement(array, i);
@@ -168,6 +168,8 @@ const ArgsBufferBuilder HookJava::getParameters(JNIEnv* env, void* self, std::ve
             builder.add<float>(NativeAPI::getFloatHookParameter(env, object));
         }else if(type=="long"){
             builder.add<long long>(NativeAPI::getLongHookParameter(env,object));
+        }else if(type=="char*"){
+            builder.add<const char*>(NativeAPI::getStringHookParameter(env, object).c_str());
         }else{
             builder.add<void*>(NativeAPI::getPointerHookParameter(env, object));
         }

@@ -14,6 +14,7 @@ JniInjector::JniInjector(void* a){
 
 JniInjector::JniInjector(long long pointer){
     if(isDebug) Logger::debug("JniInjector-Debug", "Init Pointer of table: %p", pointer);
+    Logger::debug("JniInjector-Debug", "Init Pointer of table: %p", pointer);
     this->table = (void*) pointer;
     this->pointer = pointer;
     this->types = std::vector<std::string>();
@@ -44,8 +45,16 @@ T callInjector(JNIEnv* env, JniInjector* injector, jstring symbol, jobjectArray 
 }
 
 export(jlong, Injector_init_1injector, long long ptr){
-
     return (jlong) new JniInjector(ptr);
+}
+
+export(jlong, Injector_constructor, jstring symbol, jstring lib, jobjectArray arr, jobjectArray args){
+    std::vector<std::string> types;
+    for(int i=0;i<env->GetArrayLength(arr);i++)
+        types.push_back(JavaClass::toString(env,(jstring) env->GetObjectArrayElement(arr, i)));
+    
+    void* ptr = VtableHelper::_call<void*>(JavaClass::toString(env,symbol).data(), nullptr, HookJava::getParameters(env, nullptr, types, args), false, "", JavaClass::toString(env,lib).data());
+    return (jlong) new JniInjector((long long) ptr);
 }
 
 export(jint, Injector_getIntResult, jlong ptr, jstring a, jobjectArray arr, jboolean virt, jstring table){

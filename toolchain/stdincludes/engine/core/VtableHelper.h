@@ -45,15 +45,15 @@ class VtableHelper {
 
     public:
 		template<typename A, unsigned N >
-		A callWithArgsBufferN(void* func, const unsigned char* buffer) {
+		static A callWithArgsBufferN(void* func, const unsigned char* buffer) {
 			auto* f = (A (*) (ArgsBuffer<N>)) func;
 			return f(*(ArgsBuffer<N>*) buffer);
 		}
 		template<typename A>
-		A call(const char* symbol, ArgsBufferBuilder buff, bool virt, const char* vtableName, const char* lib){
+		static A _call(const char* symbol, void* self, ArgsBufferBuilder buff, bool virt, const char* vtableName, const char* lib){
 			void* func;
 			if(virt)
-				func = VTableManager::get_method(this->original, getVtableOffset(vtableName, symbol));
+				func = VTableManager::get_method(self, getVtableOffset(vtableName, symbol));
 			else
 				func = SYMBOL(lib, symbol);
 				//func = dlsym(dlopen("libminecraftpe.so", RTLD_LAZY), symbol);
@@ -71,6 +71,10 @@ class VtableHelper {
 			}
 			//auto a = (A(*)(void*,B&&...)) dlsym(handle, symbol);
 			//return a(this->original,std::forward<B>(args)...);
+		};
+		template<typename A>
+		A call(const char* symbol, ArgsBufferBuilder buff, bool virt, const char* vtableName, const char* lib){
+			return _call<A>(symbol, this->original, buff, virt, vtableName, lib);
 		};
 		void* getTop();
 		void** get();
