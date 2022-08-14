@@ -152,6 +152,45 @@ export(jlong, engine_DataOffset_getPointerOffset,jlong ptr,jint offset){
     return (jlong)((JniInjector::DataOffset*) ptr)->getPointer((int)offset);   
 }
 
+export(void, engine_DataOffset_setBool,jlong ptr,jboolean value){
+    return ((JniInjector::DataOffset*) ptr)->setBool((bool) value);
+}
+
+export(void, engine_DataOffset_setBoolOffset,jlong ptr,jint offset,jboolean value){
+    return ((JniInjector::DataOffset*) ptr)->setBool(offset,value);
+}
+export(void, engine_DataOffset_setInt,jlong ptr,jint value){
+    return ((JniInjector::DataOffset*) ptr)->setInt(value);
+}
+
+export(void, engine_DataOffset_setIntOffset,jlong ptr,jint offset,jint value){
+    return ((JniInjector::DataOffset*) ptr)->setInt((int)offset,(int) value);
+}
+
+export(void, engine_DataOffset_setFloat,jlong ptr,jfloat value){
+    return ((JniInjector::DataOffset*) ptr)->setFloat((float)value);
+}
+
+export(void, engine_DataOffset_setFloatOffset,jlong ptr,jint offset,jfloat value){
+    return ((JniInjector::DataOffset*) ptr)->setFloat((int)offset,(float) value);
+}
+
+export(void, engine_DataOffset_setString,jlong ptr,jstring value){
+    return ((JniInjector::DataOffset*) ptr)->setString(JavaClass::toStlString(env,value));   
+}
+
+export(void, engine_DataOffset_setStringOffset,jlong ptr,jint offset,jstring value){
+    return ((JniInjector::DataOffset*) ptr)->setString((int)offset,JavaClass::toStlString(env,value));      
+}
+
+export(void, engine_DataOffset_setPointer,jlong ptr,jlong pointer){
+    return ((JniInjector::DataOffset*) ptr)->setPointer((long long) pointer);   
+}
+
+export(void, engine_DataOffset_setPointerOffset,jlong ptr,jint offset,jlong pointer){
+    return ((JniInjector::DataOffset*) ptr)->setPointer((int)offset,(long long) pointer);   
+}
+
 export(void, engine_DataOffset_free,jlong ptr){
     return ((JniInjector::DataOffset*) ptr)->free();
 }

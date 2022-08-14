@@ -81,6 +81,45 @@ class JniInjector {
             this->offset = offset;
         };
 
+        void setBool(bool value){
+            *(bool*)((char*) table + this->offset) = value;
+        };
+
+        void setBool(int offset,bool value){
+            *(bool*)((char*) table + offset) = value;
+        };
+
+        void setInt(int value){
+            *(int*)((char*) table + this->offset) = value;
+        };
+
+        void setInt(int offset,int value){
+            *(int*)((char*) table + offset) = value;
+        };
+
+        void setFloat(float value){
+            *(float*)((char*) table + this->offset) = value;
+        };
+
+        void setFloat(int offset,float value){
+            *(float*)((char*) table + offset) = value;
+        };
+
+        void setPointer(long long value){
+            *(long long*)((char*) table + this->offset) = value;
+        };
+
+        void setPointer(int offset,long long value){
+            *(long long*)((char*) table + offset) = value;
+        };
+
+        void setString(int offset, stl::string value){
+            *(stl::string*)((char*) table + offset) = value;    
+        };
+
+        void setString(stl::string value){
+            *(stl::string*)((char*) table + this->offset) = value;    
+        };
         ~DataOffset(){
 
         }

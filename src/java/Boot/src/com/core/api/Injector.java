@@ -144,8 +144,8 @@ public class Injector {
     public native static int getBoolResult(long ptr,String symbol, Object[] args, boolean virt, String table);
     public native static long getPointerResult(long ptr, String symbol, Object[] args, boolean virt, String table);
     public native static String getStringResult(long ptr,String symbol, Object[] args, boolean virt, String table);
-    public native static void call(long ptr,String symbol, Object[] args, boolean virt, String table);
 
+    public native static void call(long ptr,String symbol, Object[] args, boolean virt, String table);
     public native static void replace(long ptr,String table,String symbol,String replace);
     public native static void setArgsType(long ptr, String[] types);
     public native static void setLib(long ptr, String name);

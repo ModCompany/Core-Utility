@@ -52,6 +52,46 @@ public class DataOffset {
         setOffset(pointer,offset);
     }
 
+    public void setBool(boolean value){
+        setBool(pointer,value);
+    }
+
+    public void setBool(int offset,boolean value){
+        setBoolOffset(pointer,offset,value);
+    }
+
+    public void setInt(int value){
+        setInt(pointer,value);
+    }
+
+    public void setInt(int offset,int value){
+        setIntOffset(pointer, offset, value);
+    }
+
+    public void setFloat(float value){
+        setFloat(pointer,value);
+    }
+
+    public void setFloat(int offset,int value){
+        setFloatOffset(pointer, offset, value);
+    }
+
+    public void setPointer(long value){
+        setPointer(pointer,value);
+    }
+
+    public void setPointer(int offset,long value){
+        setFloatOffset(pointer, offset, value);
+    }
+
+    public void setString(String value){
+        setString(pointer,value);
+    }
+
+    public void setString(int offset,String value){
+        setStringOffset(pointer,offset,value);
+    }
+
     public long get(){
         return this.pointer;
     }
@@ -72,4 +112,15 @@ public class DataOffset {
     public static native boolean getBoolOffset(long ptr,int offset);
     public static native String getString(long ptr);
     public static native String getStringOffset(long ptr,int offset);
+
+    public static native void setPointer(long ptr,long value);
+    public static native void setPointerOffset(long ptr,int offset,long value);
+    public static native void setInt(long ptr,int value);
+    public static native void setIntOffset(long ptr,int offset,int value);
+    public static native void setFloat(long ptr,float value);
+    public static native void setFloatOffset(long ptr,int offset,float value);
+    public static native void setBool(long ptr,boolean value);
+    public static native void setBoolOffset(long ptr,int offset,boolean value);
+    public static native void setString(long ptr,String value);
+    public static native void setStringOffset(long ptr,int offset,String value);
 }
