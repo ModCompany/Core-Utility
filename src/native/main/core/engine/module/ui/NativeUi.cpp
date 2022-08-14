@@ -9,11 +9,17 @@
 #include <logger.h>
 
 std::vector<NativeUi*> NativeUi::opens;
-jclass NativeUi::JavaElement, NativeUi::JavaImageElement;
-jmethodID NativeUi::getTypeElement, NativeUi::getXElement, NativeUi::getYElement, NativeUi::getWidthElement, NativeUi::getHeigthElement, NativeUi::getTextureElement, NativeUi::getTextureHeigthElement, NativeUi::getTextureWidthElement;
+jclass NativeUi::JavaElement, NativeUi::JavaImageElement, NativeUi::JavaTextElement;
+Font* NativeUi::font;
+jmethodID NativeUi::getTypeElement, NativeUi::getMaterialElement, NativeUi::getXElement, NativeUi::getYElement, NativeUi::getWidthElement, NativeUi::getHeigthElement, NativeUi::getTextureElement, NativeUi::getTextureHeigthElement, NativeUi::getTextureWidthElement, NativeUi::getSizeElement, NativeUi::getTextElement;
 
 void ElementImage::render(ScreenContext& ctx){
-    ScalesModule::blit(&ctx, x, y, w, h, texture, t_w, t_h, .5);
+    ScalesModule::blit(&ctx, x, y, w, h, texture, t_w, t_h, 1, material);
+}
+
+void ElementFont::render(ScreenContext& ctx){
+    mce::MaterialPtr material = mce::RenderMaterialGroup::common.getMaterial(HashedString(this->material.c_str()));
+    NativeUi::font->draw(ctx, std::__ndk1::string(text.c_str()), x, y, {1, 1, 1, 1}, false, &material, size, 0);
 }
 
 
@@ -54,12 +60,13 @@ void NativeUi::close(NativeUi* ui){
         }
     }
 }
-
+#include <logger.h>
 void NativeUi::init(){
     JNIEnv* env;
 	ATTACH_JAVA(env, JNI_VERSION_1_6){
         NativeUi::JavaElement = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/engine/ui/types/Element")));
         NativeUi::getTypeElement = env->GetMethodID(NativeUi::JavaElement, "getType", "()Ljava/lang/String;");
+        NativeUi::getMaterialElement = env->GetMethodID(NativeUi::JavaElement, "getMaterial", "()Ljava/lang/String;");
         NativeUi::getXElement = env->GetMethodID(NativeUi::JavaElement, "getX", "()I");
         NativeUi::getYElement = env->GetMethodID(NativeUi::JavaElement, "getY", "()I");
 
@@ -69,11 +76,21 @@ void NativeUi::init(){
         NativeUi::getTextureElement = env->GetMethodID(NativeUi::JavaImageElement, "getTexture", "()Ljava/lang/String;");
         NativeUi::getTextureWidthElement = env->GetMethodID(NativeUi::JavaImageElement, "getTextureWidth", "()I");
         NativeUi::getTextureHeigthElement = env->GetMethodID(NativeUi::JavaImageElement, "getTextureHeigth", "()I");
-       
+
+        NativeUi::JavaTextElement = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/engine/ui/types/TextElement")));
+        NativeUi::getSizeElement = env->GetMethodID(NativeUi::JavaTextElement, "getSize", "()I");
+        NativeUi::getTextElement = env->GetMethodID(NativeUi::JavaTextElement, "getText", "()Ljava/lang/String;");
+        
         HookManager::addCallback(
             SYMBOL("mcpe", "_ZN3mce11RenderGraph6renderER13ScreenContextRK17FrameRenderObject"), 
             LAMBDA((void* self, ScreenContext& ctx), {
                 NativeUi::render(ctx);
+            }, ), HookManager::RETURN | HookManager::LISTENER
+        );
+        HookManager::addCallback(
+            SYMBOL("mcpe", "_ZN4FontC2ERN3mce12TextureGroupE"), 
+            LAMBDA((Font* self), {
+                NativeUi::font = self;
             }, ), HookManager::RETURN | HookManager::LISTENER
         );
     }
@@ -94,6 +111,15 @@ export(jlong,engine_ui_NativeUi_init, jobjectArray arr) {
             element->t_w = (int) env->CallIntMethod(object, NativeUi::getTextureWidthElement);
             element->t_h = (int) env->CallIntMethod(object, NativeUi::getTextureHeigthElement);
             element->texture = JavaClass::toString(env, (jstring) env->CallObjectMethod(object, NativeUi::getTextureElement));
+            element->material = JavaClass::toString(env, (jstring) env->CallObjectMethod(object, NativeUi::getMaterialElement));
+            elements.push_back(element);
+        }else if(type == "text"){
+            ElementFont* element = new ElementFont();
+            element->x = (int) env->CallIntMethod(object, NativeUi::getXElement);
+            element->y = (int) env->CallIntMethod(object, NativeUi::getYElement);
+            element->size = (int) env->CallIntMethod(object, NativeUi::getSizeElement);
+            element->text = JavaClass::toString(env, (jstring) env->CallObjectMethod(object, NativeUi::getTextElement));
+            element->material = JavaClass::toString(env, (jstring) env->CallObjectMethod(object, NativeUi::getMaterialElement));
             elements.push_back(element);
         }
     }

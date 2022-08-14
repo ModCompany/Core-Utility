@@ -164,8 +164,8 @@ class Scales {
 std::map<std::string, ScalePlayer*> Scales::scales_player;
 std::map<std::string, Scales*> Scales::scales;
 
-void ScalesModule::blit(ScreenContext* ctx, float x, float y, float width, float height, std::string texture, float textureWidth, float textureHeight, float alpha){
-	mce::MaterialPtr material = mce::RenderMaterialGroup::common.getMaterial(HashedString("ui_textured_and_glcolor"));
+void ScalesModule::blit(ScreenContext* ctx, float x, float y, float width, float height, std::string texture, float textureWidth, float textureHeight, float alpha, std::string m){
+	mce::MaterialPtr material = mce::RenderMaterialGroup::common.getMaterial(HashedString(m.c_str()));
 	float maxU = width / textureWidth;
 	float maxV = height / textureHeight;
 	ctx->tessellator->begin(4, false);
@@ -243,7 +243,7 @@ void ScalesModule::initialize(){
 						fill+=2;
 					}
 						
-					ScalesModule::blit(renderContext.getScreenContext(), x + x_bonus - SCALE_SIZE*j, y, SCALE_SIZE, SCALE_SIZE, texture, SCALE_SIZE, SCALE_SIZE, options->getInterfaceOpacity());
+					ScalesModule::blit(renderContext.getScreenContext(), x + x_bonus - SCALE_SIZE*j, y, SCALE_SIZE, SCALE_SIZE, texture, SCALE_SIZE, SCALE_SIZE, options->getInterfaceOpacity(), "ui_textured_and_glcolor");
 				}
 				if(options->getUIProfile() == 0){
 					if(scale->isLeft())

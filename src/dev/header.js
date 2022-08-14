@@ -21,6 +21,7 @@ let NativeVar = WRAP_JAVA("com.core.api.engine.NativeVar");
 let ActorDamageCause = WRAP_JAVA("com.core.api.entity.ActorDamageCause");
 let NativeUi = WRAP_JAVA("com.core.api.engine.ui.NativeUi");
 let ImageElement = WRAP_JAVA("com.core.api.engine.ui.types.ImageElement");
+let TextElement = WRAP_JAVA("com.core.api.engine.ui.types.TextElement");
 
 let Membory = new UI.Window({
     drawing: [
@@ -57,7 +58,15 @@ Threading.initThread("membory-information-update", function(){
 
 
 let TestUi = new NativeUi([
-    new ImageElement("textures/blocks/barrel_side", 100, 100, 50, 50, 16, 16),
+    new ImageElement({
+        texture: "textures/blocks/barrel_side",
+        x: 100,
+        y: 100,
+        width: 50,
+        heigth: 50,
+        texture_width: 16,
+        texture_heigth: 16
+    }),
     new ImageElement({
         texture: "textures/blocks/barrel_side",
         x: 100,
@@ -66,6 +75,11 @@ let TestUi = new NativeUi([
         heigth: 50,
         texture_width: 16,
         texture_heigth: 16
+    }),
+    new TextElement({
+        x: 100,
+        y: 100,
+        text: "Любопытной варваре, нос оторвали"
     })
 ]);
 TestUi.open();

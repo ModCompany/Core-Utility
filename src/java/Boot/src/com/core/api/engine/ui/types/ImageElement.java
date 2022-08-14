@@ -5,8 +5,8 @@ import org.mozilla.javascript.ScriptableObject;
 public class ImageElement extends Element {
     public int width, heigth, tex_w, tex_h;
     String texture;
-    public ImageElement(String texture, int x, int y, int width, int heigth, int tex_w, int tex_h){
-        super(x, y);
+    public ImageElement(String texture, int x, int y, int width, int heigth, int tex_w, int tex_h, String material){
+        super(x, y, material);
         this.width = width;
         this.heigth = heigth;
         this.texture = texture;
@@ -21,7 +21,8 @@ public class ImageElement extends Element {
             ((Double) object.get("width")).intValue(),
             ((Double) object.get("heigth")).intValue(),
             object.has("texture_width", object) ? ((Double) object.get("texture_width")).intValue() : ((Double) object.get("width")).intValue(),
-            object.has("texture_heigth", object) ? ((Double) object.get("texture_heigth")).intValue() : ((Double) object.get("heigth")).intValue()
+            object.has("texture_heigth", object) ? ((Double) object.get("texture_heigth")).intValue() : ((Double) object.get("heigth")).intValue(),
+            object.has("material", object) ? ((String) object.get("material")) : "ui_textured_and_glcolor"
         );
     }
     @Override
