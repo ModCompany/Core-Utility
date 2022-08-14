@@ -34,6 +34,7 @@ typedef int content_id_t;
 #include <core/module/NativeVar.h>
 #include <core/module/ActorDamageCause.h>
 #include <core/module/BlockUtils.h>
+#include <core/module/ui/NativeUi.h>
 
 #include <Core.h>
 #include <innercore/global_context.h>
@@ -82,6 +83,7 @@ public:
 		BlockLegacyApi::init();
 		NativeVar::init();
 		RegisterDamageCause::init();
+		NativeUi::init();
 		//BlockUtils::init();
 		//NativeSaver::init();
 

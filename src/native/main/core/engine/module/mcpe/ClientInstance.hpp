@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vtable.hpp"
+#include <vtable.h>
 
 class IClientInstance {};
 

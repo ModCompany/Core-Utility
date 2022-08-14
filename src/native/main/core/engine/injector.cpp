@@ -14,7 +14,6 @@ JniInjector::JniInjector(void* a){
 
 JniInjector::JniInjector(long long pointer){
     if(isDebug) Logger::debug("JniInjector-Debug", "Init Pointer of table: %p", pointer);
-    Logger::debug("JniInjector-Debug", "Init Pointer of table: %p", pointer);
     this->table = (void*) pointer;
     this->pointer = pointer;
     this->types = std::vector<std::string>();

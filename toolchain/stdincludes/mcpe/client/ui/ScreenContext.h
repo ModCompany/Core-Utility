@@ -1,9 +1,6 @@
-#include "mce.hpp"
-#include <string>
+#pragma once
 
-#ifndef APPLESKIN_SCREENCONTEXT_HPP
-#define APPLESKIN_SCREENCONTEXT_HPP
-
+#include <mce.h>
 
 class ShaderColor {
     public:
@@ -21,15 +18,12 @@ class Tessellator {
 
 class ScreenContext {
     public:
-    char filler1[28]; // 28
-    ShaderColor* shaderColor; // 32
-    char filler2[72]; // 104
-    Tessellator* tessellator; // 108
+        char filler1[28]; // 28
+        ShaderColor* shaderColor; // 32
+        char filler2[72]; // 104
+        Tessellator* tessellator; // 108
 };
 
 namespace RenderMesh {
     void endTessellationAndRenderImmediately(ScreenContext&, Tessellator&, void*, std::string const&);
 }
-
-
-#endif //APPLESKIN_SCREENCONTEXT_HPP

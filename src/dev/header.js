@@ -19,6 +19,18 @@ let ServerPlayer = WRAP_JAVA("com.core.api.mcpe.entity.ServerPlayer");
 
 let NativeVar = WRAP_JAVA("com.core.api.engine.NativeVar");
 let ActorDamageCause = WRAP_JAVA("com.core.api.entity.ActorDamageCause");
+let NativeUi = WRAP_JAVA("com.core.api.engine.ui.NativeUi");
+let ImageElement = WRAP_JAVA("com.core.api.engine.ui.types.ImageElement");
+
+let TestUi = new NativeUi([
+    new ImageElement("test", 100, 100, 50, 50)
+]);
+Callback.addCallback("ItemUse", function(){
+    if(TestUi.isOpen())
+        TestUi.close();
+    else
+        TestUi.open();
+});
 
 /*Callback.addCallback("ItemUse", function(){
     let injector = new Injector("_ZN12HashedStringC2EPKc", ["char*"], [
