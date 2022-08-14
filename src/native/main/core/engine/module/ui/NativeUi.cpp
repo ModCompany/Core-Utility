@@ -19,7 +19,10 @@ void ElementImage::render(ScreenContext& ctx){
 
 void ElementFont::render(ScreenContext& ctx){
     mce::MaterialPtr material = mce::RenderMaterialGroup::common.getMaterial(HashedString(this->material.c_str()));
-    NativeUi::font->draw(ctx, std::__ndk1::string(text.c_str()), x, y, {1, 1, 1, 1}, false, &material, size, 0);
+    float height = NativeUi::font->getBaseFontHeight();
+    NativeUi::font->drawShadow(ctx, std::__ndk1::string(text.c_str()), x + 1, y + 1, {0, 0, 0, 1}, true, nullptr,0); //А это тень :/
+    NativeUi::font->draw(ctx, std::__ndk1::string(text.c_str()), x, y, {1, 1, 1, 1}, false, nullptr, size, 0); //0 это расстояние между строк оказывается :D
+
 }
 
 
@@ -137,3 +140,4 @@ export(void,engine_ui_NativeUi_open, jlong ptr) {
 export(void,engine_ui_NativeUi_close, jlong ptr) {
     NativeUi::close((NativeUi*) ptr);
 }
+

@@ -69,6 +69,7 @@ namespace GlobalContext {
 	Minecraft* getMinecraft();
 	// get server side Minecraft instance
 	Minecraft* getServerMinecraft();
+
 	// get client player instance
 	LocalPlayer* getLocalPlayer();
 	// get server player instance (hosting player or null, if it is remote world)
