@@ -177,7 +177,6 @@ void ScalesModule::blit(ScreenContext* ctx, float x, float y, float width, float
 	RenderMesh::endTessellationAndRenderImmediately(*ctx, *ctx->tessellator, &material, texture);
 	ctx->shaderColor->setColor(mce::Color { 1.0f, 1.0f, 1.0f, 1.0f });
 }
-#include <core/module/ui/NativeUi.h>
 void ScalesModule::initialize(){
     DLHandleManager::initializeHandle("libminecraftpe.so", "mcpe");
 	HookManager::addCallback(

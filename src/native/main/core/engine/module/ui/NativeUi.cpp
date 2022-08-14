@@ -6,13 +6,14 @@
 #include <symbol.h>
 #include <core/VtableHelper.h>
 #include <core/scales.h>
+#include <logger.h>
 
 std::vector<NativeUi*> NativeUi::opens;
 jclass NativeUi::JavaElement, NativeUi::JavaImageElement;
-jmethodID NativeUi::getTypeElement, NativeUi::getXElement, NativeUi::getYElement, NativeUi::getWidthElement, NativeUi::getHeigthElement, NativeUi::getTextureElement;
+jmethodID NativeUi::getTypeElement, NativeUi::getXElement, NativeUi::getYElement, NativeUi::getWidthElement, NativeUi::getHeigthElement, NativeUi::getTextureElement, NativeUi::getTextureHeigthElement, NativeUi::getTextureWidthElement;
 
 void ElementImage::render(ScreenContext& ctx){
-    ScalesModule::blit(&ctx, x, y, w, h, texture, w, h, 1);
+    ScalesModule::blit(&ctx, x, y, w, h, texture, t_w, t_h, .5);
 }
 
 
@@ -53,7 +54,7 @@ void NativeUi::close(NativeUi* ui){
         }
     }
 }
-#include <logger.h>
+
 void NativeUi::init(){
     JNIEnv* env;
 	ATTACH_JAVA(env, JNI_VERSION_1_6){
@@ -66,13 +67,13 @@ void NativeUi::init(){
         NativeUi::getWidthElement = env->GetMethodID(NativeUi::JavaImageElement, "getWidth", "()I");
         NativeUi::getHeigthElement = env->GetMethodID(NativeUi::JavaImageElement, "getHeigth", "()I");
         NativeUi::getTextureElement = env->GetMethodID(NativeUi::JavaImageElement, "getTexture", "()Ljava/lang/String;");
+        NativeUi::getTextureWidthElement = env->GetMethodID(NativeUi::JavaImageElement, "getTextureWidth", "()I");
+        NativeUi::getTextureHeigthElement = env->GetMethodID(NativeUi::JavaImageElement, "getTextureHeigth", "()I");
        
         HookManager::addCallback(
-            SYMBOL("mcpe", "_ZN19ScreenContextHelper30makeScreenContextAlphaOverrideER13ScreenContextf"), 
+            SYMBOL("mcpe", "_ZN3mce11RenderGraph6renderER13ScreenContextRK17FrameRenderObject"), 
             LAMBDA((void* self, ScreenContext& ctx), {
-                Logger::debug("Test-pre", "NativeUi::render");
                 NativeUi::render(ctx);
-                Logger::debug("Test-post", "NativeUi::render");
             }, ), HookManager::RETURN | HookManager::LISTENER
         );
     }
@@ -86,10 +87,12 @@ export(jlong,engine_ui_NativeUi_init, jobjectArray arr) {
         std::string type = JavaClass::toString(env, (jstring) env->CallObjectMethod(object, NativeUi::getTypeElement));
         if(type == "image"){
             ElementImage* element = new ElementImage();
-            element->h = (int) env->CallIntMethod(object, NativeUi::getXElement);
+            element->x = (int) env->CallIntMethod(object, NativeUi::getXElement);
             element->y = (int) env->CallIntMethod(object, NativeUi::getYElement);
             element->w = (int) env->CallIntMethod(object, NativeUi::getWidthElement);
-            element->h = (int) env->CallIntMethod(object, NativeUi::getTextureElement);
+            element->h = (int) env->CallIntMethod(object, NativeUi::getHeigthElement);
+            element->t_w = (int) env->CallIntMethod(object, NativeUi::getTextureWidthElement);
+            element->t_h = (int) env->CallIntMethod(object, NativeUi::getTextureHeigthElement);
             element->texture = JavaClass::toString(env, (jstring) env->CallObjectMethod(object, NativeUi::getTextureElement));
             elements.push_back(element);
         }

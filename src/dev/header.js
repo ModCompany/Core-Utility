@@ -44,11 +44,11 @@ Threading.initThread("membory-information-update", function(){
         let float = free/total;
         let obj = Membory.content.elements["membory"];
         if(float >= .85)
-            obj.font.color = android.graphics.Color.argb(1, 1, 0, 0);
+            obj.font.color = android.graphics.Color.RED;
         else if(float >= .6)
-            obj.font.color = android.graphics.Color.argb(1, 1, 1, 0);
+            obj.font.color = android.graphics.Color.YELLOW;
         else
-            obj.font.color = android.graphics.Color.argb(1, 0, 1, 0);
+            obj.font.color = android.graphics.Color.GREEN;
         obj.text = free + "/" + total;
         Membory.forceRefresh();
     }
@@ -57,20 +57,24 @@ Threading.initThread("membory-information-update", function(){
 
 
 let TestUi = new NativeUi([
-    new ImageElement("test", 100, 100, 50, 50)
+    new ImageElement("textures/blocks/barrel_side", 100, 100, 50, 50, 16, 16),
+    new ImageElement({
+        texture: "textures/blocks/barrel_side",
+        x: 100,
+        y: 150,
+        width: 50,
+        heigth: 50,
+        texture_width: 16,
+        texture_heigth: 16
+    })
 ]);
+TestUi.open();
 Callback.addCallback("ItemUse", function(){
     if(TestUi.isOpen())
         TestUi.close();
     else
         TestUi.open();
 });
-
-/*Callback.addCallback("ItemUse", function(){
-    let injector = new Injector("_ZN12HashedStringC2EPKc", ["char*"], [
-        Parameter.getChar("WopaArtema")
-    ])
-});*/
 
 /*
 Любопытной варваре нос аторвали

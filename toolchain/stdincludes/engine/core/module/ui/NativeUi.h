@@ -12,7 +12,7 @@ class Element {
 
 class ElementImage : public Element {
     public:
-        int w, h;
+        int w, h, t_w, t_h;
         std::string texture;
         virtual void render(ScreenContext&) override;
 };
@@ -24,7 +24,7 @@ class NativeUi {
         static std::vector<NativeUi*> opens; 
     public:
         static jclass JavaElement, JavaImageElement;
-        static jmethodID getTypeElement, getXElement, getYElement, getWidthElement, getHeigthElement, getTextureElement;
+        static jmethodID getTypeElement, getXElement, getYElement, getWidthElement, getHeigthElement, getTextureElement, getTextureHeigthElement, getTextureWidthElement;
         static void init();
         static void render(ScreenContext&);
         static void open(NativeUi*);

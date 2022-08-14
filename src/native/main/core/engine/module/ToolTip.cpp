@@ -80,6 +80,8 @@ std::vector<int> ToolTip::items_dynamic;
 
 jclass ToolTipClass, ItemStack;
 jmethodID pre, post, constructorItemStack;
+std::map<int, bool> enablesPre;
+std::map<int, bool> enablesPost;
 
 void ToolTip::init(){
     JNIEnv* env;
@@ -95,42 +97,55 @@ void ToolTip::init(){
     HookManager::addCallback(
         SYMBOL("mcpe", "_ZNK4Item24appendFormattedHovertextERK13ItemStackBaseR5LevelRNSt6__ndk112basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEb"), 
         LAMBDA((Item* item, ItemStackBase const& stack, Level& level, std::__ndk1::string& text, bool b), {
-            if(stack.isNull() || IdConversion::dynamicToStatic(stack.getId(), IdConversion::Scope::ITEM) == 0)
+            int id = IdConversion::dynamicToStatic(stack.getId(), IdConversion::Scope::ITEM);
+            if(stack.isNull() || id == 0)
                 return;
             JNIEnv* env;
             ATTACH_JAVA(env, JNI_VERSION_1_6){
-                jobject itemStack = env->NewObject(ItemStack, constructorItemStack, (jlong) &stack);
-                jstring str = (jstring) env->CallStaticObjectMethod(
-                    ToolTipClass, pre, 
-                    itemStack
-                );
-                std::__ndk1::string res = JavaClass::toStlString(env, str);
-                env->DeleteLocalRef(str);
-                if(res != "")
-                    text += "\n"+res;
+                jobject itemStack;
+                if(enablesPre.find(id) != enablesPre.end() || enablesPost.find(id) != enablesPost.end())
+                    itemStack = env->NewLocalRef(env->NewObject(ItemStack, constructorItemStack, (jlong) &stack));
+                if(enablesPre.find(id) != enablesPre.end()){
+                    jstring str = (jstring) env->CallStaticObjectMethod(
+                        ToolTipClass, pre, 
+                        itemStack
+                    );
+                    std::__ndk1::string res = JavaClass::toStlString(env, str);
+                    env->DeleteLocalRef(str);
+                    if(res != "")
+                        text += "\n"+res;
+                }
 
-                ToolTip* key_tip = new ToolTip(IdConversion::dynamicToStatic(stack.getId(), IdConversion::Scope::ITEM), stack.getAuxValue());
+                ToolTip* key_tip = new ToolTip(id, stack.getAuxValue());
                 std::vector<std::string> tips = ToolTip::get(key_tip);
                 for(int i = 0;i < tips.size();i++)
                     text += "\n"+std::__ndk1::string(tips[i].c_str());
 
-                str = (jstring) env->CallStaticObjectMethod(
-                    ToolTipClass, post, 
-                    itemStack
-                );
-                env->DeleteLocalRef(itemStack);
-                res = JavaClass::toStlString(env, str);
-                env->DeleteLocalRef(str);
-                if(res != "")
-                    text += "\n"+res;
-                
+                if(enablesPost.find(id) != enablesPost.end()){
+                    jstring str = (jstring) env->CallStaticObjectMethod(
+                        ToolTipClass, post, 
+                        itemStack
+                    );
+                    
+                    std::__ndk1::string res = JavaClass::toStlString(env, str);
+                    env->DeleteLocalRef(str);
+                    if(res != "")
+                        text += "\n"+res;
+                }
+                if(enablesPre.find(id) != enablesPre.end() || enablesPost.find(id) != enablesPost.end())
+                    env->DeleteLocalRef(itemStack);
                 delete key_tip;
                 key_tip = nullptr;
             }
         }, ), HookManager::RETURN | HookManager::LISTENER
     );
 }
-
+export(void,item_ToolTip_enablePre, jint id, jboolean value){
+    enablesPre[(int) id] = value == JNI_TRUE;
+}
+export(void,item_ToolTip_enablePost, jint id, jboolean value){
+    enablesPost[(int) id] = value == JNI_TRUE;
+}
 export(void,item_ToolTip_addToolTip, jint id, jint data, jstring name) {
     ToolTip::addToolTip((int) id, (int) data, JavaClass::toString(env, name));
 }
