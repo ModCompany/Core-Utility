@@ -44,11 +44,11 @@ Threading.initThread("membory-information-update", function(){
         let float = free/total;
         let obj = Membory.content.elements["membory"];
         if(float >= .85)
-            obj.font.color = android.graphics.Color.argb(1, 0, 1, 0);
+            obj.font.color = android.graphics.Color.argb(1, 1, 0, 0);
         else if(float >= .6)
             obj.font.color = android.graphics.Color.argb(1, 1, 1, 0);
         else
-            obj.font.color = android.graphics.Color.argb(1, 1, 0, 0);
+            obj.font.color = android.graphics.Color.argb(1, 0, 1, 0);
         obj.text = free + "/" + total;
         Membory.forceRefresh();
     }
