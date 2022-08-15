@@ -10,18 +10,24 @@
 
 std::vector<NativeUi*> NativeUi::opens;
 jclass NativeUi::JavaElement, NativeUi::JavaImageElement, NativeUi::JavaTextElement;
-Font* NativeUi::font;
-jmethodID NativeUi::getTypeElement, NativeUi::getMaterialElement, NativeUi::getXElement, NativeUi::getYElement, NativeUi::getWidthElement, NativeUi::getHeigthElement, NativeUi::getTextureElement, NativeUi::getTextureHeigthElement, NativeUi::getTextureWidthElement, NativeUi::getSizeElement, NativeUi::getTextElement;
+std::vector<Font*> NativeUi::fonts;
+jmethodID NativeUi::getTypeElement, NativeUi::getMaterialElement, NativeUi::getXElement, NativeUi::getYElement, NativeUi::getWidthElement, NativeUi::getHeigthElement, NativeUi::getTextureElement, NativeUi::getTextureHeigthElement, NativeUi::getTextureWidthElement, NativeUi::getSizeElement, NativeUi::getTextElement, NativeUi::getFontTypeElement, NativeUi::getShadowOffsetElement, NativeUi::isShadowElement;
 
 void ElementImage::render(ScreenContext& ctx){
     ScalesModule::blit(&ctx, x, y, w, h, texture, t_w, t_h, 1, material);
 }
 
 void ElementFont::render(ScreenContext& ctx){
-    mce::MaterialPtr material = mce::RenderMaterialGroup::common.getMaterial(HashedString(this->material.c_str()));
-    float height = NativeUi::font->getBaseFontHeight();
-    NativeUi::font->drawShadow(ctx, std::__ndk1::string(text.c_str()), x + 1, y + 1, {0, 0, 0, 1}, true, nullptr,0); //А это тень :/
-    NativeUi::font->draw(ctx, std::__ndk1::string(text.c_str()), x, y, {1, 1, 1, 1}, false, nullptr, size, 0); //0 это расстояние между строк оказывается :D
+    //mce::MaterialPtr material = mce::RenderMaterialGroup::common.getMaterial(HashedString(this->material.c_str()));
+    ctx.shaderColor->setColor(mce::Color { 1.0f, 1.0f, 1.0f, 1.0f });
+    Font* font;
+    if(font_type < NativeUi::fonts.size())
+        font = NativeUi::fonts[font_type];
+    else
+        font = NativeUi::fonts[NativeUi::fonts.size() - 1];
+    if(isShadow)
+        font->drawShadow(ctx, std::__ndk1::string(text.c_str()), x + shadow_offset, y + shadow_offset, {0, 0, 0, 1}, true, nullptr, 0); //А это тень :/
+    font->draw(ctx, std::__ndk1::string(text.c_str()), x, y, {1, 1, 1, 1}, true, nullptr, -size, 0); //0 это расстояние между строк оказывается :D, окей спасибо
 
 }
 
@@ -64,6 +70,7 @@ void NativeUi::close(NativeUi* ui){
     }
 }
 #include <logger.h>
+#include <client/ui/ResourceLocation.h>
 void NativeUi::init(){
     JNIEnv* env;
 	ATTACH_JAVA(env, JNI_VERSION_1_6){
@@ -82,6 +89,9 @@ void NativeUi::init(){
 
         NativeUi::JavaTextElement = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/engine/ui/types/TextElement")));
         NativeUi::getSizeElement = env->GetMethodID(NativeUi::JavaTextElement, "getSize", "()I");
+        NativeUi::getFontTypeElement = env->GetMethodID(NativeUi::JavaTextElement, "getFontType", "()I");
+        NativeUi::getShadowOffsetElement = env->GetMethodID(NativeUi::JavaTextElement, "getShadowOffset", "()I");
+        NativeUi::isShadowElement = env->GetMethodID(NativeUi::JavaTextElement, "isShadow", "()Z");
         NativeUi::getTextElement = env->GetMethodID(NativeUi::JavaTextElement, "getText", "()Ljava/lang/String;");
         
         HookManager::addCallback(
@@ -93,7 +103,7 @@ void NativeUi::init(){
         HookManager::addCallback(
             SYMBOL("mcpe", "_ZN4FontC2ERN3mce12TextureGroupE"), 
             LAMBDA((Font* self), {
-                NativeUi::font = self;
+                NativeUi::fonts.push_back(self);
             }, ), HookManager::RETURN | HookManager::LISTENER
         );
     }
@@ -123,6 +133,9 @@ export(jlong,engine_ui_NativeUi_init, jobjectArray arr) {
             element->size = (int) env->CallIntMethod(object, NativeUi::getSizeElement);
             element->text = JavaClass::toString(env, (jstring) env->CallObjectMethod(object, NativeUi::getTextElement));
             element->material = JavaClass::toString(env, (jstring) env->CallObjectMethod(object, NativeUi::getMaterialElement));
+            element->isShadow = env->CallBooleanMethod(object, NativeUi::isShadowElement) == JNI_TRUE;
+            element->shadow_offset = (int) env->CallIntMethod(object, NativeUi::getShadowOffsetElement);
+            element->font_type = (int) env->CallIntMethod(object, NativeUi::getFontTypeElement);
             elements.push_back(element);
         }
     }

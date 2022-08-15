@@ -21,7 +21,8 @@ class ElementImage : public Element {
 
 class ElementFont : public Element {
     public:
-        int size;
+        int size, font_type, shadow_offset;
+        bool isShadow;
         std::string text;
         virtual void render(ScreenContext&) override;
 };
@@ -32,9 +33,9 @@ class NativeUi {
         bool _open;
         static std::vector<NativeUi*> opens; 
     public:
-        static Font* font;
+        static std::vector<Font*> fonts;
         static jclass JavaElement, JavaImageElement, JavaTextElement;
-        static jmethodID getTypeElement, getMaterialElement, getXElement, getYElement, getWidthElement, getHeigthElement, getTextureElement, getTextureHeigthElement, getTextureWidthElement, getSizeElement, getTextElement;
+        static jmethodID getTypeElement, getMaterialElement, getXElement, getYElement, getWidthElement, getHeigthElement, getTextureElement, getTextureHeigthElement, getTextureWidthElement, getSizeElement, getTextElement, getFontTypeElement, getShadowOffsetElement, isShadowElement;
         static void init();
         static void render(ScreenContext&);
         static void open(NativeUi*);

@@ -23,40 +23,42 @@ let NativeUi = WRAP_JAVA("com.core.api.engine.ui.NativeUi");
 let ImageElement = WRAP_JAVA("com.core.api.engine.ui.types.ImageElement");
 let TextElement = WRAP_JAVA("com.core.api.engine.ui.types.TextElement");
 
-let Membory = new UI.Window({
-    drawing: [
-        {type: "color", color: android.graphics.Color.argb(0, 0, 0, 0)}
-    ],
-    elements: {
-        "membory": {type: "text", x: 0, y: 0, text: "", size: 70, font: {color: android.graphics.Color.argb(1, 1, 1, 1)}}
-    }
-});
-Membory.setAsGameOverlay(true);
-Membory.setTouchable(false);
-Membory.open();
+if(__config__.getBool("membory_display") == true){
+    let Membory = new UI.Window({
+        drawing: [
+            {type: "color", color: android.graphics.Color.argb(0, 0, 0, 0)}
+        ],
+        elements: {
+            "membory": {type: "text", x: 0, y: 0, text: "", size: 70, font: {color: android.graphics.Color.argb(1, 1, 1, 1)}}
+        }
+    });
+    Membory.setAsGameOverlay(true);
+    Membory.setTouchable(false);
+    Membory.open();
 
-let time = 1000/30;
-Threading.initThread("membory-information-update", function(){
-    let context = UI.getContext();
-    while(true){
-        java.lang.Thread.sleep(time);
-        let free = Math.floor(context.getFreeMemory() / 1024 / 1024);
-        let total = Math.floor(context.getTotalMemory() / 1024 / 1024);
-        let float = free/total;
-        let obj = Membory.content.elements["membory"];
-        if(float >= .85)
-            obj.font.color = android.graphics.Color.RED;
-        else if(float >= .6)
-            obj.font.color = android.graphics.Color.YELLOW;
-        else
-            obj.font.color = android.graphics.Color.GREEN;
-        obj.text = free + "/" + total;
-        Membory.forceRefresh();
-    }
-});
+    let time = 1000/30;
+    Threading.initThread("membory-information-update", function(){
+        let context = UI.getContext();
+        while(true){
+            java.lang.Thread.sleep(time);
+            let free = Math.floor(context.getFreeMemory() / 1024 / 1024);
+            let total = Math.floor(context.getTotalMemory() / 1024 / 1024);
+            let float = free/total;
+            let obj = Membory.content.elements["membory"];
+            if(float >= .85)
+                obj.font.color = android.graphics.Color.RED;
+            else if(float >= .6)
+                obj.font.color = android.graphics.Color.YELLOW;
+            else
+                obj.font.color = android.graphics.Color.GREEN;
+            obj.text = free + "/" + total;
+            Membory.forceRefresh();
+        }
+    });
+}
 
 
-
+/*
 let TestUi = new NativeUi([
     new ImageElement({
         texture: "textures/blocks/barrel_side",
@@ -79,7 +81,14 @@ let TestUi = new NativeUi([
     new TextElement({
         x: 100,
         y: 70,
-        text: "Любопытной варваре, нос оторвали да да это тест говна \n поэтому мы его и проверим"
+        text: "Любопытной варваре, нос оторвали да да это тест говна \n поэтому мы его и проверим",
+        font_type: 5
+    }),
+    new TextElement({
+        x: 300,
+        y: 70,
+        text: "Любопытной варваре, нос оторвали да да это тест говна \n поэтому мы его и проверим",
+        shadow: true
     })
 ]);
 TestUi.open();
@@ -88,7 +97,7 @@ Callback.addCallback("ItemUse", function(){
         TestUi.close();
     else
         TestUi.open();
-});
+});*/
 
 /*
 Любопытной варваре нос аторвали
