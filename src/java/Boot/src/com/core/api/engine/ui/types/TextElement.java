@@ -3,10 +3,10 @@ package com.core.api.engine.ui.types;
 import org.mozilla.javascript.ScriptableObject;
 
 public class TextElement extends Element {
-    int size, shadow_offset, font_type;
-    String text;
-    boolean shadow;
-    public TextElement(int x, int y, String material, String text, int size, boolean shadow, int shadow_offset, int font_type){
+    public int size, shadow_offset, font_type;
+    public String text;
+    public boolean shadow;
+    public TextElement(float x, float y, String material, String text, int size, boolean shadow, int shadow_offset, int font_type){
         super(x, y, material);
         this.text = text;
         this.size = size;
@@ -16,8 +16,8 @@ public class TextElement extends Element {
     }
     public TextElement(ScriptableObject object){
         this(
-            ((Double) object.get("x")).intValue(),
-            ((Double) object.get("y")).intValue(),
+            ((Double) object.get("x")).floatValue(),
+            ((Double) object.get("y")).floatValue(),
             object.has("material", object) ? ((String) object.get("material")) : "ui_text",
             ((String) object.get("text")),
             object.has("size", object) ? ((Double) object.get("size")).intValue() : 100,

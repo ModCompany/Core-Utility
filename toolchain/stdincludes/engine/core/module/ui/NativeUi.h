@@ -7,7 +7,7 @@
 
 class Element {
     public:
-        int x, y;
+        float x, y;
         std::string material;
         virtual void render(ScreenContext&) = 0;
 };

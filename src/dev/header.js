@@ -58,8 +58,8 @@ if(__config__.getBool("membory_display") == true){
 }
 
 
-/*
-let TestUi = new NativeUi([
+
+/*let TestUi = new NativeUi([
     new ImageElement({
         texture: "textures/blocks/barrel_side",
         x: 100,
@@ -91,6 +91,11 @@ let TestUi = new NativeUi([
         shadow: true
     })
 ]);
+TestUi.setHandlerUpdate(function(ui, value){
+    ui.elements[0].x += 1 * value;
+    ui.elements[1].x += 1 * value;
+    ui.force();
+});
 TestUi.open();
 Callback.addCallback("ItemUse", function(){
     if(TestUi.isOpen())

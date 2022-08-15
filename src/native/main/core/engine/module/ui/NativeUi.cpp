@@ -77,8 +77,8 @@ void NativeUi::init(){
         NativeUi::JavaElement = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/engine/ui/types/Element")));
         NativeUi::getTypeElement = env->GetMethodID(NativeUi::JavaElement, "getType", "()Ljava/lang/String;");
         NativeUi::getMaterialElement = env->GetMethodID(NativeUi::JavaElement, "getMaterial", "()Ljava/lang/String;");
-        NativeUi::getXElement = env->GetMethodID(NativeUi::JavaElement, "getX", "()I");
-        NativeUi::getYElement = env->GetMethodID(NativeUi::JavaElement, "getY", "()I");
+        NativeUi::getXElement = env->GetMethodID(NativeUi::JavaElement, "getX", "()F");
+        NativeUi::getYElement = env->GetMethodID(NativeUi::JavaElement, "getY", "()F");
 
         NativeUi::JavaImageElement = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/engine/ui/types/ImageElement")));
         NativeUi::getWidthElement = env->GetMethodID(NativeUi::JavaImageElement, "getWidth", "()I");
@@ -109,7 +109,7 @@ void NativeUi::init(){
     }
 }
 
-export(jlong,engine_ui_NativeUi_init, jobjectArray arr) {
+std::vector<Element*> getElements(JNIEnv* env, jobjectArray arr){
     int size = env->GetArrayLength(arr);
     std::vector<Element*> elements;
     for(int i = 0;i < size;i++){
@@ -117,8 +117,8 @@ export(jlong,engine_ui_NativeUi_init, jobjectArray arr) {
         std::string type = JavaClass::toString(env, (jstring) env->CallObjectMethod(object, NativeUi::getTypeElement));
         if(type == "image"){
             ElementImage* element = new ElementImage();
-            element->x = (int) env->CallIntMethod(object, NativeUi::getXElement);
-            element->y = (int) env->CallIntMethod(object, NativeUi::getYElement);
+            element->x = (float) env->CallFloatMethod(object, NativeUi::getXElement);
+            element->y = (float) env->CallFloatMethod(object, NativeUi::getYElement);
             element->w = (int) env->CallIntMethod(object, NativeUi::getWidthElement);
             element->h = (int) env->CallIntMethod(object, NativeUi::getHeigthElement);
             element->t_w = (int) env->CallIntMethod(object, NativeUi::getTextureWidthElement);
@@ -128,8 +128,8 @@ export(jlong,engine_ui_NativeUi_init, jobjectArray arr) {
             elements.push_back(element);
         }else if(type == "text"){
             ElementFont* element = new ElementFont();
-            element->x = (int) env->CallIntMethod(object, NativeUi::getXElement);
-            element->y = (int) env->CallIntMethod(object, NativeUi::getYElement);
+            element->x = (float) env->CallFloatMethod(object, NativeUi::getXElement);
+            element->y = (float) env->CallFloatMethod(object, NativeUi::getYElement);
             element->size = (int) env->CallIntMethod(object, NativeUi::getSizeElement);
             element->text = JavaClass::toString(env, (jstring) env->CallObjectMethod(object, NativeUi::getTextElement));
             element->material = JavaClass::toString(env, (jstring) env->CallObjectMethod(object, NativeUi::getMaterialElement));
@@ -139,8 +139,12 @@ export(jlong,engine_ui_NativeUi_init, jobjectArray arr) {
             elements.push_back(element);
         }
     }
+    return elements;
+}
+
+export(jlong,engine_ui_NativeUi_init, jobjectArray arr) {
     NativeUi* ui = new NativeUi();
-    ui->setElements(elements);
+    ui->setElements(getElements(env, arr));
     return (jlong) ui;
 }
 export(jboolean,engine_ui_NativeUi_isOpen, jlong ptr) {
@@ -148,6 +152,14 @@ export(jboolean,engine_ui_NativeUi_isOpen, jlong ptr) {
 }
 export(void,engine_ui_NativeUi_open, jlong ptr) {
     NativeUi::open((NativeUi*) ptr);
+}
+
+export(void,engine_ui_NativeUi_setElements, jlong ptr, jobjectArray arr) {
+    ((NativeUi*) ptr)->setElements(getElements(env, arr));
+}
+
+export(void,engine_ui_NativeUi_free, jlong ptr) {
+    ((NativeUi*) ptr)->~NativeUi();
 }
 
 export(void,engine_ui_NativeUi_close, jlong ptr) {

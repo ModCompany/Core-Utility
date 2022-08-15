@@ -4,8 +4,8 @@ import org.mozilla.javascript.ScriptableObject;
 
 public class ImageElement extends Element {
     public int width, heigth, tex_w, tex_h;
-    String texture;
-    public ImageElement(String texture, int x, int y, int width, int heigth, int tex_w, int tex_h, String material){
+    public String texture;
+    public ImageElement(String texture, float x, float y, int width, int heigth, int tex_w, int tex_h, String material){
         super(x, y, material);
         this.width = width;
         this.heigth = heigth;
@@ -16,8 +16,8 @@ public class ImageElement extends Element {
     public ImageElement(ScriptableObject object){
         this(
             (String) object.get("texture"), 
-            ((Double) object.get("x")).intValue(),
-            ((Double) object.get("y")).intValue(),
+            ((Double) object.get("x")).floatValue(),
+            ((Double) object.get("y")).floatValue(),
             ((Double) object.get("width")).intValue(),
             ((Double) object.get("heigth")).intValue(),
             object.has("texture_width", object) ? ((Double) object.get("texture_width")).intValue() : ((Double) object.get("width")).intValue(),
