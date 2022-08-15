@@ -8,6 +8,8 @@ import com.zhekasmirnov.horizon.runtime.logger.Logger;
 import com.zhekasmirnov.innercore.api.log.DialogHelper;
 
 import android.animation.ValueAnimator;
+import android.animation.Animator;
+import android.animation.Animator.AnimatorListener;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.os.Handler;
 import android.os.Looper;
@@ -74,17 +76,18 @@ public class NativeUi {
         if(jsUpdate != null)
             JsHelper.callFunction(jsUpdate, new Object[] {this, value});
     }
-
+    private float time;
     private void upt(){
         try {
             animator = ValueAnimator.ofFloat(0, 1);
-            animator.setDuration(1000);
             animator.setRepeatCount(ValueAnimator.INFINITE);
+            NativeUi self = this;
             animator.addUpdateListener(new AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator arg0) {
                     try {
-                        update((float) arg0.getAnimatedValue());
+                        update(((float) arg0.getAnimatedValue()) - self.time);
+                        self.time = (float) arg0.getAnimatedValue();
                     }catch(Exception e) {
                         Logger.error(e.getLocalizedMessage());
                         DialogHelper.reportNonFatalError("NativeUi-update", e.getCause());
@@ -92,6 +95,28 @@ public class NativeUi {
                     }
                 }
             });
+            animator.addListener(new AnimatorListener() {
+                @Override
+                public void onAnimationCancel(Animator arg0) {
+                    
+                }
+
+                @Override
+                public void onAnimationEnd(Animator arg0) {
+                    
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator arg0) {
+                    self.time = 0;
+                }
+
+                @Override
+                public void onAnimationStart(Animator arg0) {
+                    
+                }
+                
+            });;
             Handler handler = new Handler(Looper.getMainLooper());
             handler.post(new Runnable(){
                 @Override

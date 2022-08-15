@@ -82,18 +82,23 @@ if(__config__.getBool("membory_display") == true){
         x: 100,
         y: 70,
         text: "Любопытной варваре, нос оторвали да да это тест говна \n поэтому мы его и проверим",
-        font_type: 5
+        font_type: 10
     }),
     new TextElement({
         x: 300,
         y: 70,
         text: "Любопытной варваре, нос оторвали да да это тест говна \n поэтому мы его и проверим",
-        shadow: true
+        shadow: true,
+        font_type: 8
     })
 ]);
 TestUi.setHandlerUpdate(function(ui, value){
     ui.elements[0].x += 1 * value;
     ui.elements[1].x += 1 * value;
+
+    ui.elements[2].text = String(value);
+    ui.elements[3].text = String(value);
+
     ui.force();
 });
 TestUi.open();
