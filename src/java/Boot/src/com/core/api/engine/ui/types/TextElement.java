@@ -51,4 +51,6 @@ public class TextElement extends Element {
     String getType() {
         return "text";
     }
+
+    native public float getHeight();
 }

@@ -32,17 +32,19 @@ class NativeUi {
         std::vector<Element*> elements;
         bool _open;
         static std::vector<NativeUi*> opens; 
+        jobject self;
     public:
         static std::vector<Font*> fonts;
-        static jclass JavaElement, JavaImageElement, JavaTextElement;
-        static jmethodID getTypeElement, getMaterialElement, getXElement, getYElement, getWidthElement, getHeigthElement, getTextureElement, getTextureHeigthElement, getTextureWidthElement, getSizeElement, getTextElement, getFontTypeElement, getShadowOffsetElement, isShadowElement;
+        static jclass JavaElement, JavaImageElement, JavaTextElement, JavaNativeUi;
+        static jmethodID touchUi, getTypeElement, getMaterialElement, getXElement, getYElement, getWidthElement, getHeigthElement, getTextureElement, getTextureHeigthElement, getTextureWidthElement, getSizeElement, getTextElement, getFontTypeElement, getShadowOffsetElement, isShadowElement;
         static void init();
         static void render(ScreenContext&);
+        static bool touch(int type, float x, float y);
         static void open(NativeUi*);
         static void close(NativeUi*);
 
         
-        NativeUi();
+        NativeUi(jobject);
         ~NativeUi();
         void setElements(std::vector<Element*> elements);
         bool isOpen() const;

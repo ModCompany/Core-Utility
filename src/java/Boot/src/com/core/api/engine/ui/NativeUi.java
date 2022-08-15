@@ -1,8 +1,5 @@
 package com.core.api.engine.ui;
 
-import org.mozilla.javascript.Function;
-
-import com.core.api.JsHelper;
 import com.core.api.engine.ui.types.Element;
 import com.zhekasmirnov.horizon.runtime.logger.Logger;
 import com.zhekasmirnov.innercore.api.log.DialogHelper;
@@ -15,14 +12,18 @@ import android.os.Handler;
 import android.os.Looper;
 
 public class NativeUi {
+    public static interface NativeUiListener {
+        public void update(NativeUi ui, float value);
+        public void touch(NativeUi ui, int type, float x, float y);
+    }
     long ptr;
     public Element[] elements;
     public boolean ui_update;
     public ValueAnimator animator;
-    public Function jsUpdate;
+    public NativeUiListener listener;
 
     public NativeUi(Element[] elements){
-        ptr = init(elements);
+        ptr = init(this, elements);
         this.elements = elements;
         ui_update = false;
     }
@@ -63,23 +64,29 @@ public class NativeUi {
         isFree = true;
     }
 
-    public void force(){
+    public void forceRefresh(){
         setElements(elements);
     }
 
-    public void setHandlerUpdate(Function function){
+    public void setListener(NativeUiListener listener){
         ui_update = true;
-        jsUpdate = function;
+        this.listener = listener;
     }
 
     public void update(float value){
-        if(jsUpdate != null)
-            JsHelper.callFunction(jsUpdate, new Object[] {this, value});
+        if(listener != null)
+            listener.update(this, value);
+    }
+    public boolean touch(int type, float x, float y){
+        if(listener != null)
+            listener.touch(this, type, x, y);
+        return true;
     }
     private float time;
     private void upt(){
         try {
             animator = ValueAnimator.ofFloat(0, 1);
+            animator.setDuration(1000);
             animator.setRepeatCount(ValueAnimator.INFINITE);
             NativeUi self = this;
             animator.addUpdateListener(new AnimatorUpdateListener() {
@@ -90,32 +97,20 @@ public class NativeUi {
                         self.time = (float) arg0.getAnimatedValue();
                     }catch(Exception e) {
                         Logger.error(e.getLocalizedMessage());
-                        DialogHelper.reportNonFatalError("NativeUi-update", e.getCause());
+                        DialogHelper.openFormattedDialog(e.getLocalizedMessage(), "Ui-Error");
                         arg0.cancel();
                     }
                 }
             });
             animator.addListener(new AnimatorListener() {
                 @Override
-                public void onAnimationCancel(Animator arg0) {
-                    
-                }
-
+                public void onAnimationCancel(Animator arg0) {}
                 @Override
-                public void onAnimationEnd(Animator arg0) {
-                    
-                }
-
+                public void onAnimationEnd(Animator arg0) {}
                 @Override
-                public void onAnimationRepeat(Animator arg0) {
-                    self.time = 0;
-                }
-
+                public void onAnimationRepeat(Animator arg0) {self.time = 0;}
                 @Override
-                public void onAnimationStart(Animator arg0) {
-                    
-                }
-                
+                public void onAnimationStart(Animator arg0) {}
             });;
             Handler handler = new Handler(Looper.getMainLooper());
             handler.post(new Runnable(){
@@ -126,7 +121,7 @@ public class NativeUi {
             });
         } catch (Exception e) {
             Logger.error(e.getLocalizedMessage());
-            DialogHelper.reportNonFatalError("NativeUi-update", e.getCause());
+            DialogHelper.openFormattedDialog(e.getLocalizedMessage(), "Ui-Error");
         }
     }
 
@@ -143,5 +138,5 @@ public class NativeUi {
     static public native void close(long ptr);
     static public native boolean isOpen(long ptr);
     static public native void free(long ptr);
-    static public native long init(Element[] elements);
+    static public native long init(Object self, Element[] elements);
 }

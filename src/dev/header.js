@@ -59,7 +59,7 @@ if(__config__.getBool("membory_display") == true){
 
 
 
-/*let TestUi = new NativeUi([
+let TestUi = new NativeUi([
     new ImageElement({
         texture: "textures/blocks/barrel_side",
         x: 100,
@@ -92,14 +92,13 @@ if(__config__.getBool("membory_display") == true){
         font_type: 8
     })
 ]);
-TestUi.setHandlerUpdate(function(ui, value){
-    ui.elements[0].x += 1 * value;
-    ui.elements[1].x += 1 * value;
+TestUi.setListener({
+    touch(ui, type, x, y){
+        ui.elements[0].x = x;
+        ui.elements[0].y = y;
 
-    ui.elements[2].text = String(value);
-    ui.elements[3].text = String(value);
-
-    ui.force();
+        ui.forceRefresh();
+    }
 });
 TestUi.open();
 Callback.addCallback("ItemUse", function(){
@@ -107,7 +106,7 @@ Callback.addCallback("ItemUse", function(){
         TestUi.close();
     else
         TestUi.open();
-});*/
+});
 
 /*
 Любопытной варваре нос аторвали
