@@ -55,6 +55,14 @@ FlatWorldOverrided *flat_world_overrided;
 Core::FileSystemImpl* Global::_system_impl;
 PlayScreenController* Global::_world_controller;
 LevelListCache* Global::_world_cache;
+#include <block/Block.h>
+#include <innercore/id_conversion_map.h>
+
+class BlockTessellator {
+	public:
+	char filler[256];
+	void tessellateLadderInWorld(Tessellator&, Block const&,BlockPos const&);
+};
 class CoreUtility : public Module
 {
 public:
