@@ -22,6 +22,7 @@ let ActorDamageCause = WRAP_JAVA("com.core.api.entity.ActorDamageCause");
 let NativeUi = WRAP_JAVA("com.core.api.engine.ui.NativeUi");
 let ImageElement = WRAP_JAVA("com.core.api.engine.ui.types.ImageElement");
 let TextElement = WRAP_JAVA("com.core.api.engine.ui.types.TextElement");
+let MeshElement = WRAP_JAVA("com.core.api.engine.ui.types.MeshElement");
 
 if(__config__.getBool("membory_display") == true){
     let Membory = new UI.Window({
@@ -77,27 +78,18 @@ let TestUi = new NativeUi([
         heigth: 50,
         texture_width: 16,
         texture_heigth: 16
-    }),
-    new TextElement({
-        x: 100,
-        y: 70,
-        text: "Любопытной варваре, нос оторвали да да это тест говна \n поэтому мы его и проверим",
-        font_type: 10
-    }),
-    new TextElement({
-        x: 300,
-        y: 70,
-        text: "Любопытной варваре, нос оторвали да да это тест говна \n поэтому мы его и проверим",
-        shadow: true,
-        font_type: 8
     })
 ]);
 TestUi.setListener({
+    update(ui, upt){
+        
+    },
     touch(ui, type, x, y){
         ui.elements[0].x = x;
         ui.elements[0].y = y;
 
         ui.forceRefresh();
+        return false;
     }
 });
 TestUi.open();

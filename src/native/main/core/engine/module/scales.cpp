@@ -7,7 +7,7 @@
 
 #include <client/ui/ScreenContext.h>
 #include "mcpe/MinecraftUIRenderContext.hpp"
-#include "mcpe/UIControl.hpp"
+#include <horizon/types.h>
 #include "mcpe/Player.hpp"
 #include "mcpe/ClientInstance.hpp"
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stl/string.h>
+#include <horizon/types.h>
 #define stl std::__ndk1
 
 class GuiData {
@@ -12,5 +13,6 @@ public:
     void setSubtitle(stl::string const&);
     void setFilteredText(stl::string const&);
     void setActionBarMessage(stl::string const&);
+    float getGuiScale() const;
 };
 

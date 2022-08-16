@@ -13,6 +13,16 @@ class Vec2 {
         
     };
 };
+
+class Vec2;
+
+class UIControl {
+    public:
+        void** vtable; // 4
+        char filler[180]; // 184
+        Vec2* getPosition() const;
+};
+
 class Vec3 {
     public:
     float x, y, z;

@@ -9,9 +9,9 @@
 #include <logger.h>
 
 std::vector<NativeUi*> NativeUi::opens;
-jclass NativeUi::JavaElement, NativeUi::JavaImageElement, NativeUi::JavaTextElement, NativeUi::JavaNativeUi;
+jclass NativeUi::JavaElement, NativeUi::JavaImageElement, NativeUi::JavaTextElement, NativeUi::JavaNativeUi, NativeUi::JavaMeshElement;
 std::vector<Font*> NativeUi::fonts;
-jmethodID NativeUi::touchUi, NativeUi::getTypeElement, NativeUi::getMaterialElement, NativeUi::getXElement, NativeUi::getYElement, NativeUi::getWidthElement, NativeUi::getHeigthElement, NativeUi::getTextureElement, NativeUi::getTextureHeigthElement, NativeUi::getTextureWidthElement, NativeUi::getSizeElement, NativeUi::getTextElement, NativeUi::getFontTypeElement, NativeUi::getShadowOffsetElement, NativeUi::isShadowElement;
+jmethodID NativeUi::getMeshElement, NativeUi::getTextureMeshElement, NativeUi::touchUi, NativeUi::getTypeElement, NativeUi::getMaterialElement, NativeUi::getXElement, NativeUi::getYElement, NativeUi::getWidthElement, NativeUi::getHeigthElement, NativeUi::getTextureElement, NativeUi::getTextureHeigthElement, NativeUi::getTextureWidthElement, NativeUi::getSizeElement, NativeUi::getTextElement, NativeUi::getFontTypeElement, NativeUi::getShadowOffsetElement, NativeUi::isShadowElement;
 
 void ElementImage::render(ScreenContext& ctx){
     ScalesModule::blit(&ctx, x, y, w, h, texture, t_w, t_h, 1, material);
@@ -31,6 +31,10 @@ void ElementFont::render(ScreenContext& ctx){
 
 }
 
+void ElementMesh::render(ScreenContext& context){
+    mce::MaterialPtr material = mce::RenderMaterialGroup::common.getMaterial(HashedString(this->material.c_str()));
+    mesh->renderImmediatelyNoCache(context, &material, texture, {0, 0, 0}, mce::Color{1, 1, 1, 1}, false, false, false);
+}
 
 NativeUi::NativeUi(jobject self){
     _open = false;
@@ -58,7 +62,7 @@ bool NativeUi::touch(int type, float x, float y){
     JNIEnv* env;
 	ATTACH_JAVA(env, JNI_VERSION_1_6){
         for(int i = 0;i < opens.size();i++){
-            jboolean v = env->CallBooleanMethod(opens[i]->self, NativeUi::touchUi, (jint) type, (jfloat) x, (jfloat) y);\
+            jboolean v = env->CallBooleanMethod(opens[i]->self, NativeUi::touchUi, (jint) type, (jfloat) x, (jfloat) y);
             if(v == JNI_TRUE)
                 return true;
         }
@@ -71,11 +75,15 @@ bool NativeUi::isOpen() const {
 }
 
 void NativeUi::open(NativeUi* ui){
+    if(ui->_open)
+        return;
     ui->_open = true;
     opens.push_back(ui);
 }
 
 void NativeUi::close(NativeUi* ui){
+    if(!ui->_open)
+        return;
     ui->_open = false;
     for(int i = 0;i < opens.size();i++){
         NativeUi* obj = opens[i];
@@ -85,12 +93,14 @@ void NativeUi::close(NativeUi* ui){
         }
     }
 }
-#include <logger.h>
+#include <innercore/global_context.h>
+#include <client/ClientIntance.h>
+#include <client/gui/GuiData.h>
 void NativeUi::init(){
     JNIEnv* env;
 	ATTACH_JAVA(env, JNI_VERSION_1_6){
         NativeUi::JavaNativeUi = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/engine/ui/NativeUi")));
-        NativeUi::touchUi = env->GetMethodID(NativeUi::JavaNativeUi, "touch", "(IFF)Z");
+        NativeUi::touchUi = env->GetMethodID(NativeUi::JavaNativeUi, "nativeTouch", "(IFF)Z");
 
         NativeUi::JavaElement = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/engine/ui/types/Element")));
         NativeUi::getTypeElement = env->GetMethodID(NativeUi::JavaElement, "getType", "()Ljava/lang/String;");
@@ -111,6 +121,10 @@ void NativeUi::init(){
         NativeUi::getShadowOffsetElement = env->GetMethodID(NativeUi::JavaTextElement, "getShadowOffset", "()I");
         NativeUi::isShadowElement = env->GetMethodID(NativeUi::JavaTextElement, "isShadow", "()Z");
         NativeUi::getTextElement = env->GetMethodID(NativeUi::JavaTextElement, "getText", "()Ljava/lang/String;");
+
+        NativeUi::JavaMeshElement = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/engine/ui/types/MeshElement")));
+        NativeUi::getMeshElement = env->GetMethodID(NativeUi::JavaMeshElement, "getMesh", "()J");
+        NativeUi::getTextureMeshElement = env->GetMethodID(NativeUi::JavaMeshElement, "getTexture", "()Ljava/lang/String;");
         
         HookManager::addCallback(
             SYMBOL("mcpe", "_ZN3mce11RenderGraph6renderER13ScreenContextRK17FrameRenderObject"), 
@@ -127,7 +141,8 @@ void NativeUi::init(){
         HookManager::addCallback(
             SYMBOL("mcpe", "_ZN17TouchPointResults10addPointerEi10TouchStateffbbb"), 
             LAMBDA((HookManager::CallbackController* controller, void* self, int i1, int type, float x, float y, bool b1, bool b2, bool b3), {
-                if(NativeUi::touch(type, x, y))
+                float scale = GlobalContext::getMinecraftClient()->getGuiData()->getGuiScale();
+                if(NativeUi::touch(type, x / scale, y / scale))
                     controller->replace();
             }, ), HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER
         );
@@ -162,6 +177,16 @@ std::vector<Element*> getElements(JNIEnv* env, jobjectArray arr){
             element->shadow_offset = (int) env->CallIntMethod(object, NativeUi::getShadowOffsetElement);
             element->font_type = (int) env->CallIntMethod(object, NativeUi::getFontTypeElement);
             elements.push_back(element);
+        }else if(type == "mesh"){
+            ElementMesh* element = new ElementMesh();
+            element->x = (float) env->CallFloatMethod(object, NativeUi::getXElement);
+            element->y = (float) env->CallFloatMethod(object, NativeUi::getYElement);
+            element->material = JavaClass::toString(env, (jstring) env->CallObjectMethod(object, NativeUi::getMaterialElement));
+
+            element->mesh = (RenderMesh*) env->CallLongMethod(object, NativeUi::getMeshElement);
+            element->texture = JavaClass::toString(env, (jstring) env->CallObjectMethod(object, NativeUi::getTextureMeshElement));
+
+            elements.push_back(element);
         }
     }
     return elements;
@@ -177,7 +202,7 @@ _export(jfloat,engine_ui_types_TextElement_getHeight) {
         font = NativeUi::fonts[font_type];
     else
         font = NativeUi::fonts[NativeUi::fonts.size() - 1];
-    return (jfloat) font->getTextHeight(JavaClass::toString(env, (jstring) env->CallObjectMethod(object, NativeUi::getTextElement)), (int) env->CallIntMethod(object, NativeUi::getSizeElement), 0, false)
+    return (jfloat) font->getTextHeight(JavaClass::toStlString(env, (jstring) env->CallObjectMethod(object, NativeUi::getTextElement)), (int) env->CallIntMethod(object, NativeUi::getSizeElement), 0, false);
 }
 
 export(jlong,engine_ui_NativeUi_init, jobject self, jobjectArray arr) {

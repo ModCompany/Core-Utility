@@ -14,7 +14,7 @@ import android.os.Looper;
 public class NativeUi {
     public static interface NativeUiListener {
         public void update(NativeUi ui, float value);
-        public void touch(NativeUi ui, int type, float x, float y);
+        public boolean touch(NativeUi ui, int type, float x, float y);
     }
     long ptr;
     public Element[] elements;
@@ -77,9 +77,9 @@ public class NativeUi {
         if(listener != null)
             listener.update(this, value);
     }
-    public boolean touch(int type, float x, float y){
+    public boolean nativeTouch(int type, float x, float y){
         if(listener != null)
-            listener.touch(this, type, x, y);
+            return (boolean) listener.touch(this, type, x, y);
         return true;
     }
     private float time;

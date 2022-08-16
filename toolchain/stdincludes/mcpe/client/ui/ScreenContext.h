@@ -1,6 +1,8 @@
 #pragma once
 
 #include <mce.h>
+#include <horizon/types.h>
+#include <string>
 
 class ShaderColor {
     public:
@@ -24,6 +26,8 @@ class ScreenContext {
         Tessellator* tessellator; // 108
 };
 
-namespace RenderMesh {
-    void endTessellationAndRenderImmediately(ScreenContext&, Tessellator&, void*, std::string const&);
-}
+class RenderMesh {
+    public:
+        void renderImmediatelyNoCache(ScreenContext&, void*, std::string const&, Vec3, mce::Color const&, bool, bool, bool);
+        static void endTessellationAndRenderImmediately(ScreenContext&, Tessellator&, void*, std::string const&);
+};
