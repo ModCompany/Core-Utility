@@ -141,7 +141,8 @@ void NativeUi::init(){
         HookManager::addCallback(
             SYMBOL("mcpe", "_ZN17TouchPointResults10addPointerEi10TouchStateffbbb"), 
             LAMBDA((HookManager::CallbackController* controller, void* self, int i1, int type, float x, float y, bool b1, bool b2, bool b3), {
-                if(NativeUi::touch(type, x, y))
+                float scale = GlobalContext::getMinecraftClient()->getGuiData()->getGuiScale();
+                if(NativeUi::touch(type, x/scale, y/scale))
                     controller->replace();
             }, ), HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER
         );
@@ -201,7 +202,7 @@ _export(jfloat,engine_ui_types_TextElement_getHeight) {
         font = NativeUi::fonts[font_type];
     else
         font = NativeUi::fonts[NativeUi::fonts.size() - 1];
-    return (jfloat) font->getTextHeight(JavaClass::toString(env, (jstring) env->CallObjectMethod(object, NativeUi::getTextElement)), (int) env->CallIntMethod(object, NativeUi::getSizeElement), 0, false)
+    return (jfloat) font->getTextHeight(JavaClass::toStlString(env, (jstring) env->CallObjectMethod(object, NativeUi::getTextElement)), (int) env->CallIntMethod(object, NativeUi::getSizeElement), 0, false);
 }
 
 export(jlong,engine_ui_NativeUi_init, jobject self, jobjectArray arr) {

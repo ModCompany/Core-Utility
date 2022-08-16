@@ -13,6 +13,8 @@ import android.os.Looper;
 
 public class NativeUi {
     public static interface NativeUiListener {
+        public void onOpen(NativeUi ui);
+        public void onClose(NativeUi ui);
         public void update(NativeUi ui, float value);
         public boolean touch(NativeUi ui, int type, float x, float y);
     }
@@ -39,12 +41,16 @@ public class NativeUi {
         open(ptr);
         if(ui_update)
             upt();
+        if(listener != null)
+            listener.onOpen(this);
         return this;
     }
 
     public NativeUi close(){
         close(ptr);
         animator.cancel();
+        if(listener != null)
+            listener.onClose(this);
         return this;
     }
 
