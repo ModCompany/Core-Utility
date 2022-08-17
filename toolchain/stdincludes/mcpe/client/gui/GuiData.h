@@ -13,6 +13,8 @@ public:
     void setSubtitle(stl::string const&);
     void setFilteredText(stl::string const&);
     void setActionBarMessage(stl::string const&);
+    Vec2* getScreenSizeData() const;
     float getGuiScale() const;
+    float setGuiScale(float);
 };
 

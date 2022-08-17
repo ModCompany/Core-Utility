@@ -7,6 +7,7 @@
 #include <core/VtableHelper.h>
 #include <core/scales.h>
 #include <logger.h>
+#include <client/ui/ResourceLocation.h>
 
 std::vector<NativeUi*> NativeUi::opens;
 jclass NativeUi::JavaElement, NativeUi::JavaImageElement, NativeUi::JavaTextElement, NativeUi::JavaNativeUi, NativeUi::JavaMeshElement;
@@ -96,6 +97,7 @@ void NativeUi::close(NativeUi* ui){
 #include <innercore/global_context.h>
 #include <client/ClientIntance.h>
 #include <client/gui/GuiData.h>
+#include <type/Json_new.h>
 void NativeUi::init(){
     JNIEnv* env;
 	ATTACH_JAVA(env, JNI_VERSION_1_6){

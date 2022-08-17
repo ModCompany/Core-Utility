@@ -82,7 +82,10 @@ let TestUi = new NativeUi([
 ]);
 TestUi.setListener({
     update(ui, upt){
-        
+        ui.elements[1].x += 20 * upt;
+        ui.elements[1].y += 20 * upt;
+
+        ui.forceRefresh();
     },
     touch(ui, type, x, y){
         ui.elements[0].x = x;
