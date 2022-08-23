@@ -20,4 +20,7 @@ public class Element {
     public float getY(){
         return y;
     }
+    public boolean isTouch(float x, float y){
+        return false;
+    }
 }

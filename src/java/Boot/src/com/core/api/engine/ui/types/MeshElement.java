@@ -18,7 +18,7 @@ public class MeshElement extends Element {
         this(
             ((Double) object.get("x")).floatValue(), 
             ((Double) object.get("y")).floatValue(), 
-            object.has("material", object) ? ((String) object.get("material")) : "ui_textured_and_glcolor",
+            object.has("material", object) ? ((String) object.get("material")) : "entity_alphatest_custom",
             (NativeRenderMesh) object.get("mesh"),
             object.has("texture", object) ? ((String) object.get("texture")) : "terrain-atlas"
         );

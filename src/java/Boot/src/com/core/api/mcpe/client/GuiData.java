@@ -1,6 +1,8 @@
 package com.core.api.mcpe.client;
 
 import com.core.api.engine.PointerClass;
+import com.core.api.innnercore.GlobalContext;
+import com.core.api.mcpe.api.Vec2;
 
 public class GuiData extends PointerClass {
 
@@ -42,6 +44,30 @@ public class GuiData extends PointerClass {
 
     public float getDisplayWidth(){
         return getDisplayWidth(pointer);
+    }
+
+    public Vec2 toWindow(float x, float y){
+        float display_x = getDisplayWidth();
+        float display_y = getDisplayWidth();
+        float window_x = getWindowWidth();
+        float window_y = getWindowHeigth();
+        return new Vec2(x/display_x*window_x, y/display_y*window_y);
+    }
+
+    public Vec2 toDisplay(float x, float y){
+        float display_x = getDisplayWidth();
+        float display_y = getDisplayWidth();
+        float window_x = getWindowWidth();
+        float window_y = getWindowHeigth();
+        return new Vec2(x/window_x*display_x, y/window_y*display_y);
+    }
+
+    public static Vec2 toWindowStatic(float x, float y){
+        return GlobalContext.getClientInstance().getGuiData().toWindow(x, y);
+    }
+
+    public static Vec2 toDisplayStatic(float x, float y){
+        return GlobalContext.getClientInstance().getGuiData().toDisplay(x, y);
     }
 
     public static native float getGuiScale(long pointer);

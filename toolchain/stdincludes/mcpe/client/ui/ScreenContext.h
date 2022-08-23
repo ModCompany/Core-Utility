@@ -28,6 +28,7 @@ class ScreenContext {
 
 class RenderMesh {
     public:
+        void renderImmediately(ScreenContext&, void*, std::string const&, Vec3, mce::Color const&, bool, bool, bool);
         void renderImmediatelyNoCache(ScreenContext&, void*, std::string const&, Vec3, mce::Color const&, bool, bool, bool);
         static void endTessellationAndRenderImmediately(ScreenContext&, Tessellator&, void*, std::string const&);
 };

@@ -33,8 +33,9 @@ void ElementFont::render(ScreenContext& ctx){
 }
 
 void ElementMesh::render(ScreenContext& context){
-    mce::MaterialPtr material = mce::RenderMaterialGroup::common.getMaterial(HashedString(this->material.c_str()));
-    mesh->renderImmediatelyNoCache(context, &material, texture, {0, 0, 0}, mce::Color{1, 1, 1, 1}, false, false, false);
+    Logger::debug("Test", "%s, %s", this->material.c_str(), texture.c_str());
+    mce::MaterialPtr mat = mce::RenderMaterialGroup::switchable.getMaterial(HashedString(this->material.c_str()));
+    mesh->renderImmediately(context, &mat, texture, {0,0,0}, mce::Color{1, 1, 1, 1}, false, false, false);
 }
 
 NativeUi::NativeUi(jobject self){
@@ -118,10 +119,10 @@ void NativeUi::init(){
 
         NativeUi::JavaImageElement = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/engine/ui/types/ImageElement")));
         NativeUi::getWidthElement = env->GetMethodID(NativeUi::JavaImageElement, "getWidth", "()I");
-        NativeUi::getHeigthElement = env->GetMethodID(NativeUi::JavaImageElement, "getHeigth", "()I");
+        NativeUi::getHeigthElement = env->GetMethodID(NativeUi::JavaImageElement, "getHeight", "()I");
         NativeUi::getTextureElement = env->GetMethodID(NativeUi::JavaImageElement, "getTexture", "()Ljava/lang/String;");
         NativeUi::getTextureWidthElement = env->GetMethodID(NativeUi::JavaImageElement, "getTextureWidth", "()I");
-        NativeUi::getTextureHeigthElement = env->GetMethodID(NativeUi::JavaImageElement, "getTextureHeigth", "()I");
+        NativeUi::getTextureHeigthElement = env->GetMethodID(NativeUi::JavaImageElement, "getTextureHeight", "()I");
 
         NativeUi::JavaTextElement = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/engine/ui/types/TextElement")));
         NativeUi::getSizeElement = env->GetMethodID(NativeUi::JavaTextElement, "getSize", "()I");

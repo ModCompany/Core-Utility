@@ -60,46 +60,57 @@ if(__config__.getBool("membory_display") == true){
 
 
 
+Callback.addCallback("ItemUse", function(){
 let TestUi = new NativeUi([
     new ImageElement({
         texture: "textures/blocks/barrel_side",
         x: 100,
         y: 100,
         width: 50,
-        heigth: 50,
+        height: 50,
         texture_width: 16,
-        texture_heigth: 16
+        texture_height: 16
     }),
     new ImageElement({
         texture: "textures/blocks/barrel_side",
         x: 100,
         y: 150,
         width: 50,
-        heigth: 50,
+        height: 50,
         texture_width: 16,
-        texture_heigth: 16
+        texture_height: 16
+    }),
+    new TextElement({
+        text: "",
+        x: 50,
+        y: 50,
+    }),
+    new MeshElement({
+        x: 100,
+        y: 100,
+        mesh: ItemModel.getFor(264, 0).getItemRenderMesh(1, false),
+        texture: "textures/blocks/barrel_side"
     })
 ]);
 TestUi.setListener({
     update(ui, upt){
-        ui.elements[0].x += 20 * upt;
-
+        ui.elements[2].text = String(upt);
+        ui.elements[1].x += 5 * upt;
         ui.forceRefresh();
     },
     touch(ui, type, x, y, i1, b1, b2, b3){
-        ui.elements[0].x = x;
-        ui.elements[0].y = y;
+        if(type == 0) alert("click");
+        if(ui.elements[0].isTouch(x, y)){
+            ui.elements[0].x = x - ui.elements[0].width / 2;
+            ui.elements[0].y = y - ui.elements[0].height / 2;
 
-        ui.forceRefresh();
+            ui.forceRefresh();
+            return true;
+        }
         return false;
     }
 });
 TestUi.open();
-Callback.addCallback("ItemUse", function(){
-    if(TestUi.isOpen())
-        TestUi.close();
-    else
-        TestUi.open();
 });
 
 /*
