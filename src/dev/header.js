@@ -84,7 +84,7 @@ let TestUi = new NativeUi([
     }),
     new MeshElement({
         x: 100,
-        y: 100,
+        y: 0,
         mesh: new RenderMesh()
     })
 ]);
@@ -107,7 +107,6 @@ TestUi.open();
 Callback.addCallback("ItemUse", function(pos, item){
     let mesh = ItemModel.getFor(item.id, item.data).getItemRenderMesh(1, false);
     mesh.scale(60, 60, 60);
-    mesh.translate(0, 0, -250);
     TestUi.elements[3].mesh = mesh;
     TestUi.elements[3].texture = ItemModel.getFor(item.id, item.data).getWorldTextureName();
 
