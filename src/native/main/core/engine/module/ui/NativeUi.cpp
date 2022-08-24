@@ -107,6 +107,7 @@ void NativeUi::close(NativeUi* ui){
 #include <client/ClientIntance.h>
 #include <client/gui/GuiData.h>
 #include <type/Json_new.h>
+#include <stl/vector>
 void NativeUi::init(){
     JNIEnv* env;
 	ATTACH_JAVA(env, JNI_VERSION_1_6){
@@ -141,6 +142,14 @@ void NativeUi::init(){
             SYMBOL("mcpe", "_ZN3mce11RenderGraph6renderER13ScreenContextRK17FrameRenderObject"), 
             LAMBDA((void* self, ScreenContext& ctx), {
                 NativeUi::render(ctx);
+            }, ), HookManager::RETURN | HookManager::LISTENER
+        );
+        HookManager::addCallback(
+            SYMBOL("mcpe", "_ZN4Font19calculateTextWidthsERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEERNS0_6vectorIiNS4_IiEEEE"), 
+            LAMBDA((void* self, stl::string const& text, stl::vector<int>& vec), {
+                Logger::debug("TEST", text.c_str());
+                for(int i = 0;i < vec.size();i++)
+                    Logger::debug("TEST", "%i", vec[i]);
             }, ), HookManager::RETURN | HookManager::LISTENER
         );
         HookManager::addCallback(
@@ -214,6 +223,25 @@ _export(jfloat,engine_ui_types_TextElement_getHeight) {
     else
         font = NativeUi::fonts[NativeUi::fonts.size() - 1];
     return (jfloat) font->getTextHeight(JavaClass::toStlString(env, (jstring) env->CallObjectMethod(object, NativeUi::getTextElement)), (int) env->CallIntMethod(object, NativeUi::getSizeElement), 0, false);
+}
+
+_export(jfloat,engine_ui_types_TextElement_getWidth) {
+    int font_type = (int) env->CallIntMethod(object, NativeUi::getFontTypeElement);
+
+    Font* font;
+    if(font_type < NativeUi::fonts.size())
+        font = NativeUi::fonts[font_type];
+    else
+        font = NativeUi::fonts[NativeUi::fonts.size() - 1];
+    stl::vector<int> vec;
+    font->calculateTextWidths(JavaClass::toStlString(env, (jstring) env->CallObjectMethod(object, NativeUi::getTextElement)), vec);
+    int max = -1;
+    for(int i = 0;i < vec.size();i++){
+        int size = vec[i];
+        if(max < size)
+            max = size;
+    }
+    return max;
 }
 
 export(jlong,engine_ui_NativeUi_init, jobject self, jobjectArray arr) {

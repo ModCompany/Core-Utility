@@ -78,7 +78,7 @@ let TestUi = new NativeUi([
         texture_height: 16
     }),
     new TextElement({
-        text: "",
+        text: "Test text\ntext",
         x: 50,
         y: 50,
     }),
@@ -107,6 +107,8 @@ TestUi.open();
 Callback.addCallback("ItemUse", function(pos, item){
     let mesh = ItemModel.getFor(item.id, item.data).getItemRenderMesh(1, false);
     mesh.scale(60, 60, 60);
+    alert(TestUi.elements[2].getHeight());
+    alert(TestUi.elements[2].getWidth());
     TestUi.elements[3].mesh = mesh;
     TestUi.elements[3].texture = ItemModel.getFor(item.id, item.data).getWorldTextureName();
 

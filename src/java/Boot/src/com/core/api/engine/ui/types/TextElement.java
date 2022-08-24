@@ -53,4 +53,5 @@ public class TextElement extends Element {
     }
 
     native public float getHeight();
+    native public float getWidth();
 }
