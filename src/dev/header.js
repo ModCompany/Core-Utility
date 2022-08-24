@@ -58,9 +58,6 @@ if(__config__.getBool("membory_display") == true){
     });
 }
 
-
-
-Callback.addCallback("ItemUse", function(){
 let TestUi = new NativeUi([
     new ImageElement({
         texture: "textures/blocks/barrel_side",
@@ -88,15 +85,11 @@ let TestUi = new NativeUi([
     new MeshElement({
         x: 100,
         y: 100,
-        mesh: ItemModel.getFor(264, 0).getItemRenderMesh(1, false),
-        texture: "textures/blocks/barrel_side"
+        mesh: new RenderMesh()
     })
 ]);
 TestUi.setListener({
     update(ui, upt){
-        ui.elements[2].text = String(upt);
-        ui.elements[1].x += 5 * upt;
-        ui.forceRefresh();
     },
     touch(ui, type, x, y, i1, b1, b2, b3){
         if(type == 0) alert("click");
@@ -111,6 +104,14 @@ TestUi.setListener({
     }
 });
 TestUi.open();
+Callback.addCallback("ItemUse", function(pos, item){
+    let mesh = ItemModel.getFor(item.id, item.data).getItemRenderMesh(1, false);
+    mesh.scale(60, 60, 60);
+    mesh.translate(0, 0, -250);
+    TestUi.elements[3].mesh = mesh;
+    TestUi.elements[3].texture = ItemModel.getFor(item.id, item.data).getWorldTextureName();
+
+    TestUi.forceRefresh();
 });
 
 /*

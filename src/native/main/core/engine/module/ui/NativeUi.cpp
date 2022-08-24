@@ -33,9 +33,11 @@ void ElementFont::render(ScreenContext& ctx){
 }
 
 void ElementMesh::render(ScreenContext& context){
-    Logger::debug("Test", "%s, %s", this->material.c_str(), texture.c_str());
     mce::MaterialPtr mat = mce::RenderMaterialGroup::switchable.getMaterial(HashedString(this->material.c_str()));
-    mesh->renderImmediately(context, &mat, texture, {0,0,0}, mce::Color{1, 1, 1, 1}, false, false, false);
+    this->mesh->translate(x, y, 0);
+    context.shaderColor->setColor(mce::Color { 1.0f, 1.0f, 1.0f, 1.0f });
+    this->mesh->renderImmediatelyNoCache(context, *context.tessellator, &mat, texture, {1,1,1}, mce::Color{1, 1, 1, 1}, true, true, true);
+    this->mesh->translate(-x, -y, 0);
 }
 
 NativeUi::NativeUi(jobject self){
