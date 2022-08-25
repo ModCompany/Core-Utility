@@ -84,12 +84,13 @@ let TestUi = new NativeUi([
     }),
     new MeshElement({
         x: 100,
-        y: 0,
+        y: 100,
         mesh: new RenderMesh()
     })
 ]);
 TestUi.setListener({
     update(ui, upt){
+        TestUi.elements[3].mesh.rotate(0.1*upt, 0.1*upt, 0.1*upt);
     },
     touch(ui, type, x, y, i1, b1, b2, b3){
         if(type == 0) alert("click");
@@ -107,8 +108,8 @@ TestUi.open();
 Callback.addCallback("ItemUse", function(pos, item){
     let mesh = ItemModel.getFor(item.id, item.data).getItemRenderMesh(1, false);
     mesh.scale(60, 60, 60);
-    alert(TestUi.elements[2].getHeight());
-    alert(TestUi.elements[2].getWidth());
+    TestUi.elements[1].x = TestUi.elements[2].x + TestUi.elements[2].getWidth();
+    TestUi.elements[1].y = TestUi.elements[2].y + TestUi.elements[2].getHeight();
     TestUi.elements[3].mesh = mesh;
     TestUi.elements[3].texture = ItemModel.getFor(item.id, item.data).getWorldTextureName();
 

@@ -2,8 +2,6 @@ package com.core.api.engine.ui.types;
 
 import org.mozilla.javascript.ScriptableObject;
 
-import com.zhekasmirnov.horizon.runtime.logger.Logger;
-
 public class ImageElement extends Element {
     public int width, height, tex_w, tex_h;
     public String texture;

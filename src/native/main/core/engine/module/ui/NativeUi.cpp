@@ -12,7 +12,7 @@
 std::vector<NativeUi*> NativeUi::opens;
 jclass NativeUi::JavaElement, NativeUi::JavaImageElement, NativeUi::JavaTextElement, NativeUi::JavaNativeUi, NativeUi::JavaMeshElement;
 std::vector<Font*> NativeUi::fonts;
-jmethodID NativeUi::getMeshElement, NativeUi::getTextureMeshElement, NativeUi::touchUi, NativeUi::getTypeElement, NativeUi::getMaterialElement, NativeUi::getXElement, NativeUi::getYElement, NativeUi::getWidthElement, NativeUi::getHeigthElement, NativeUi::getTextureElement, NativeUi::getTextureHeigthElement, NativeUi::getTextureWidthElement, NativeUi::getSizeElement, NativeUi::getTextElement, NativeUi::getFontTypeElement, NativeUi::getShadowOffsetElement, NativeUi::isShadowElement;
+jmethodID NativeUi::getMeshElement, NativeUi::getTextureMeshElement, NativeUi::getZElement, NativeUi::touchUi, NativeUi::getTypeElement, NativeUi::getMaterialElement, NativeUi::getXElement, NativeUi::getYElement, NativeUi::getWidthElement, NativeUi::getHeigthElement, NativeUi::getTextureElement, NativeUi::getTextureHeigthElement, NativeUi::getTextureWidthElement, NativeUi::getSizeElement, NativeUi::getTextElement, NativeUi::getFontTypeElement, NativeUi::getShadowOffsetElement, NativeUi::isShadowElement;
 
 void ElementImage::render(ScreenContext& ctx){
     ScalesModule::blit(&ctx, x, y, w, h, texture, t_w, t_h, 1, material);
@@ -28,16 +28,48 @@ void ElementFont::render(ScreenContext& ctx){
         font = NativeUi::fonts[NativeUi::fonts.size() - 1];
     if(isShadow)
         font->drawShadow(ctx, std::__ndk1::string(text.c_str()), x + shadow_offset, y + shadow_offset, {0, 0, 0, 1}, true, nullptr, 0); //А это тень :/
-    font->draw(ctx, std::__ndk1::string(text.c_str()), x, y, {1, 1, 1, 1}, true, nullptr, -size, 0); //0 это расстояние между строк оказывается :D, окей спасибо
+    font->draw(ctx, std::__ndk1::string(text.c_str()), x, y, {1, 1, 1, 1}, true, nullptr, 0, 0); //0 это расстояние между строк оказывается :D, окей спасибо
 
 }
+/*
+Союз нерушимый республик свободных
+Сплотила навеки Великая Русь
+Да здравствует созданный волей народов
+Единый, могучий Советский Союз!
 
+Славься, Отечество наше свободное
+Дружбы народов надёжный оплот!
+Партия Ленина — сила народная
+Нас к торжеству коммунизма ведёт!
+
+Сквозь грозы сияло нам солнце свободы
+И Ленин великий нам путь озарил
+На правое дело он поднял народы
+На труд и на подвиги нас вдохновил
+
+Славься, Отечество наше свободное
+Дружбы народов надёжный оплот!
+Партия Ленина — сила народная
+Нас к торжеству коммунизма ведёт!
+
+В победе бессмертных идей коммунизма
+Мы видим грядущее нашей страны
+И Красному знамени славной Отчизны
+Мы будем всегда беззаветно верны!
+
+Славься, Отечество наше свободное
+Дружбы народов надёжный оплот!
+Партия Ленина — сила народная
+Нас к торжеству коммунизма ведёт!
+*/
 void ElementMesh::render(ScreenContext& context){
     mce::MaterialPtr mat = mce::RenderMaterialGroup::switchable.getMaterial(HashedString(this->material.c_str()));
-    this->mesh->translate(x, y, 0);
+    this->mesh->translate(x, -y, z);
+    this->mesh->rebuildNormals();
+    this->mesh->prepareForRender();
     context.shaderColor->setColor(mce::Color { 1.0f, 1.0f, 1.0f, 1.0f });
-    this->mesh->renderImmediatelyNoCache(context, *context.tessellator, &mat, texture, {1,1,1}, mce::Color{1, 1, 1, 1}, true, true, true);
-    this->mesh->translate(-x, -y, 0);
+    this->mesh->renderImmediatelyNoCache(context, *context.tessellator, &mat, texture, {0,0,0}, mce::Color{1, 1, 1, 1}, false, false, true);
+    this->mesh->translate(-x, y, -z);
 }
 
 NativeUi::NativeUi(jobject self){
@@ -135,6 +167,7 @@ void NativeUi::init(){
         NativeUi::getTextElement = env->GetMethodID(NativeUi::JavaTextElement, "getText", "()Ljava/lang/String;");
         
         NativeUi::JavaMeshElement = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/engine/ui/types/MeshElement")));
+        NativeUi::getZElement = env->GetMethodID(NativeUi::JavaMeshElement, "getZ", "()F");
         NativeUi::getMeshElement = env->GetMethodID(NativeUi::JavaMeshElement, "getMesh", "()J");
         NativeUi::getTextureMeshElement = env->GetMethodID(NativeUi::JavaMeshElement, "getTexture", "()Ljava/lang/String;");
         
@@ -142,14 +175,6 @@ void NativeUi::init(){
             SYMBOL("mcpe", "_ZN3mce11RenderGraph6renderER13ScreenContextRK17FrameRenderObject"), 
             LAMBDA((void* self, ScreenContext& ctx), {
                 NativeUi::render(ctx);
-            }, ), HookManager::RETURN | HookManager::LISTENER
-        );
-        HookManager::addCallback(
-            SYMBOL("mcpe", "_ZN4Font19calculateTextWidthsERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEERNS0_6vectorIiNS4_IiEEEE"), 
-            LAMBDA((void* self, stl::string const& text, stl::vector<int>& vec), {
-                Logger::debug("TEST", text.c_str());
-                for(int i = 0;i < vec.size();i++)
-                    Logger::debug("TEST", "%i", vec[i]);
             }, ), HookManager::RETURN | HookManager::LISTENER
         );
         HookManager::addCallback(
@@ -201,6 +226,7 @@ std::vector<Element*> getElements(JNIEnv* env, jobjectArray arr){
             ElementMesh* element = new ElementMesh();
             element->x = (float) env->CallFloatMethod(object, NativeUi::getXElement);
             element->y = (float) env->CallFloatMethod(object, NativeUi::getYElement);
+            element->z = (float) env->CallFloatMethod(object, NativeUi::getZElement);
             element->material = JavaClass::toString(env, (jstring) env->CallObjectMethod(object, NativeUi::getMaterialElement));
 
             element->mesh = (RenderMesh*) env->CallLongMethod(object, NativeUi::getMeshElement);
@@ -222,7 +248,12 @@ _export(jfloat,engine_ui_types_TextElement_getHeight) {
         font = NativeUi::fonts[font_type];
     else
         font = NativeUi::fonts[NativeUi::fonts.size() - 1];
-    return (jfloat) font->getTextHeight(JavaClass::toStlString(env, (jstring) env->CallObjectMethod(object, NativeUi::getTextElement)), (int) env->CallIntMethod(object, NativeUi::getSizeElement), 0, false);
+    std::string text = JavaClass::toString(env, (jstring) env->CallObjectMethod(object, NativeUi::getTextElement));
+    int countline = 1;
+    for(int i = 0;i < text.size();i++)
+        if(text.at(i) == '\n' && i != text.size()-1)
+            countline++;
+    return (jfloat) font->getBaseFontHeight() * countline;
 }
 
 _export(jfloat,engine_ui_types_TextElement_getWidth) {

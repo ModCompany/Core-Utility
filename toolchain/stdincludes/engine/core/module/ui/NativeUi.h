@@ -29,6 +29,7 @@ class ElementFont : public Element {
 
 class ElementMesh : public Element {
     public:
+        float z;
         std::string texture;
         RenderMesh* mesh;
         virtual void render(ScreenContext&) override;
@@ -43,7 +44,7 @@ class NativeUi {
     public:
         static std::vector<Font*> fonts;
         static jclass JavaElement, JavaImageElement, JavaTextElement, JavaNativeUi, JavaMeshElement;
-        static jmethodID getTextureMeshElement, getMeshElement, touchUi, getTypeElement, getMaterialElement, getXElement, getYElement, getWidthElement, getHeigthElement, getTextureElement, getTextureHeigthElement, getTextureWidthElement, getSizeElement, getTextElement, getFontTypeElement, getShadowOffsetElement, isShadowElement;
+        static jmethodID getZElement, getTextureMeshElement, getMeshElement, touchUi, getTypeElement, getMaterialElement, getXElement, getYElement, getWidthElement, getHeigthElement, getTextureElement, getTextureHeigthElement, getTextureWidthElement, getSizeElement, getTextElement, getFontTypeElement, getShadowOffsetElement, isShadowElement;
         static void init();
         static void render(ScreenContext&);
         static bool touch(int type, float x, float y, int i1, bool b1, bool b2, bool b3);
