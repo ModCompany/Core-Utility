@@ -5,6 +5,7 @@
 
 #include <string>
 #include <logger.h>
+#include "id_pool.h"
 #include "common.h"
 
 
@@ -64,6 +65,10 @@ namespace BlockRegistry {
 			return NULL;
 		}
 	};
+};
+
+namespace BlockStatesRegistry {
+	Block* getBlockByRuntimeId(int);
 };
 
 #endif

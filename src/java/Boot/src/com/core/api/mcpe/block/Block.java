@@ -2,7 +2,6 @@ package com.core.api.mcpe.block;
 
 import com.core.api.Injector;
 import com.core.api.engine.PointerClass;
-import com.zhekasmirnov.apparatus.adapter.innercore.game.block.BlockState;
 
 public class Block extends PointerClass {
     Injector injector;

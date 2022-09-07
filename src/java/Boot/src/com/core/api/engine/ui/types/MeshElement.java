@@ -23,7 +23,7 @@ public class MeshElement extends Element {
             ((Double) object.get("x")).floatValue(), 
             ((Double) object.get("y")).floatValue(), 
             object.has("z", object) ? ((Double) object.get("z")).floatValue() : 0,
-            object.has("material", object) ? ((String) object.get("material")) : "entity_alphatest_custom",
+            object.has("material", object) ? ((String) object.get("material")) : "native_ui_mesh",
             (NativeRenderMesh) object.get("mesh"),
             object.has("texture", object) ? ((String) object.get("texture")) : "terrain::atlas"
         );

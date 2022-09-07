@@ -135,7 +135,6 @@ public class NativeUi {
 
     @Override
     protected void finalize() throws Throwable {
-        super.finalize();
         free();
     }
     

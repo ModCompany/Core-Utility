@@ -49,9 +49,8 @@ public class Hook {
         try {
             JSONObject object = new JSONObject(readFile(path+"config.json"));
             return object.getBoolean("enabled");
-        } finally {
-            return true;
-        }
+        }catch(Exception e){}
+        return true;
     }
     private static void hookLoad(String path){
         try{

@@ -1,0 +1,5 @@
+{
+    "native_ui_mesh:entity_alphatest_custom": {
+        "fragmentShader": "./native_ui_mesh.fragment"
+    }
+}

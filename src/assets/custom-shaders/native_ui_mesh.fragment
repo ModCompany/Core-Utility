@@ -1,0 +1,12 @@
+#include "util.h"
+
+LAYOUT_BINDING(0) uniform sampler2D TEXTURE_0;
+
+void main(){
+    vec4 tex = texture2D(TEXTURE_0, uv);
+
+    gl_FragColor.a = tex.a;
+    gl_FragColor.r = tex.r;
+    gl_FragColor.g = tex.g;
+    gl_FragColor.b = tex.b;
+}

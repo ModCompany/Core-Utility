@@ -38,6 +38,7 @@ typedef int content_id_t;
 
 #include <Core.h>
 #include <innercore/global_context.h>
+#include <core/DungeonUtility.h>
 
 
 
@@ -168,6 +169,7 @@ public:
 MAIN
 {
 	Module *main_module = new CoreUtility("core_utility");
+	new DungeonUtility::DungeonUtilityModule();
 	///new CoreGeneration(main_module, "core_utility.generation");
 	new SoundModule(main_module, "core_utility.sound");
 	new ScalesModule();

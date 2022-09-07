@@ -24,6 +24,37 @@ let ImageElement = WRAP_JAVA("com.core.api.engine.ui.types.ImageElement");
 let TextElement = WRAP_JAVA("com.core.api.engine.ui.types.TextElement");
 let MeshElement = WRAP_JAVA("com.core.api.engine.ui.types.MeshElement");
 
+let StructureObject = WRAP_JAVA("com.core.api.dungeonutility.struct.StructureObject");
+let StructureParser = WRAP_JAVA("com.core.api.dungeonutility.struct.StructureParser");
+let JsStructureParser = WRAP_JAVA("com.core.api.dungeonutility.struct.JsStructureParser");
+let BlockData = WRAP_JAVA("com.core.api.dungeonutility.api.BlockData");
+
+StructureParser.registerFormat("test", new JsStructureParser({
+    read(text){
+        alert(text);
+        let struct = new StructureObject();
+        struct.addBlock(new BlockData(0, 0, 0, new BlockState(1, 0), new BlockState(0, 0)));
+        struct.addBlock(new BlockData(0, 1, 0, new BlockState(1, 0), new BlockState(0, 0)));
+        return struct;
+    },
+    save(struct){
+        return "test";
+    }
+}));
+
+
+
+let TestStructure;
+
+Callback.addCallback("LevelLoaded", function(){
+    alert(StructureParser.getParser("test").save(new StructureObject()));
+    TestStructure = StructureParser.getParser("test").read("test text");
+});
+
+Callback.addCallback("ItemUse", function(coords, item, block, is, player){
+    TestStructure.set(coords.x, coords.y, coords.z, BlockSource.getDefaultForActor(player));
+});
+
 if(__config__.getBool("membory_display") == true){
     let Membory = new UI.Window({
         drawing: [

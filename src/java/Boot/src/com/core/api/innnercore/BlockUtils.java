@@ -1,15 +1,13 @@
 package com.core.api.innnercore;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 
-import com.core.api.mcpe.api.BlockPos;
+import com.core.api.dungeonutility.api.BlockData;
 import com.core.api.mcpe.block.Block;
 import com.core.api.mcpe.block.BlockLegacy;
+import com.zhekasmirnov.apparatus.adapter.innercore.game.block.BlockState;
 import com.zhekasmirnov.innercore.api.NativeBlockRenderer;
 import com.zhekasmirnov.innercore.api.NativeICRender;
-import com.zhekasmirnov.innercore.api.NativeRenderMesh;
-import com.zhekasmirnov.innercore.api.mod.adaptedscript.AdaptedScriptAPI.BlockRenderer;
 
 public class BlockUtils {
     native public static long getBlockLegacy(int id);
@@ -21,16 +19,18 @@ public class BlockUtils {
     public static Block getBlockStateForIdData(int id, int data){
         return new Block(getBlockState(id, data));
     }
+    public static Block getBlock(BlockState state){
+        return new Block(BlockData.getPointerBlock(state));
+    }
+        
 
     public static HashMap<Integer, NativeICRender.Model> models = new HashMap<>();
     public static void register(int id, NativeICRender.Model model){
-        models.put(new Integer(id), model);
+        models.put(id , model);
         NativeBlockRenderer.enableCoordMapping(id, -1, model);
     }
     
 
     public static void renderModelBlock(long mesh, long bl, long po){
-        Block block = new Block(bl);
-        BlockPos pos = new BlockPos(po);
     }
 }
