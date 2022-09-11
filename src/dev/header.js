@@ -25,6 +25,7 @@ let TextElement = WRAP_JAVA("com.core.api.engine.ui.types.TextElement");
 let MeshElement = WRAP_JAVA("com.core.api.engine.ui.types.MeshElement");
 
 let StructureObject = WRAP_JAVA("com.core.api.dungeonutility.struct.StructureObject");
+let StructurePool = WRAP_JAVA("com.core.api.dungeonutility.struct.StructurePool");
 let StructureParser = WRAP_JAVA("com.core.api.dungeonutility.struct.StructureParser");
 let JsStructureParser = WRAP_JAVA("com.core.api.dungeonutility.struct.JsStructureParser");
 let BlockData = WRAP_JAVA("com.core.api.dungeonutility.api.BlockData");
@@ -42,17 +43,13 @@ StructureParser.registerFormat("test", new JsStructureParser({
     }
 }));
 
-
-
-let TestStructure;
-
-Callback.addCallback("LevelLoaded", function(){
-    alert(StructureParser.getParser("test").save(new StructureObject()));
-    TestStructure = StructureParser.getParser("test").read("test text");
-});
-
+alert("test 1");
+let pool = new StructurePool();
+alert("test 2");
+pool.load(__dir__+"test.json", "test", "test", false);
+alert("test 3");
 Callback.addCallback("ItemUse", function(coords, item, block, is, player){
-    TestStructure.set(coords.x, coords.y, coords.z, BlockSource.getDefaultForActor(player));
+    pool.get("test").set(coords.x, coords.y, coords.z, BlockSource.getDefaultForActor(player));
 });
 
 if(__config__.getBool("membory_display") == true){

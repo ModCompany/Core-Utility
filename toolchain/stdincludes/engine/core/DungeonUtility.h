@@ -29,17 +29,16 @@ namespace DungeonUtility {
     };
 
     struct LoadData {
-        std::string path, name, type;
-        bool haffman;
+        std::string text, name, type;
     };
 
     class StructurePool {
         private:
             static std::map<std::string, StructurePool*> pools;
-            static std::map<StructurePool*, LoadData*> loads;
 
             std::map<std::string, StructureObject*> structures;
         public:
+            static std::map<StructurePool*, LoadData*> loads;
             StructurePool();
             void put(std::string, StructureObject*);
             StructureObject* get(std::string) const;
@@ -49,8 +48,8 @@ namespace DungeonUtility {
 
             std::map<std::string, StructureObject*>& getStructures() const;
             std::vector<std::string> getAllStructure() const;
-            void loadRuntime(std::string, std::string, std::string, bool);
-            void load(std::string, std::string, std::string, bool) const;
+            void loadRuntime(std::string, std::string, std::string);
+            void load(std::string, std::string, std::string);
             void copy(std::string, std::string);
 
             static void registerPool(std::string, StructurePool*);

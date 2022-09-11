@@ -1,6 +1,9 @@
 #include <core/DungeonUtility.h>
 #include <java.h>
 #include <innercore_callbacks.h>
+#include <symbol.h>
+#include <hook.h>
+#include <logger.h>
 
 DungeonUtility::DungeonUtilityModule::DungeonUtilityModule(): Module("core_utility.dungeonutility"){
 
