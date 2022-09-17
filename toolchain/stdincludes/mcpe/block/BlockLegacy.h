@@ -4,12 +4,26 @@
 #include <stl/string>
 #define stl std::__ndk1
 
-class BlockSource;
-class BlockPos;
 
-class ItemState {
-    //ItemState(unsigned int, HashedString const&, unsigned int);
+class BlockPos;
+class ItemState;
+class BlockSource;
+class Random;
+class BlockSupportType;
+class Material {};
+
+class VanillaStates {
+	public:
+	static ItemState DoorHingeBit;
+	static ItemState DirtType;
+	static ItemState UpperBlockBit;
+	static ItemState Direction;
+	static ItemState OpenBit;
 };
+
+class AABB;
+class Player;
+class Actor;
 
 class BlockLegacy {
 public:
@@ -48,11 +62,18 @@ class DoorBlock : public BlockLegacy {
 	public:
 	char filler[256];
 	enum class DoorType : int {
-		LEFT,
-		RIGHT
+		Oak,
+        Spruce,
+        Birch,
+        Jungle,
+        Acacia,
+        Dark_Oak,
+        Iron,
+        Crimson,
+        Warped
 	};
 	DoorBlock(stl::string const&, int, Material const&, DoorBlock::DoorType);
-		void _hasSupport(BlockPos const&, unsigned char, BlockSupportType, BlockSource&) const;
+	void _hasSupport(BlockPos const&, unsigned char, BlockSupportType, BlockSource&) const;
     void hasRightHinge(BlockSource&, BlockPos const&) const;
     void getDoorFacing(int);
     void stringToDoorType(stl::string);

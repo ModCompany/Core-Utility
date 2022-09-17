@@ -142,4 +142,55 @@ class SplashPotionItem : public PotionItem {
 	public:
 	SplashPotionItem(stl::string const&,int);
 };
+
+class RangedWeaponItem : public Item
+{
+public:
+	virtual void releaseUsing(ItemStack &, Player *, int) const;
+};
+
+class BowItem : public RangedWeaponItem
+{
+public:
+	BowItem(stl::string const &, int);
+};
+
+class Container;
+class BlockSource;
+class Level;
+
+class ShieldItem : public Item
+{
+public:
+	// Fields
+	char filler[512];
+
+public:
+	// Virtual Tables
+	virtual ~ShieldItem();
+	virtual bool isHandEquipped() const
+	{
+		return true;
+	};
+	virtual void isValidRepairItem(ItemStackBase const &, ItemStackBase const &) const;
+	virtual void getEnchantSlot() const;
+	virtual void dispense(BlockSource &, Container &, int, Vec3 const &, unsigned char) const;
+	virtual void hurtActor(ItemStack &, Actor &, Mob &) const;
+	virtual void inventoryTick(ItemStack &, Level &, Actor &, int, bool) const;
+	virtual void getInHandUpdateType(Player const &, ItemInstance const &, ItemInstance const &, bool, bool) const;
+	virtual void getInHandUpdateType(Player const &, ItemStack const &, ItemStack const &, bool, bool) const;
+
+public:
+	// Methods
+	ShieldItem(stl::string const &, int);
+	void playBreakSound(Player *) const;
+	void playBlockSound(Player *) const;
+
+public:
+	// Objects
+	static ShieldItem *TIMESTAMP_TAG;
+	static ShieldItem *EFFECTIVE_BLOCK_DELAY;
+	static ShieldItem *IN_HAND_BLOCK_DURATION;
+}; // ShieldItem
+
 #endif //HORIZON_ITEM_H

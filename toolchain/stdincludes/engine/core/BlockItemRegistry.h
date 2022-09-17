@@ -9,5 +9,7 @@ class BlockItemPool {
     public:
     static stl::map<stl::string, BlockLegacy*> block_pool;
     static stl::map<stl::string, Item*> item_pool;
-
-}
+    static void addBlockToPool(stl::string uid, BlockLegacy* block){
+       
+    };
+};
