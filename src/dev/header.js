@@ -29,7 +29,7 @@ let StructurePool = WRAP_JAVA("com.core.api.dungeonutility.struct.StructurePool"
 let StructureParser = WRAP_JAVA("com.core.api.dungeonutility.struct.StructureParser");
 let JsStructureParser = WRAP_JAVA("com.core.api.dungeonutility.struct.JsStructureParser");
 let BlockData = WRAP_JAVA("com.core.api.dungeonutility.api.BlockData");
-
+/*
 StructureParser.registerFormat("test", new JsStructureParser({
     read(text){
         alert(text);
@@ -143,7 +143,7 @@ Callback.addCallback("ItemUse", function(pos, item){
 
     TestUi.forceRefresh();
 });
-
+*/
 /*
 Любопытной варваре нос аторвали
 let BlockSource_ = BlockSource;

@@ -37,14 +37,14 @@ ModAPI.registerAPI("CoreUtility", {
         return eval(cmd);
     }
 });
-
+BlockRegistry.registerDoorBlock("test_block","Test Glass Door",{name:"glass"});
 //container.openAs(window);
 
 
 //WRAP_JAVA("com.core.api.module.NativeAPI").setWorldGenerator("{'biome_id':1,'block_layers': [{'block_name': 'minecraft:dirt',count:80}],'encoding_version':5}");
 /*
 let block_id = IDRegistry.genBlockID("test_block");
-BlockRegistry.registerDoorBlock("test_block","Test Glass Door",{name:"glass"});
+
 
 Item.registerUseFunctionForID(280, function(coords,item,block){
     var source = BlockSource.getDefaultForActor(Player.get());

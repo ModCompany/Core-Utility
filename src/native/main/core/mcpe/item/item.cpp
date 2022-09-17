@@ -24,6 +24,9 @@
 #include <core/Overrided.h>
 
 #include <mce.h>
+
+#include <block/BlockLegacy.h>
+
 typedef int content_id_t;
 
 #define ItemToStatic(ID) return IdConversion::dynamicToStatic(ID, IdConversion::ITEM);
@@ -241,15 +244,68 @@ public:
 	};
 };
 
-/*
-JS_MODULE_VERSION(TestItem, 1);
-JS_EXPORT(TestItem, reg, "V(I)", (JNIEnv* env, int a){
-	/*ArrowFactory* factory = new ArrowFactory();
-	factory->initParameters(a, "test_shield", "arrow", "stick",0);
+class DoorItem : public Item {
+	public:
+	char filler[256];
+	DoorItem(stl::string const&,int,DoorBlock::DoorType);
+	char filler[256];
+};
 
-	LegacyItemRegistry::registerItemFactory(factory);
+class DoorItemFactory : public LegacyItemRegistry::LegacyItemFactoryBase
+{
+public:
+	DoorItemFactory() : LegacyItemRegistry::LegacyItemFactoryBase(){};
+	virtual void registerItem();
+};
+
+class DoorItemProvider : public LegacyItemRegistry::LegacyItemProviderBase
+{
+public:
+	DoorItemFactory *factory;
+	DoorItemProvider(DoorItemFactory *factory) : LegacyItemRegistry::LegacyItemProviderBase()
+	{
+		this->factory = factory;
+	}
+
+	virtual LegacyItemRegistry::LegacyItemFactoryBase *getFactory()
+	{
+		return this->factory;
+	}
+
+	DoorBlock* getDoorBlock(){
+		return 
+	}
+	virtual void setupVtable(void *a)
+	{
+		// LegacyItemRegistry::LegacyItemProviderBase::setupVtable(a);
+		void **table = (void **)a;
+		// table[getVtableOffset("_ZTV14FishingRodItem", "_ZNK14FishingRodItem3useER9ItemStackR6Player")] = SYMBOL("mcpe", "_ZNK14FishingRodItem3useER9ItemStackR6Player");
+		// table[getVtableOffset("_ZTV14FishingRodItem", "_ZNK4Item6_useOnER9ItemStackR5Actor8BlockPoshfff")] = SYMBOL("mcpe", "_ZNK4Item6_useOnER9ItemStackR5Actor8BlockPoshfff");
+		// table[getVtableOffset("_ZTV14FishingRodItem", "_ZNK4Item20validFishInteractionEi")] = SYMBOL("mcpe", "_ZNK4Item20validFishInteractionEi");
+		// table[getVtableOffset("_ZTV14FishingRodItem", "_ZNK14FishingRodItem16requiresInteractEv")] = SYMBOL("mcpe", "_ZNK14FishingRodItem16requiresInteractEv");
+	}
+};
+
+void DoorItemFactory::registerItem(){
+	if (id != 0){
+		ItemRegistry::registerCustomItem<DoorItem>(new FishingProvider(this), IdConversion::staticToDynamic(id, IdConversion::ITEM), nameId,DoorBlock::DoorType::LEFT);
+	}
+}
+
+JS_MODULE_VERSION(ItemTester, 1);
+
+JS_EXPORT(ItemTester, init, "V()", (JNIEnv* env){
+
 });
-*/
+
+
+
+
+
+
+
+
+
 
 stl::string getName(Item *item, ItemStackBase const &stack)
 {
