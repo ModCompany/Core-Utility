@@ -8,17 +8,19 @@
 #include <vtable.h>
 #include <java.h>
 #include <stl/string>
-
+#include <stl/map>
 #define stl std::__ndk1
 
 #include <core/item/ItemProvider.h>
 #include <core/block/BlockProvider.h>
 #include <core/BlockItemRegistry.h>
 
- 
+stl::map<int,BlockLegacy*> BlockItemPool::block_pool;
+
 void DoorFactory::registerBlock() {
     if (id != 0) {
-        BlockRegistry::registerCustomBlock<DoorBlock>(new DoorProvider(this), IdConversion::staticToDynamic(id, IdConversion::BLOCK), nameId, *props.getMaterial(),DoorBlock::DoorType::Oak);
+        this->door_block = BlockRegistry::registerCustomBlock<DoorBlock>(new DoorProvider(this), IdConversion::staticToDynamic(id, IdConversion::BLOCK), nameId, *props.getMaterial(),DoorBlock::DoorType::Oak);
+		BlockItemPool::addBlockToPool(id,this->door_block);
     }
 }
 

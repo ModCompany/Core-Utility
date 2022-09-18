@@ -60,7 +60,8 @@ public:
 
 class DoorBlock : public BlockLegacy {
 	public:
-	char filler[256];
+	char filler[104];
+	short id;
 	enum class DoorType : int {
 		Oak,
         Spruce,
