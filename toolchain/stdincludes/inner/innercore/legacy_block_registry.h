@@ -12,6 +12,7 @@ struct FaceTextureData {
         public:
         FaceTextureData();
         ~FaceTextureData();
+
         FaceTextureData(FaceTextureData const& other);
         FaceTextureData(std::string name, int id);
         FaceTextureData(std::string* names, int* ids, int count);
@@ -20,7 +21,7 @@ struct FaceTextureData {
         BlockGraphics* getGraphics();
         stl_vector<TextureUVCoordinateSet>* getAllSides();
 
-        FaceTextureData& operator=(FaceTextureData const& other);
+        FaceTextureData& operator=(const FaceTextureData&);
 };
 
 namespace LegacyBlockRegistry {

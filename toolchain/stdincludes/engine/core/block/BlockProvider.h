@@ -45,7 +45,7 @@ public:
 		this->factory->props.translucency = 0.8;
 		this->factory->props.renderLayer = 8;
 		this->factory->props.renderType = 7;
-		this->factory->addVariant(this->factory->name,true);
+		this->factory->addVariant(this->factory->name,true)->textureData
     };
     virtual LegacyBlockRegistry::LegacyBlockFactoryBase* getFactory() {
         return this->factory;
