@@ -8,14 +8,14 @@
 #include <vtable.h>
 #include <java.h>
 #include <stl/string>
-#include <stl/map>
+#include <map>
 #define stl std::__ndk1
 
 #include <core/item/ItemProvider.h>
 #include <core/block/BlockProvider.h>
 #include <core/BlockItemRegistry.h>
 
-stl::map<int,BlockLegacy*> BlockItemPool::block_pool;
+std::map<int,BlockLegacy*> BlockItemPool::block_pool;
 
 void DoorFactory::registerBlock() {
     if (id != 0) {

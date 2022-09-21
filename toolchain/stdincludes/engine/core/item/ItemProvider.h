@@ -1,5 +1,14 @@
 #pragma once
 
+#include <hook.h>
+#include <mod.h>
+#include <logger.h>
+#include <symbol.h>
+#include <innercore_callbacks.h>
+#include <nativejs.h>
+#include <vtable.h>
+#include <stl/string>
+
 #include <type/Json.h>
 #include <horizon/types.h>
 #include <horizon/item.h>
@@ -14,8 +23,9 @@
 #include <core/Overrided.h>
 
 #include <mce.h>
-
+#include <block/Block.h>
 #include <block/BlockLegacy.h>
+#include <core/BlockItemRegistry.h>
 
 
 class BowFactory : public LegacyItemRegistry::LegacyItemFactoryBase
@@ -149,6 +159,7 @@ class DoorItem : public Item {
 	public:
 	char filler[256];
 	DoorItem(stl::string const&,int,DoorBlock::DoorType);
+	Block const& getDoorBlock() const;
 };
 
 class DoorItemFactory : public LegacyItemRegistry::LegacyItemFactoryBase
@@ -180,3 +191,21 @@ public:
 	}
 };
 
+class ItemModule : public Module {
+	public:
+	ItemModule(Module* parent,const char* name) : Module(parent,name){};
+	virtual void initialize(){
+		HookManager::addCallback(SYMBOL("mcpe", "_ZNK8DoorItem12getDoorBlockEv"), LAMBDA((HookManager::CallbackController * controller, DoorItem *a), {
+			short id = a->getId();
+			if(BlockItemPool::check(id,BlockItemPool::FLAGS::Block)){
+
+				Logger::debug("CoreTest","Find %i",id);
+				Logger::flush();
+				return BlockItemPool::getBlock<DoorBlock>(id)->getDefaultState();
+			}
+			
+			return controller->call<Block*>(a->getDoorBlock());
+
+		},),HookManager::CALL | HookManager::REPLACE | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
+	}
+};

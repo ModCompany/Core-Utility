@@ -82,12 +82,13 @@ public:
 	
 	virtual void onBlockItemCreated(){
 		
-		DoorItem* door = new DoorItem("tile.test_block",this->factory->id,DoorBlock::DoorType::Oak);
+		DoorItem* door = new DoorItem("test_block",this->factory->id,DoorBlock::DoorType::Oak);
 		void* ptr = (void*) door;
 		void** table = (void**) ptr;
-		ItemRegistry::registerItem((Item*)door,nullptr);
 		LegacyBlockRegistry::LegacyBlockProviderBase::patchItemVtable(table);
-		table[getVtableOffset("_ZTV8DoorItem","_ZNK8DoorItem12getDoorBlockEv")] = (void*) &DoorProvider::getDoorBlock;
+		ItemRegistry::registerItem((Item*)door,nullptr);
+
+
 	}
 };
 

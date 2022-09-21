@@ -30,6 +30,7 @@ public:
     char filler[0xA18u];  
     BlockLegacy(stl_string const&, int, Material const&);
 	void addState(ItemState const&);
+	Block* getDefaultState() const;
 	virtual void getNextBlockPermutation(Block const&) const;
 	virtual void getAABB(BlockSource&, BlockPos const&, Block const&, AABB&, bool) const;
 	virtual void getLiquidClipVolume(BlockSource&, BlockPos const&, AABB&) const;

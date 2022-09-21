@@ -8,6 +8,6 @@ class BlockLegacy;
 class Block {
     public:
     char filler[256];
-
+    
     int& getRuntimeId() const;
 };

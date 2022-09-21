@@ -31,6 +31,9 @@ typedef int content_id_t;
 #include <client/ui/Container.h>
 #include <client/Sound.h>
 #include <core/scales.h>
+#include <core/BlockItemRegistry.h>
+#include <core/item/ItemProvider.h>
+
 #include <core/module/NativeVar.h>
 #include <core/module/ActorDamageCause.h>
 #include <core/module/BlockUtils.h>
@@ -172,7 +175,9 @@ MAIN
 	new DungeonUtility::DungeonUtilityModule();
 	///new CoreGeneration(main_module, "core_utility.generation");
 	new SoundModule(main_module, "core_utility.sound");
+	new ItemModule(main_module,"core_utility.items");
 	new ScalesModule();
+
 }
 
 
