@@ -121,11 +121,8 @@ void ToolTip::init(){
                     text += "\n"+std::__ndk1::string(tips->at(i).c_str());
 
                 tips = ToolTip::get(id, stack.getAuxValue());
-                Logger::debug("Test", "%i", tips->size());
-                for(int i = 0;i < tips->size();i++){
-                    Logger::debug("Tip", tips->at(i).c_str());
+                for(int i = 0;i < tips->size();i++)
                     text += "\n"+std::__ndk1::string(tips->at(i).c_str());
-                }
 
                 if(enablesPost.find(id) != enablesPost.end()){
                     jstring str = (jstring) env->CallStaticObjectMethod(
