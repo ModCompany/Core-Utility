@@ -30,28 +30,6 @@ let StructureParser = WRAP_JAVA("com.core.api.dungeonutility.struct.StructurePar
 let JsStructureParser = WRAP_JAVA("com.core.api.dungeonutility.struct.JsStructureParser");
 let BlockData = WRAP_JAVA("com.core.api.dungeonutility.api.BlockData");
 
-StructureParser.registerFormat("test", new JsStructureParser({
-    read(text){
-        alert(text);
-        let struct = new StructureObject();
-        struct.addBlock(new BlockData(0, 0, 0, new BlockState(1, 0), new BlockState(0, 0)));
-        struct.addBlock(new BlockData(0, 1, 0, new BlockState(1, 0), new BlockState(0, 0)));
-        return struct;
-    },
-    save(struct){
-        return "test";
-    }
-}));
-
-alert("test 1");
-let pool = new StructurePool();
-alert("test 2");
-pool.load(__dir__+"test.json", "test", "test", false);
-alert("test 3");
-Callback.addCallback("ItemUse", function(coords, item, block, is, player){
-    pool.get("test").set(coords.x, coords.y, coords.z, BlockSource.getDefaultForActor(player));
-});
-
 if(__config__.getBool("membory_display") == true){
     let Membory = new UI.Window({
         drawing: [
@@ -86,63 +64,6 @@ if(__config__.getBool("membory_display") == true){
     });
 }
 
-let TestUi = new NativeUi([
-    new ImageElement({
-        texture: "textures/blocks/barrel_side",
-        x: 100,
-        y: 100,
-        width: 50,
-        height: 50,
-        texture_width: 16,
-        texture_height: 16
-    }),
-    new ImageElement({
-        texture: "textures/blocks/barrel_side",
-        x: 100,
-        y: 150,
-        width: 50,
-        height: 50,
-        texture_width: 16,
-        texture_height: 16
-    }),
-    new TextElement({
-        text: "Test text\ntext",
-        x: 50,
-        y: 50,
-    }),
-    new MeshElement({
-        x: 100,
-        y: 100,
-        mesh: new RenderMesh()
-    })
-]);
-TestUi.setListener({
-    update(ui, upt){
-        TestUi.elements[3].mesh.rotate(0.1*upt, 0.1*upt, 0.1*upt);
-    },
-    touch(ui, type, x, y, i1, b1, b2, b3){
-        if(type == 0) alert("click");
-        if(ui.elements[0].isTouch(x, y)){
-            ui.elements[0].x = x - ui.elements[0].width / 2;
-            ui.elements[0].y = y - ui.elements[0].height / 2;
-
-            ui.forceRefresh();
-            return true;
-        }
-        return false;
-    }
-});
-TestUi.open();
-Callback.addCallback("ItemUse", function(pos, item){
-    let mesh = ItemModel.getFor(item.id, item.data).getItemRenderMesh(1, false);
-    mesh.scale(60, 60, 60);
-    TestUi.elements[1].x = TestUi.elements[2].x + TestUi.elements[2].getWidth();
-    TestUi.elements[1].y = TestUi.elements[2].y + TestUi.elements[2].getHeight();
-    TestUi.elements[3].mesh = mesh;
-    TestUi.elements[3].texture = ItemModel.getFor(item.id, item.data).getWorldTextureName();
-
-    TestUi.forceRefresh();
-});
 
 /*
 Любопытной варваре нос аторвали

@@ -24,6 +24,7 @@ namespace DungeonUtility {
         private:
             std::vector<BlockData*> blocks;
         public:
+            std::vector<BlockData*>& getBlocks();
             void addBlock(BlockData*);
             void set(int const, int const, int const, BlockSource*) const;
     };

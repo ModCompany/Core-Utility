@@ -34,35 +34,35 @@ struct ItemStackBase {
 
 
 
-std::map<ToolTip*, std::vector<std::string>> ToolTip::tool_tips;
-std::vector<std::string> ToolTip::get(ToolTip* key){
+std::map<ToolTip*, std::vector<std::string>*> ToolTip::tool_tips;
+std::vector<std::string>* ToolTip::get(ToolTip* key){
     for(auto it = tool_tips.begin(); it != tool_tips.end(); ++it){
         ToolTip* tip = it->first;
-        if(tip->id == key->id && (tip->data == -1 || tip->data == key->data))
+        if(tip->id == key->id && tip->data == key->data)
             return it->second;
     }
-    return std::vector<std::string>();
+    return new std::vector<std::string>();
 }
-std::vector<std::string> ToolTip::get(int id, int data){
+std::vector<std::string>* ToolTip::get(int id, int data){
     ToolTip* tip = new ToolTip(id, data);
-    std::vector<std::string> result = get(tip);
+    std::vector<std::string>* result = get(tip);
     delete tip;
     tip = nullptr;
     return result;
 }
 void ToolTip::addToolTip(int id, int data, std::string name){
     ToolTip* key = new ToolTip(id, data);
-    std::vector<std::string> result = get(key);
-    result.push_back(name);
+    std::vector<std::string>* result = get(key);
+    result->push_back(name);
     tool_tips[key] = result;
 }
 void ToolTip::clearToolTips(){
     for(auto it = tool_tips.begin(); it != tool_tips.end(); ++it)
-        it->second.clear();
+        it->second->clear();
 }
 void ToolTip::clearToolTip(int id, int data){
     ToolTip* tip = new ToolTip(id, data);
-    get(tip).clear();
+    get(tip)->clear();
     delete tip;
 }
 namespace GlobalContext {
@@ -116,10 +116,16 @@ void ToolTip::init(){
                         text += "\n"+res;
                 }
 
-                ToolTip* key_tip = new ToolTip(id, stack.getAuxValue());
-                std::vector<std::string> tips = ToolTip::get(key_tip);
-                for(int i = 0;i < tips.size();i++)
-                    text += "\n"+std::__ndk1::string(tips[i].c_str());
+                std::vector<std::string>* tips = ToolTip::get(id, -1);
+                for(int i = 0;i < tips->size();i++)
+                    text += "\n"+std::__ndk1::string(tips->at(i).c_str());
+
+                tips = ToolTip::get(id, stack.getAuxValue());
+                Logger::debug("Test", "%i", tips->size());
+                for(int i = 0;i < tips->size();i++){
+                    Logger::debug("Tip", tips->at(i).c_str());
+                    text += "\n"+std::__ndk1::string(tips->at(i).c_str());
+                }
 
                 if(enablesPost.find(id) != enablesPost.end()){
                     jstring str = (jstring) env->CallStaticObjectMethod(
@@ -134,8 +140,6 @@ void ToolTip::init(){
                 }
                 if(enablesPre.find(id) != enablesPre.end() || enablesPost.find(id) != enablesPost.end())
                     env->DeleteLocalRef(itemStack);
-                delete key_tip;
-                key_tip = nullptr;
             }
         }, ), HookManager::RETURN | HookManager::LISTENER
     );
@@ -156,9 +160,9 @@ export(void,item_ToolTip_clearToolTip, jint id, jint data) {
     ToolTip::clearToolTip((int) id, (int) data);
 }
 export(jobjectArray,item_ToolTip_getToolTips, jint id, jint data) {
-    std::vector<std::string> datas = ToolTip::get((int) id, (int) data);
-	jobjectArray array = env->NewObjectArray(datas.size(), env->FindClass("java/lang/String"), env->NewStringUTF(""));
-	for(int i = 0;i < datas.size();i++)
-		env->SetObjectArrayElement(array,i,env->NewStringUTF(datas[i].c_str()));  
+    std::vector<std::string>* datas = ToolTip::get((int) id, (int) data);
+	jobjectArray array = env->NewObjectArray(datas->size(), env->FindClass("java/lang/String"), env->NewStringUTF(""));
+	for(int i = 0;i < datas->size();i++)
+		env->SetObjectArrayElement(array,i,env->NewStringUTF(datas->at(i).c_str()));  
 	return array;
 }

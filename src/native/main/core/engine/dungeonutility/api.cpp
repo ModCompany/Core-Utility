@@ -13,10 +13,9 @@ void DungeonUtility::BlockData::setBlock(int const x, int const y, int const z, 
     region->setBlock(x + pos->x, y +pos->y, z + pos->z, *block, 3);
 }
 
-export(jlong, dungeonutility_api_BlockData_getPointerToBlock, jint id, jint data, jint runtimeid){
-    if(runtimeid == -1)
-        return (jlong) BlockRegistry::getBlockStateForIdData(IdConversion::staticToDynamic((int) id, IdConversion::Scope::ITEM), (int) data);
-    return (jlong) BlockStatesRegistry::getBlockByRuntimeId((int) runtimeid);
+export(jlong, dungeonutility_api_BlockData_getBlock, jlong pointer){
+    Block* block = ((DungeonUtility::BlockData*) pointer)->block;
+    //return (jlong) ((((uint64_t) id << 16) | (uint64_t) data) | ((uint64_t) block.getRuntimeId() « 32));
 }
 
 export(jlong, dungeonutility_api_BlockData_newBlockData, jint x, jint y, jint z, jlong block, jlong extra){
