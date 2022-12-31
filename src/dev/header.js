@@ -24,12 +24,6 @@ let ImageElement = WRAP_JAVA("com.core.api.engine.ui.types.ImageElement");
 let TextElement = WRAP_JAVA("com.core.api.engine.ui.types.TextElement");
 let MeshElement = WRAP_JAVA("com.core.api.engine.ui.types.MeshElement");
 
-let StructureObject = WRAP_JAVA("com.core.api.dungeonutility.struct.StructureObject");
-let StructurePool = WRAP_JAVA("com.core.api.dungeonutility.struct.StructurePool");
-let StructureParser = WRAP_JAVA("com.core.api.dungeonutility.struct.StructureParser");
-let JsStructureParser = WRAP_JAVA("com.core.api.dungeonutility.struct.JsStructureParser");
-let BlockData = WRAP_JAVA("com.core.api.dungeonutility.api.BlockData");
-
 if(__config__.getBool("membory_display") == true){
     let Membory = new UI.Window({
         drawing: [
