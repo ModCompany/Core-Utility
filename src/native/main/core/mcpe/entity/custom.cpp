@@ -69,7 +69,7 @@ void CustomEntity::init(){
     ), HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
 }
 
-export(void,api_entity_CustomEntity_setTick,jstring name, jboolean value) {
+export(void,entity_CustomEntity_setTick,jstring name, jboolean value) {
     CustomEntity::setTick(JavaClass::toString(env,name),(bool)(value == JNI_TRUE));
 }
 export(void,mcpe_level_Level_addEntityLevel,jlong pointer, jfloat x, jfloat y, jfloat z, jstring name) {
@@ -87,7 +87,7 @@ void test(int x,int y,int z,int i){
 
     spawn->spawnMob(*GlobalContext::getRegion(),ActorDefinitionIdentifier((ActorType) i),nullptr, {x,y,z},false,true,false);
 }
-JS_MODULE_VERSION(Spawner,1);
-JS_EXPORT(Spawner, test, "V(IIII)", (JNIEnv* env, int x,int y,int z,int i){
-    test(x,y,z,i);
-})
+// JS_MODULE_VERSION(Spawner,1);
+// JS_EXPORT(Spawner, test, "V(IIII)", (JNIEnv* env, int x,int y,int z,int i){
+//     test(x,y,z,i);
+// })

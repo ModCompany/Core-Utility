@@ -1,5 +1,3 @@
-#pragma once
-
 #include <string>
 #include <jni.h>
 #include <map>
@@ -16,9 +14,16 @@ class TypeBuilder {
     	std::vector<unsigned char> buffer;
 	public:
 		template<typename T>
-		TypeBuilder* set(const T& v);
+		TypeBuilder* set(const T& v){
+            constexpr std::size_t size = sizeof(T);
+            buffer.resize(size);
+            *reinterpret_cast<T*>(buffer.data()) = v;
+            return this;
+        }
         template<typename T>
-        const T get();
+        const T& get(){
+            return *reinterpret_cast<T*>(buffer.data());
+        }
 };
 
 class NativeType {
@@ -27,23 +32,19 @@ class NativeType {
         virtual TypeBuilder* getCpp(JNIEnv*,jobject,NativeVar*) = 0;
 };
 
-/*
-Не большая инструкция по использованию NativeVar
-TypeBuilder не обходимо удалять из памяти в ручную!!!
-Ну а дальше сами разберётесь :D, удачи
-*/
-
 class NativeVar {
     private:
-        jobject value;
+        TypeBuilder* value = nullptr;
+        jobject jValue = NULL;
         static std::map<std::string, NativeType*> types;
     public:
-        static jclass PointerClass, Double, Long;
-        static jmethodID getPointerPointerClass, constructorDouble, doubleValue, constructorLong, longValue;
+        static jclass PointerClass, Double, Long, NativeVarClass;
+        static jmethodID getPointerPointerClass, constructorDouble, doubleValue, constructorLong, longValue, NativeVarConstructor;
         std::string type;
         bool isFinalize;
         static void init();
         static void registerType(std::string, NativeType*);
+        
         NativeVar();
         NativeVar(std::string);
         NativeVar(JNIEnv*, jobject, std::string);

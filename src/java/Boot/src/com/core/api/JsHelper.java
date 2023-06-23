@@ -6,6 +6,8 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.NativeJavaClass;
 
 import com.core.api.module.types.Parameter;
+import com.zhekasmirnov.innercore.api.log.DialogHelper;
+import com.zhekasmirnov.innercore.api.log.ICLog;
 
 public class JsHelper {
     public static Context context = Context.enter();
@@ -14,6 +16,10 @@ public class JsHelper {
 
     public static Object callFunction(Function function, Object[] args) {
         return function.call(context, scriptable, that, args);
+    }
+
+    public static void error(Exception e){
+        DialogHelper.openFormattedDialog(ICLog.getStackTrace(e), "CoreUtility");
     }
 
     public static Object get(Class<?> _class){

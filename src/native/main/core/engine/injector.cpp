@@ -9,11 +9,13 @@
 
 JniInjector::JniInjector(void* a){
     this->table = a;
+    this->pointer = (long long) a;
     this->types = std::vector<std::string>();
+    this->lib = "mcpe";
 };
 
 JniInjector::JniInjector(long long pointer){
-    if(isDebug) Logger::debug("JniInjector-Debug", "Init Pointer of table: %p", pointer);
+    if(this->isDebug) Logger::debug("JniInjector-Debug", "Init Pointer of table: %p", pointer);
     this->table = (void*) pointer;
     this->pointer = pointer;
     this->types = std::vector<std::string>();

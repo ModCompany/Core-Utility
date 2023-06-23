@@ -1,6 +1,7 @@
 package com.core.api;
 
 import com.core.api.engine.DataOffset;
+import com.core.api.engine.NativeVar;
 import com.core.api.engine.PointerClass;
 
 public class Injector {
@@ -9,6 +10,12 @@ public class Injector {
 
     public Injector(long ptr){
         this.pointer = init_injector(ptr);
+    }
+    public Injector(Long ptr){
+        this.pointer = init_injector(ptr);
+    }
+    public Injector(NativeVar native_var){
+        this((long) native_var.get());
     }
     public Injector(PointerClass v){
         this.pointer = init_injector(v.getPointer());

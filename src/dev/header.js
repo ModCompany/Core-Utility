@@ -16,6 +16,7 @@ let Mob = WRAP_JAVA("com.core.api.mcpe.entity.Mob");
 let NativePlayer = WRAP_JAVA("com.core.api.mcpe.entity.Player");
 let LocalPlayer = WRAP_JAVA("com.core.api.mcpe.entity.LocalPlayer");
 let ServerPlayer = WRAP_JAVA("com.core.api.mcpe.entity.ServerPlayer");
+let ItemStack = WRAP_JAVA("com.core.api.mcpe.item.ItemStack")
 
 let NativeVar = WRAP_JAVA("com.core.api.engine.NativeVar");
 let ActorDamageCause = WRAP_JAVA("com.core.api.entity.ActorDamageCause");
@@ -58,6 +59,17 @@ if(__config__.getBool("membory_display") == true){
     });
 }
 
+let Helper = WRAP_NATIVE("HelperCoreUtility");
+
+
+Callback.addCallback("Test", (item) => {
+    new Injector(item)
+        .setDebug(true)
+        .call("_ZN5Actor9setOnFireEi", [
+            Parameter.getInt(25)
+        ]);
+    new ItemStack();
+});
 
 /*
 Любопытной варваре нос аторвали

@@ -31,10 +31,11 @@ typedef int content_id_t;
 #include <client/ui/Container.h>
 #include <client/Sound.h>
 #include <core/scales.h>
-#include <core/module/NativeVar.h>
+#include <core/module/NativeVar.hpp>
 #include <core/module/ActorDamageCause.h>
 #include <core/module/BlockUtils.h>
 #include <core/module/ui/NativeUi.h>
+#include <core/module/HookAPI.hpp>
 
 #include <Core.h>
 #include <innercore/global_context.h>
@@ -57,6 +58,14 @@ PlayScreenController* Global::_world_controller;
 LevelListCache* Global::_world_cache;
 #include <block/Block.h>
 #include <innercore/id_conversion_map.h>
+
+#include <nativejs.h>
+
+JS_MODULE_VERSION(HelperCoreUtility, 1);
+
+JS_EXPORT(HelperCoreUtility, loggerPointer, "V(L)", (long long ptr){
+    Logger::debug("CoreUtility", "pointer print %llu %p", ptr, (void*) ptr);
+});
 
 class BlockTessellator {
 	public:
@@ -116,6 +125,12 @@ public:
 			Global::_system_impl = self;
 		}, ), HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
 
+		Logger::debug("Core Utility", "Loaded custom hook...");
+		HookAPI::init();
+		ATTACH_JAVA(env, JNI_VERSION_1_6){
+			jclass bootClass = env->FindClass("com/core/api/Boot");
+			env->CallStaticVoidMethod(bootClass, env->GetStaticMethodID(bootClass, "nativeFullLoaded", "()V"));
+		}
 	}
 };
 
@@ -165,8 +180,7 @@ public:
 	}
 };
 
-MAIN
-{
+MAIN {
 	Module *main_module = new CoreUtility("core_utility");
 	///new CoreGeneration(main_module, "core_utility.generation");
 	new SoundModule(main_module, "core_utility.sound");

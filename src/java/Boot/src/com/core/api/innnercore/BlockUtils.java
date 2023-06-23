@@ -2,7 +2,6 @@ package com.core.api.innnercore;
 
 import java.util.HashMap;
 
-import com.core.api.dungeonutility.api.BlockData;
 import com.core.api.mcpe.block.Block;
 import com.core.api.mcpe.block.BlockLegacy;
 import com.zhekasmirnov.apparatus.adapter.innercore.game.block.BlockState;
@@ -18,9 +17,6 @@ public class BlockUtils {
     }
     public static Block getBlockStateForIdData(int id, int data){
         return new Block(getBlockState(id, data));
-    }
-    public static Block getBlock(BlockState state){
-        return new Block(BlockData.getPointerBlock(state));
     }
         
 

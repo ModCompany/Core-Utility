@@ -3,11 +3,13 @@
         {
             "name": "Android",
             "includePath": [
-                "${workspaceFolder}/toolchain/stdincludes/inner",
+                "${workspaceFolder}/toolchain/stdincludes/inner/**",
+                "${workspaceFolder}/toolchain/stdincludes/horizon/**",
                 "${workspaceFolder}/toolchain/stdincludes/mcpe/**",
                 "${workspaceFolder}/toolchain/ndk/arm/sysroot/usr/include/**",
                 "${workspaceFolder}/toolchain/stdincludes/engine/**",
-                "${workspaceFolder}/toolchain/stdincludes/gsl/**"
+                "${workspaceFolder}/toolchain/stdincludes/gnu_stl/**"
+
             ],
             "defines": [
                 "_DEBUG",
