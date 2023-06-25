@@ -120,7 +120,7 @@ inline void registerParameter(JNIEnv* env, void* paramter, jobjectArray& array, 
 
 inline jobjectArray HookJava::getParameters(JNIEnv* env, std::vector<std::string> types, std::vector<jlong> ptrs, void* a, void* b, void* c, void* d, void* e, void* k, void* l, void* f, void* t, void* p){
     int size = types.size()+ptrs.size();
-    jobjectArray array = (jobjectArray) env->NewGlobalRef(env->NewObjectArray(size, NativeAPI::PARAMETER, NULL));
+    jobjectArray array = (jobjectArray) env->NewObjectArray(size, NativeAPI::PARAMETER, NULL);
     for(int i = 0;i < ptrs.size();i++)
         env->SetObjectArrayElement(array, i, NativeAPI::createHookParameter(env, ptrs[i], HookJava::getJavaString(env, "ptr")));
     for(int i = 0;i < types.size();i++){
@@ -186,16 +186,20 @@ inline void registerHook(JNIEnv* env, Hook* hook, std::function<T(JNIEnv*,Hook*,
 	        ATTACH_JAVA(env, JNI_VERSION_1_6){
                 Controller ctr(controller);
                 jobjectArray array = HookJava::getParameters(env, hook->args, {(jlong) &ctr, (jlong) self}, a, b, c, d, e, k, l, f, t, p);
+
                 env->CallStaticVoidMethod(
                     HookJava::HOOK, HookJava::ID, 
                     HookJava::getJavaString(env, hook->callback), 
                     HookJava::getJavaString(env, hook->returnType), 
                     array
                 );
+
                 int size = (int) env->GetArrayLength(array);
-                for(int i = 0;i < size;i++)
-                    env->DeleteLocalRef(env->GetObjectArrayElement(array, i));
-                env->DeleteGlobalRef(array);
+                for(int i = 0;i < size;i++){
+                    jobject element = env->GetObjectArrayElement(array, i);
+                    env->DeleteLocalRef(element);
+                }
+                env->DeleteLocalRef(array);
                 if(ctr.isResult()){
                     T result = func(env, hook, ctr);
                     ctr.end(env);

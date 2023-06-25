@@ -60,9 +60,9 @@ class HookJava {
         static std::vector<Init*> getInits(JNIEnv*);
         static void init();
         static jstring& getJavaString(JNIEnv* env, std::string n){
-            if(cache.find(n) != cache.end())
-                return cache.find(n)->second;
-            cache[n] = (jstring) env->NewGlobalRef(env->NewStringUTF(n.c_str()));
-            return cache.find(n)->second;
+             if(cache.find(n) != cache.end())
+                 return cache.find(n)->second;
+             cache[n] = (jstring) env->NewGlobalRef(env->NewStringUTF(n.c_str()));
+             return cache.find(n)->second;
         }
 };
