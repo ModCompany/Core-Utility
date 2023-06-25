@@ -31,8 +31,8 @@ public class ChunkPos extends PointerClass {
         setX(pointer, x);
     }
 
-    public void setY(int x){
-        setX(pointer, x);
+    public void setZ(int x){
+        setZ(pointer, x);
     }
 
     boolean isFree = false;
@@ -46,5 +46,10 @@ public class ChunkPos extends PointerClass {
     public void finalize() {
         if(freeEnable)
             free();
+    }
+
+    @Override
+    public String toString() {
+        return "x: "+getX() + ", z: "+getZ();
     }
 }

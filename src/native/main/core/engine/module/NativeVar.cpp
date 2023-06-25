@@ -15,7 +15,7 @@ class NativeTypeInt : public NativeType {
             return env->NewObject(NativeVar::Double, NativeVar::constructorDouble, (jdouble) ((double) value->get<int>()));
         }
         TypeBuilder* getCpp(JNIEnv* env, jobject value, NativeVar* self) override {
-            return TypeBuilder().set<int>((int) ((double) env->CallDoubleMethod(value, NativeVar::doubleValue)));
+            return (new TypeBuilder())->set<int>((int) ((double) env->CallDoubleMethod(value, NativeVar::doubleValue)));
         }
 };
 
@@ -25,37 +25,38 @@ class NativeTypeDouble : public NativeType {
             return env->NewObject(NativeVar::Double, NativeVar::constructorDouble, (jdouble) value->get<double>());
         }
         TypeBuilder* getCpp(JNIEnv* env, jobject value, NativeVar* self) override {
-            return TypeBuilder().set<double>((double) env->CallDoubleMethod(value, NativeVar::doubleValue));
+            return (new TypeBuilder())->set<double>((double) env->CallDoubleMethod(value, NativeVar::doubleValue));
         }
 };
 
 class NativeTypeFloat : public NativeType {
     public:
         jobject getJava(JNIEnv* env, TypeBuilder* value, NativeVar* self) override {
-            return env->NewObject(NativeVar::Double, NativeVar::constructorDouble, (jfloat) ((float) value->get<int>()));
+            return env->NewObject(NativeVar::Double, NativeVar::constructorDouble, ((jdouble) ((double) value->get<float>())));
         }
         TypeBuilder* getCpp(JNIEnv* env, jobject value, NativeVar* self) override {
-            return TypeBuilder().set<float>((float) ((jfloat) env->CallDoubleMethod(value, NativeVar::doubleValue)));
+            return (new TypeBuilder())->set<float>((float) ((jfloat) env->CallDoubleMethod(value, NativeVar::doubleValue)));
         }
 };
 
 class NativeTypePtr : public NativeType {
     public:
         jobject getJava(JNIEnv* env, TypeBuilder* value, NativeVar* self) override {
-            return env->NewGlobalRef(env->NewObject(NativeVar::Long, NativeVar::constructorLong, (jlong) value->get<long long>()));
+            return env->NewObject(NativeVar::Long, NativeVar::constructorLong, (jlong) value->get<long long>());
         }
         TypeBuilder* getCpp(JNIEnv* env, jobject value, NativeVar* self) override {
             return (new TypeBuilder())->set<long long>((long long) ((jlong) env->CallLongMethod(value, NativeVar::longValue)));
         }
 };
-#include <stl/string>
+#include <core/JavaClass.h>
 class NativeTypeString : public NativeType {
     public:
         jobject getJava(JNIEnv* env, TypeBuilder* value, NativeVar* self) override {
+            Logger::debug("Test", value->get<std::__ndk1::string>().c_str());
             return (jobject) env->NewStringUTF(value->get<std::__ndk1::string>().c_str());
         }
         TypeBuilder* getCpp(JNIEnv* env, jobject value, NativeVar* self) override {
-            return TypeBuilder().set<std::__ndk1::string>(JavaClass::toStlString(env, (jstring) value));
+            return (new TypeBuilder())->set<std::__ndk1::string>(JavaClass::toStlString(env, (jstring) value));
         }
 };
 
@@ -126,19 +127,15 @@ void NativeVar::set(JNIEnv* env, jobject value){
     this->value = NativeVar::types.find(this->type)->second->getCpp(env, value, this);
 }
 TypeBuilder* NativeVar::getCpp(JNIEnv* env) {
-    Logger::debug("CoreUtility", "%p", this->value->get<void*>());
     return this->value;
 }
 void NativeVar::setCpp(JNIEnv* env, TypeBuilder* value){
-    Logger::debug("CoreUtility", "setCpp %i", (this->value != nullptr && this->value != value));
     if(this->value != nullptr && this->value != value){
         env->DeleteGlobalRef(this->jValue);
         delete this->value;
        
     }
-    Logger::debug("CoreUtility", "prePrint");
-    Logger::debug("CoreUtility", "%p", value->get<void*>());
-    this->jValue = NativeVar::types.find(this->type)->second->getJava(env, value, this);
+    this->jValue = env->NewGlobalRef(NativeVar::types.find(this->type)->second->getJava(env, value, this));
     this->value = value;
 }
 void NativeVar::setFinalize(bool value){
@@ -171,18 +168,31 @@ _export(void,engine_NativeVar_nativeSetFinalize, jlong ptr, jboolean value) {
 _export(void,engine_NativeVar_nativeSet, jlong ptr, jobject value) {
     ((NativeVar*) ptr)->set(env, env->NewGlobalRef(value));
 }
-
 _export(void,engine_NativeVar_nativeFinalize, jlong ptr, jobject value) {
     NativeVar* var = ((NativeVar*) ptr);
     if(var->isFinalize)
         delete var;
 }
 
+_export(jlong,engine_NativeVar_nativeCreateForPointer, jlong pointer, jstring type) {
+    void* ptr = (void*) pointer;
+    size_t size = 2048; 
+
+    return (jlong) new NativeVar(env, new TypeBuilder(std::vector<unsigned char>(static_cast<unsigned char*>(ptr), static_cast<unsigned char*>(ptr) + size)), JavaClass::toString(env, type));
+}
+
+
 
 _export(void,Boot_nativeVarMath, jlong ptr) {
+    // NativeVar* var = ((NativeVar*) ptr);
+    // Logger::debug("CoreUtility", "NativeVar test, status: 4");
+    // TypeBuilder* value = var->getCpp(env);
+    // Logger::debug("CoreUtility", "NativeVar test, status: 5");
+    // var->(env, value->set<long long>(value->get<long long>() - 100));
     NativeVar* var = ((NativeVar*) ptr);
     Logger::debug("CoreUtility", "NativeVar test, status: 4");
-    TypeBuilder* value = var->getCpp(env);
+    NativeVarHelper<long long> helper(var);
     Logger::debug("CoreUtility", "NativeVar test, status: 5");
-    var->setCpp(env, value->set<long long>(value->get<long long>() - 100));
+    helper.set(helper.get() - 100);
+    Logger::debug("CoreUtility", "NativeVar test, status: 6");
 }

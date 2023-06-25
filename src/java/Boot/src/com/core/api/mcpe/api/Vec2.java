@@ -32,7 +32,7 @@ public class Vec2 extends PointerClass{
     }
 
     public void setY(float x){
-        setX(pointer, x);
+        setY(pointer, x);
     }
 
     boolean isFree = false;
@@ -46,5 +46,10 @@ public class Vec2 extends PointerClass{
     public void finalize() {
         if(freeEnable)
             free();
+    }
+
+    @Override
+    public String toString() {
+        return "x: "+getX() + ", y: "+ getY();
     }
 }

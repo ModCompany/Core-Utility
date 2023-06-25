@@ -37,7 +37,7 @@ public class Vec3 extends PointerClass {
     }
 
     public void setY(float x){
-        setX(pointer, x);
+        setY(pointer, x);
     }
 
     public void setZ(float x){
@@ -61,5 +61,10 @@ public class Vec3 extends PointerClass {
     public void finalize() {
         if(freeEnable)
             free();
+    }
+
+    @Override
+    public String toString() {
+        return "x: "+getX() + ", y: "+ getY() + ", z: "+getZ();
     }
 }

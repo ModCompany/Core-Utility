@@ -53,4 +53,9 @@ public class BlockPos extends PointerClass {
         if(freeEnable)
             free();
     }
+
+    @Override
+    public String toString() {
+        return "x: "+getX() + ", y: "+ getY() + ", z: "+getZ();
+    }
 }

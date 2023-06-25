@@ -24,6 +24,10 @@ public class ItemStack extends PointerClass {
         count = getCount();
     }
 
+    public ItemStack(PointerClass ptr){
+        this(ptr.getPointer());
+    }
+
     public boolean isBlock(){
         return injector.setArgsTypes().getBoolResult("_ZNK13ItemStackBase7isBlockEv");
     }

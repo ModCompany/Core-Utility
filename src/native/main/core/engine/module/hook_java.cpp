@@ -192,6 +192,9 @@ inline void registerHook(JNIEnv* env, Hook* hook, std::function<T(JNIEnv*,Hook*,
                     HookJava::getJavaString(env, hook->returnType), 
                     array
                 );
+                int size = (int) env->GetArrayLength(array);
+                for(int i = 0;i < size;i++)
+                    env->DeleteLocalRef(env->GetObjectArrayElement(array, i));
                 env->DeleteGlobalRef(array);
                 if(ctr.isResult()){
                     T result = func(env, hook, ctr);

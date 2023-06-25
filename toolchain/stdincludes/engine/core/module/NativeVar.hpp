@@ -13,6 +13,9 @@ class TypeBuilder {
 	private:
     	std::vector<unsigned char> buffer;
 	public:
+        TypeBuilder(){}
+        TypeBuilder(std::vector<unsigned char> buffer): buffer(buffer){}
+
 		template<typename T>
 		TypeBuilder* set(const T& v){
             constexpr std::size_t size = sizeof(T);
@@ -63,3 +66,43 @@ class NativeVar {
 inline void* getPointerClass(JNIEnv* env, jobject obj){
     return (void*) env->CallLongMethod(obj, NativeVar::getPointerPointerClass);
 }
+/*
+T - тип c++
+value - значение 
+type = подерживаемый NativeVar, текстовый тип
+*/
+#define newJavaNativeVar(T, env, value, type) env->NewGlobalRef(env->NewObject(NativeVar::NativeVarClass, NativeVar::NativeVarConstructor, (jlong) new NativeVar(env, (new TypeBuilder())->set<T>(value), type)))
+
+/*
+Класс упрощает использование NativeVar из C++
+*/
+template<typename T>
+class NativeVarHelper {
+    private:
+        NativeVar* native_var;
+        TypeBuilder* builder;
+    public:
+        NativeVarHelper(NativeVar* native_var): native_var(native_var){
+            this->builder = native_var->getCpp(NULL);
+        }
+
+        T get() const {
+            return builder->get<T>();
+        }
+
+        void set(T v){
+            JNIEnv* env;
+            ATTACH_JAVA(env, JNI_VERSION_1_6){
+                native_var->setCpp(env, builder->set<T>(v));
+            }
+        }
+};
+
+/*
+Аналоги NativeVarHelper, хз нахуя, но пусть будут
+*/
+#define VarGet(T, native_var) native_var->getCpp(NULL)->get<T>()
+#define VarSet(T, native_var, value)({JNIEnv* env;                          \
+    ATTACH_JAVA(env, JNI_VERSION_1_6){                                      \
+        native_var->setCpp(env, native_var->getCpp(NULL)->set<T>(value));   \
+    }})

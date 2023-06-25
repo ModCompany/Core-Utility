@@ -9,10 +9,9 @@ import com.zhekasmirnov.innercore.api.runtime.Callback;
  */
 
 public class HookAPI {
-    public static void hook(NativeVar[] args) {
-        Logger.debug("Ponter of java "+((long) args[0].get())+"    "+args[0].get().getClass().getName());
+    public static void hook(String callbackName, NativeVar[] args) {
         try {  
-            Callback.invokeCallbackV("Test", args);
+            Callback.invokeCallbackV(callbackName, args);
         } catch (Exception e) {
             JsHelper.error(e);
         }

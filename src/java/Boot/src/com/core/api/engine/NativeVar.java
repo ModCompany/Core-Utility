@@ -9,6 +9,15 @@ public class NativeVar extends PointerClass {
     native private static void nativeFree(long ptr);
     native private static void nativeSetFinalize(long ptr, boolean value);
     native private static void nativeFinalize(long ptr);
+    native private static long nativeCreateForPointer(long pointer, String type);
+
+    public static NativeVar createForPointer(long pointer, String type){
+        return new NativeVar(nativeCreateForPointer(pointer, type));
+    }
+
+    public static NativeVar createForPointer(PointerClass pointer, String type){
+        return createForPointer(pointer.getPointer(), type);
+    }
 
     public NativeVar(long ptr){
         super(ptr);
@@ -46,5 +55,10 @@ public class NativeVar extends PointerClass {
     @Override
     protected void finalize() throws Throwable {
         nativeFinalize(pointer);
+    }
+
+    @Override
+    public String toString() {
+        return get().toString();
     }
 }

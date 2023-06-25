@@ -61,14 +61,13 @@ if(__config__.getBool("membory_display") == true){
 
 let Helper = WRAP_NATIVE("HelperCoreUtility");
 
+Callback.addCallback("BeaconSetEffects", (self, int, ptr_int1, ptr_int2) => {
+    let int1 =  NativeVar.createForPointer(ptr_int1, "int");
+    let int2 =  NativeVar.createForPointer(ptr_int2, "int");
 
-Callback.addCallback("Test", (item) => {
-    new Injector(item)
-        .setDebug(true)
-        .call("_ZN5Actor9setOnFireEi", [
-            Parameter.getInt(25)
-        ]);
-    new ItemStack();
+    alert(int.get()+ "  "+int1.get()+" "+int2.get());
+    int1.set(Native.PotionEffect.bad_omen);
+    alert(int.get()+ "  "+int1.get()+" "+int2.get());
 });
 
 /*
