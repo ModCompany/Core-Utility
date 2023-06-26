@@ -1,11 +1,11 @@
 #include <core/module/hook_java.h>
-#include <innercore_callbacks.h>
 #include <logger.h>
-
 #include <hook.h>
 #include <symbol.h>
 #include <stl/string>
 #include <functional>
+#include <horizon/types.h>
+#include <core/module/NativeAPI.h>
 #define stl std::__ndk1
 
 jclass HookJava::HOOK;
@@ -17,7 +17,36 @@ jmethodID HookJava::ID_INTAS;
 jmethodID HookJava::ID_FLOATAS;
 jmethodID HookJava::ID_LongAS;
 jobject HookJava::obj;
-std::map<std::string, jstring> HookJava::cache;
+std::unordered_map<std::string, jstring> HookJava::cache;
+std::unordered_map<std::thread::id, JNIEnv*> HookJava::env_map;
+
+
+const ArgsBufferBuilder HookJava::getParameters(JNIEnv* env, void* self, std::vector<std::string> types, jobjectArray array){
+    ArgsBufferBuilder builder;
+    if(self != nullptr)
+        builder.add<void*>(self);
+    for (int i = 0;i < types.size();i++){
+        jobject object = env->GetObjectArrayElement(array, i);
+        std::string type = types[i];
+        if(type == "int"){
+            builder.add<int>(NativeAPI::getIntHookParameter(env, object));
+        }else if(type == "bool"){
+            builder.add<bool>(NativeAPI::getIntHookParameter(env, object) == 1);
+        }else if(type == "stl::string"){
+            builder.add<stl::string>(stl::string(NativeAPI::getStringHookParameter(env, object).c_str()));
+        }else if(type == "float"){
+            builder.add<float>(NativeAPI::getFloatHookParameter(env, object));
+        }else if(type=="long"){
+            builder.add<long long>(NativeAPI::getLongHookParameter(env,object));
+        }else if(type=="char*"){
+            builder.add<const char*>(NativeAPI::getStringHookParameter(env, object).c_str());
+        }else{
+            builder.add<void*>(NativeAPI::getPointerHookParameter(env, object));
+        }
+    }
+    return builder;
+}
+
 
 std::vector<Hook*> HookJava::getHooks(JNIEnv* env){
     const jmethodID getJsons = env->GetStaticMethodID(HookJava::HOOK, "getJsons", "()[Lcom/core/api/module/JsonData;");
@@ -30,7 +59,7 @@ std::vector<Hook*> HookJava::getHooks(JNIEnv* env){
 	const jobjectArray array = (jobjectArray) env->CallStaticObjectMethod(HookJava::HOOK, getJsons);
 
     std::vector<Hook*> hooks;
-    for(int i=0;i<env->GetArrayLength(array);i++) {
+    for(int i = 0;i < env->GetArrayLength(array);i++) {
         jobject json = env->GetObjectArrayElement(array, i);
         jstring symbol = (jstring) env->CallObjectMethod(json, getSymbol);
         jstring callback = (jstring) env->CallObjectMethod(json, getCallback);
@@ -38,10 +67,11 @@ std::vector<Hook*> HookJava::getHooks(JNIEnv* env){
         jstring returnType = (jstring) env->CallObjectMethod(json, getReturn);
         jstring lib = (jstring) env->CallObjectMethod(json, getLib);
         jobjectArray arr = (jobjectArray) env->CallObjectMethod(json, getArgs);
+
         std::vector<std::string> args;
-        for(int j=0;j<env->GetArrayLength(arr);j++) {
+        for(int j=0;j<env->GetArrayLength(arr);j++)
             args.push_back(JavaClass::toString(env,(jstring) env->GetObjectArrayElement(arr, j)));
-        }
+
         hooks.push_back(new Hook(
             JavaClass::toString(env, symbol),
             JavaClass::toString(env, callback),
@@ -98,8 +128,6 @@ class Controller {
         }
 };
 
-#include <core/module/NativeAPI.h>
-
 inline void registerParameter(JNIEnv* env, void* paramter, jobjectArray& array, int i, std::string type){
     if(type == "ptr"){
         env->SetObjectArrayElement(array, i, NativeAPI::createHookParameter(env, (jlong) paramter, HookJava::getJavaString(env, type)));
@@ -110,7 +138,7 @@ inline void registerParameter(JNIEnv* env, void* paramter, jobjectArray& array, 
     }else if(type == "float"){
         env->SetObjectArrayElement(array, i, NativeAPI::createHookParameter(env, (jfloat) ((float&) paramter), HookJava::getJavaString(env, type)));
     }else if(type == "const char"){
-        env->SetObjectArrayElement(array,i,NativeAPI::createHookParameter(env,HookJava::getJavaString(env,(const char*) paramter),HookJava::getJavaString(env,type)));
+        env->SetObjectArrayElement(array, i, NativeAPI::createHookParameter(env, HookJava::getJavaString(env, ((const char*) paramter)), HookJava::getJavaString(env,type)));
     }else if(type == "stl::string"){
         env->SetObjectArrayElement(array, i, NativeAPI::createHookParameter(env, HookJava::getJavaString(env, ((const stl::string*) paramter)->c_str()), HookJava::getJavaString(env, type)));
     }else{
@@ -119,8 +147,7 @@ inline void registerParameter(JNIEnv* env, void* paramter, jobjectArray& array, 
 }
 
 inline jobjectArray HookJava::getParameters(JNIEnv* env, std::vector<std::string> types, std::vector<jlong> ptrs, void* a, void* b, void* c, void* d, void* e, void* k, void* l, void* f, void* t, void* p){
-    int size = types.size()+ptrs.size();
-    jobjectArray array = (jobjectArray) env->NewObjectArray(size, NativeAPI::PARAMETER, NULL);
+    jobjectArray array = (jobjectArray) env->NewGlobalRef(env->NewObjectArray(types.size()+ptrs.size(), NativeAPI::PARAMETER, NULL));
     for(int i = 0;i < ptrs.size();i++)
         env->SetObjectArrayElement(array, i, NativeAPI::createHookParameter(env, ptrs[i], HookJava::getJavaString(env, "ptr")));
     for(int i = 0;i < types.size();i++){
@@ -148,66 +175,53 @@ inline jobjectArray HookJava::getParameters(JNIEnv* env, std::vector<std::string
     }
     return array;
 }
-#include <logger.h>
-#include <horizon/types.h>
-
-const ArgsBufferBuilder HookJava::getParameters(JNIEnv* env, void* self, std::vector<std::string> types, jobjectArray array){
-    ArgsBufferBuilder builder;
-    if(self != nullptr)
-        builder.add<void*>(self);
-    for (int i = 0;i < types.size();i++){
-        jobject object = env->GetObjectArrayElement(array, i);
-        std::string type = types[i];
-        if(type == "int"){
-            builder.add<int>(NativeAPI::getIntHookParameter(env, object));
-        }else if(type == "bool"){
-            builder.add<bool>(NativeAPI::getIntHookParameter(env, object) == 1);
-        }else if(type == "stl::string"){
-            builder.add<stl::string>(stl::string(NativeAPI::getStringHookParameter(env, object).c_str()));
-        }else if(type == "float"){
-            builder.add<float>(NativeAPI::getFloatHookParameter(env, object));
-        }else if(type=="long"){
-            builder.add<long long>(NativeAPI::getLongHookParameter(env,object));
-        }else if(type=="char*"){
-            builder.add<const char*>(NativeAPI::getStringHookParameter(env, object).c_str());
-        }else{
-            builder.add<void*>(NativeAPI::getPointerHookParameter(env, object));
-        }
-    }
-    return builder;
-}
 
 template<typename T>
 inline void registerHook(JNIEnv* env, Hook* hook, std::function<T(JNIEnv*,Hook*,Controller)> func, int v){
+    jstring callback = (jstring) env->NewGlobalRef(env->NewStringUTF(hook->callback.c_str()));
+    Logger::debug("CoreUtility", "Start hook %s", hook->symbol.c_str());
+    jstring returnType = (jstring) env->NewGlobalRef(env->NewStringUTF(hook->returnType.c_str()));
+
     HookManager::addCallback(
         SYMBOL(hook->lib.c_str(),hook->symbol.c_str()), 
         LAMBDA((HookManager::CallbackController* controller, void* self, void* a, void* b, void* c, void* d, void* e, void* k, void* l, void* f, void* t, void* p),{
-            JNIEnv* env;
-	        ATTACH_JAVA(env, JNI_VERSION_1_6){
+            JNIEnv* env = HookJava::get_jni_env();
+            //JNIEnv* env;
+            //ATTACH_JAVA(env, JNI_VERSION_1_6){
+            //if(env != NULL){
                 Controller ctr(controller);
                 jobjectArray array = HookJava::getParameters(env, hook->args, {(jlong) &ctr, (jlong) self}, a, b, c, d, e, k, l, f, t, p);
 
-                env->CallStaticVoidMethod(
-                    HookJava::HOOK, HookJava::ID, 
-                    HookJava::getJavaString(env, hook->callback), 
-                    HookJava::getJavaString(env, hook->returnType), 
-                    array
-                );
-
+                // env->CallStaticVoidMethod(
+                //     HookJava::HOOK, HookJava::ID, 
+                //     callback, 
+                //     returnType, 
+                //     array
+                // );
+                // JavaCallbacks::invokeControlledCallback(HookJava::HOOK, "hookCallback", "(Ljava/lang/String;Ljava/lang/String;[Lcom/core/api/module/types/Parameter;)V", controller, 0, 
+                //     callback, 
+                //     returnType, 
+                //     array
+                // );
+                
                 int size = (int) env->GetArrayLength(array);
                 for(int i = 0;i < size;i++){
                     jobject element = env->GetObjectArrayElement(array, i);
+                    env->SetObjectArrayElement(array, i, NULL);
                     env->DeleteLocalRef(element);
                 }
-                env->DeleteLocalRef(array);
+                env->DeleteGlobalRef(array);
+                
+
                 if(ctr.isResult()){
                     T result = func(env, hook, ctr);
                     ctr.end(env);
                     return result;
                 }
-            }
-        },hook, func
+           // }
+        },hook, func, callback, returnType
     ), v);
+    Logger::debug("CoreUtility", "End hook %s", hook->symbol.c_str());
 }
 
 void HookJava::init(){
@@ -217,6 +231,7 @@ void HookJava::init(){
         HookJava::DATA = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/module/JsonData")));
         HookJava::INIT = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/module/InitData")));
         HookJava::OBJECT = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("java/lang/Object")));
+
         HookJava::ID = env->GetStaticMethodID(HookJava::HOOK, "hookCallback", "(Ljava/lang/String;Ljava/lang/String;[Lcom/core/api/module/types/Parameter;)V");
         jclass Double = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("java/lang/Double")));
         HookJava::ID_INTAS = env->GetMethodID(Double, "intValue", "()I");
@@ -232,7 +247,6 @@ void HookJava::init(){
         std::vector<Hook*> hooks = HookJava::getHooks(env);
         for(int i = 0;i < hooks.size();i++){
             Hook* hook = hooks[i];
-            HookJava::getJavaString(env, hook->callback); HookJava::getJavaString(env, hook->returnType);
 
             int v = HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER;
             if(hook->priority == "post")

@@ -6,6 +6,9 @@
 #include <map>
 #include <core/JavaClass.h>
 #include <core/VtableHelper.h>
+#include <unordered_map>
+#include <thread>
+#include <innercore_callbacks.h>
 
 class Hook {
     public:
@@ -22,8 +25,9 @@ class Init {
 
 class HookJava {
     private:
-        static std::map<std::string, jstring> cache;
+        static std::unordered_map<std::string, jstring> cache;
     public:
+        static std::unordered_map<std::thread::id, JNIEnv*> env_map;
         static jclass HOOK, DATA, OBJECT, INIT;
         static jmethodID ID;
         static jmethodID ID_INTAS;
@@ -49,6 +53,20 @@ class HookJava {
 
         inline static jobjectArray getParameters(JNIEnv*, std::vector<std::string>, std::vector<jlong>, void*, void*, void*, void*, void*, void*, void*, void*, void*, void*);
         static const ArgsBufferBuilder getParameters(JNIEnv*, void*, std::vector<std::string>, jobjectArray);
+        inline static JNIEnv* get_jni_env() {
+            std::thread::id thread_id = std::this_thread::get_id();
+            auto it = env_map.find(thread_id);
+            if (it != env_map.end()) {
+                return it->second;
+            } else {
+                JavaVM* jvm = JavaCallbacks::getJavaVM();
+                JNIEnv* env;
+                //jint res = jvm->AttachCurrentThread(&env, NULL);
+                jvm->GetEnv((void**) &env, JNI_VERSION_1_6);
+                env_map[thread_id] = env;
+                return env;
+            }
+        }
         
         static std::string getStringByObject(JNIEnv* env, jobject v){
             jstring t = (jstring) v;
@@ -59,10 +77,12 @@ class HookJava {
         static std::vector<Hook*> getHooks(JNIEnv*);
         static std::vector<Init*> getInits(JNIEnv*);
         static void init();
-        static jstring& getJavaString(JNIEnv* env, std::string n){
-             if(cache.find(n) != cache.end())
-                 return cache.find(n)->second;
-             cache[n] = (jstring) env->NewGlobalRef(env->NewStringUTF(n.c_str()));
-             return cache.find(n)->second;
+        static jstring getJavaString(JNIEnv* env, std::string n){
+            auto it = cache.find(n);
+            if(it != cache.end())
+                return it->second;
+            jstring value = (jstring) env->NewGlobalRef(env->NewStringUTF(n.c_str()));
+            cache[n] = value;
+            return value;
         }
 };

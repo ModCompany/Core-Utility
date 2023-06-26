@@ -96,7 +96,6 @@ public:
 		CustomEntity::init();
 		ToolTip::init();
 		NativeAPI::init();
-		HookJava::init();
 		BlockLegacyApi::init();
 		NativeVar::init();
 		RegisterDamageCause::init();
@@ -125,6 +124,8 @@ public:
 			Global::_system_impl = self;
 		}, ), HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
 
+		Logger::debug("Core Utility", "Loaded custom legacy hook...");
+		HookJava::init();
 		Logger::debug("Core Utility", "Loaded custom hook...");
 		HookAPI::init();
 		ATTACH_JAVA(env, JNI_VERSION_1_6){

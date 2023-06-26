@@ -28,7 +28,7 @@ public class ActorDamageCause {
             Logger.debug(type+" "+name+" "+actor);
             return (String) JsHelper.callFunction(deadMessage, new Object[] {new PointerClass(type), name, new Actor(actor)});
         } catch (Exception e) {
-            DialogHelper.reportNonFatalError("CoreUtility", e.fillInStackTrace());
+            JsHelper.error(e);
         }
         return "kill";
     }

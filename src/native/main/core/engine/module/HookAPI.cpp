@@ -73,6 +73,7 @@ inline jobjectArray getParameters(JNIEnv* env, std::vector<std::string> types, A
 
 template<typename T>
 inline void registerHook(JNIEnv* env, HookRegistry* hook, std::function<T(JNIEnv*,HookRegistry*)> func, int v){
+    Logger::debug("CoreUtility", "Start hook %s", hook->symbol.c_str());
     HookManager::addCallback(
         SYMBOL(hook->lib.c_str(), hook->symbol.c_str()), 
         LAMBDA((HookManager::CallbackController* controller, Buff<512> buff),{
@@ -109,6 +110,7 @@ inline void registerHook(JNIEnv* env, HookRegistry* hook, std::function<T(JNIEnv
             }
         },hook, func
     ), v);
+    Logger::debug("CoreUtility", "End hook %s", hook->symbol.c_str());
 }
 
 void HookRegistry::hooksLoaded(JNIEnv* env){

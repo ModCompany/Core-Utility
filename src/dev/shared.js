@@ -16,6 +16,7 @@ ModAPI.registerAPI("CoreUtility", {
     Vec3: JsHelper.get(Vec3),
     Vec2: JsHelper.get(Vec2),
     ChunkPos: JsHelper.get(ChunkPos),
+    ItemStack: JsHelper.get(ItemStack),
     
     Actor: JsHelper.get(Actor),
     Mob: JsHelper.get(Mob),

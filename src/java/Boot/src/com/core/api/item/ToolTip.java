@@ -35,7 +35,9 @@ public class ToolTip {
                 func = mapsPost.get(item.id+":-1");
             if(func != null)
                 return (String) JsHelper.callFunction(func, new Object[]{item});
-        } catch (Exception e) {Logger.error("Core", e.getLocalizedMessage());}
+        } catch (Exception e) {
+            JsHelper.error(e);
+        }
         return "";
     }
     public static String generateBuildDynamicToolTipPre(ItemStack item){
@@ -45,7 +47,9 @@ public class ToolTip {
                 func = mapsPre.get(item.id+":-1");
             if(func != null)
                 return (String) JsHelper.callFunction(func, new Object[]{item});
-        } catch (Exception e) {Logger.error("Core", e.getLocalizedMessage());}
+        } catch (Exception e) {
+            JsHelper.error(e);
+        }
         return "";
     }
     

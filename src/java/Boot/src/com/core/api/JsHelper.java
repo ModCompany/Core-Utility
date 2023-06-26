@@ -6,6 +6,9 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.NativeJavaClass;
 
 import com.core.api.module.types.Parameter;
+import com.zhekasmirnov.apparatus.adapter.innercore.EngineConfig;
+import com.zhekasmirnov.horizon.runtime.logger.Logger;
+import com.zhekasmirnov.innercore.api.InnerCoreConfig;
 import com.zhekasmirnov.innercore.api.log.DialogHelper;
 import com.zhekasmirnov.innercore.api.log.ICLog;
 
@@ -18,8 +21,14 @@ public class JsHelper {
         return function.call(context, scriptable, that, args);
     }
 
+    private static final boolean debug = EngineConfig.isDeveloperMode();
+
     public static void error(Exception e){
-        DialogHelper.openFormattedDialog(ICLog.getStackTrace(e), "CoreUtility");
+        String message = ICLog.getStackTrace(e);
+        Logger.error("CoreUtility", message);
+        
+        if(debug)
+            DialogHelper.openFormattedDialog(message, "CoreUtility");
     }
 
     public static Object get(Class<?> _class){

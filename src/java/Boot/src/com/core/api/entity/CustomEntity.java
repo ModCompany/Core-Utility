@@ -23,8 +23,7 @@ public class CustomEntity {
         try{
             JsHelper.callFunction(handlers.get(Entity.getTypeName(ent)), new Object[] {ent});
         }catch(Exception e){
-            Logger.error("Core", e.getLocalizedMessage());
-            DialogHelper.reportNonFatalError("Core", e.getCause());
+            JsHelper.error(e);
         }
         
     }

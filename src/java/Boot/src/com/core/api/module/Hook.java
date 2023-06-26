@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.core.api.JsHelper;
 import com.core.api.module.types.Parameter;
 import com.core.api.module.types.ReturnBool;
 import com.core.api.module.types.ReturnInt;
@@ -176,11 +177,11 @@ public class Hook {
             
             for(int i = 0;i < args.length;i++)
                 if(args[i] != null)
-                    args_callback[i] = ((Parameter) args[i]).getValue();
+                    args_callback[i] = args[i].getValue();
             args_callback[0] = new Controller((long) args_callback[0], returnType);
             Callback.invokeCallback(name, args_callback);
         }catch(Exception e){
-            Logger.error("HOOK", e.getMessage());
+            JsHelper.error(e);
         }
     }
 }
