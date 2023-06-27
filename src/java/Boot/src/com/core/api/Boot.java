@@ -19,7 +19,7 @@ class Boot {
     }  
 
     public static void nativeFullLoaded(){
-        log("Start test NativeVar");
+        /*log("Start test NativeVar");
         NativeVar native_var = new NativeVar(1000l, "ptr");
         log("NativeVar test, status: 1");
         long value = (long) native_var.get();
@@ -30,7 +30,7 @@ class Boot {
         log("NativeVar test, status: 3");
         nativeVarMath(native_var.getPointer());
         log("print result math NativeVar...");
-        log("NativeVar result math: "+((long) native_var.get()));
+        log("NativeVar result math: "+((long) native_var.get()));*/
     }
 
     public static native void nativeVarMath(long ptr);

@@ -14,7 +14,8 @@ class Hook {
     public:
         std::string symbol, callback, priority, returnType, lib;
         std::vector<std::string> args;
-        Hook(std::string symbol, std::string callback, std::string priority, std::string returnType, std::vector<std::string> args, std::string lib): symbol(symbol), callback(callback), priority(priority), returnType(returnType), args(args), lib(lib){}
+        bool legacyListener;
+        Hook(std::string symbol, std::string callback, std::string priority, std::string returnType, std::vector<std::string> args, std::string lib, bool legacyListener): symbol(symbol), callback(callback), priority(priority), returnType(returnType), args(args), lib(lib), legacyListener(legacyListener){}
 };
 
 class Init {
@@ -37,7 +38,7 @@ class HookJava {
     public:
         static std::unordered_map<std::thread::id, JNIEnv*> env_map;
         static jclass HOOK, DATA, OBJECT, INIT;
-        static jmethodID ID;
+        static jmethodID ID, ID_NEW;
         static jmethodID ID_INTAS;
         static jmethodID ID_FLOATAS;
         static jmethodID ID_LongAS;

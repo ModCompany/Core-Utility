@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.core.api.JsHelper;
 import com.core.api.module.types.Parameter;
@@ -33,6 +35,36 @@ public class Hook {
     public static InitData[] getInits(){
         return inits.toArray(new InitData[inits.size()]);
     }
+    public static String comment(String input) {
+        String[] RE_BLOCKS = new String[] {
+            "\\/(\\*)[^*]*\\*+(?:[^*\\/][^*]*\\*+)*\\/", // multiline comments
+            "\\/(\\/)[^\\n]*$", // single line comments
+            "\"(?:[^\"\\\\]*|\\\\[\\S\\s])*\"|'(?:[^'\\\\]*|\\\\[\\S\\s])*'|(?:[^`\\\\]*|\\\\[\\S\\s])*", // strings
+            "(?:[$\\w\\)\\]]|\\+\\+|--)\\s*\\/(?![*\\/])" // division operator
+        };
+        StringBuilder regexBuilder = new StringBuilder();
+        for (int i = 0; i < RE_BLOCKS.length; i++) {
+            regexBuilder.append(RE_BLOCKS[i]);
+            if (i != RE_BLOCKS.length - 1) {
+                regexBuilder.append("|");
+            }
+        }
+        String regex = regexBuilder.toString();
+        Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(input);
+        StringBuffer resultBuilder = new StringBuffer();
+        while (matcher.find()) {
+            if (matcher.group(1) != null) { // if it's a multiline comment
+                matcher.appendReplacement(resultBuilder, " ");
+            } else if (matcher.group(2) != null) { // if it's a single line comment
+                matcher.appendReplacement(resultBuilder, "");
+            } else { // if it's a string or regex literal
+                matcher.appendReplacement(resultBuilder, matcher.group());
+            }
+        }
+        matcher.appendTail(resultBuilder);
+        return resultBuilder.toString();
+    }
     public static String readFile(String path) throws IOException{
         File file = new File(path);
         if(file.exists()){
@@ -40,7 +72,7 @@ public class Hook {
             String json = "";
             String line;
             while((line = reader.readLine()) != null)
-                json+=line;
+                json+=line+"\n";
             reader.close();
             return json;
         }
@@ -55,7 +87,11 @@ public class Hook {
     }
     private static void hookLoad(String path){
         try{
-            JSONArray array = new JSONArray(readFile(path));
+            String file = readFile(path);
+            if(file == null) return;
+            file = comment(file);
+            
+            JSONArray array = new JSONArray(file);
             for(int j = 0;j < array.length();j++){
                 JSONObject object = array.getJSONObject(j);
                 String[] args;
@@ -67,17 +103,36 @@ public class Hook {
                 }else
                     args = new String[] {};
                             
-                jsons.add(new JsonData(object.getString("symbol"), object.getString("callback"), !object.isNull("priority") ? object.getString("priority") : "post", !object.isNull("return") ? object.getString("return") : "void", args, !object.isNull("lib") ? object.getString("lib") : "mcpe"));
+                jsons.add(new JsonData(
+                    object.getString("symbol"),
+                    object.getString("callback"),
+                    !object.isNull("priority") ? object.getString("priority") : "post", 
+                    !object.isNull("return") ? object.getString("return") : "void", 
+                    args, 
+                    !object.isNull("lib") ? object.getString("lib") : "mcpe",
+                    !object.isNull("legacyListener") ? object.getBoolean("legacyListener") : true,
+                    !object.isNull("version") ? object.getInt("version") : 1
+                ));
             }
         }catch (Exception e) {
-            Logger.error(e.getMessage());
+            JsHelper.log("Error loaded hooks");
+            JsHelper.log(e);
         }
     }
-    public static void initLibrary(String path)  throws Exception{
-        JSONArray array = new JSONArray(readFile(path));
-        for(int j = 0;j < array.length();j++){
-            JSONObject object = array.getJSONObject(j);
-            inits.add(new InitData(object.getString("name"), object.getString("lib")));
+    public static void initLibrary(String path){
+        try{
+            String file = readFile(path);
+            if(file == null) return;
+            file = comment(file);
+
+            JSONArray array = new JSONArray(file);
+            for(int j = 0;j < array.length();j++){
+                JSONObject object = array.getJSONObject(j);
+                inits.add(new InitData(object.getString("name"), object.getString("lib")));
+            }
+        }catch (Exception e) {
+            JsHelper.log("Error loaded inits");
+            JsHelper.log(e);
         }
     }
     public static void jsonLoad(){
@@ -114,7 +169,7 @@ public class Hook {
                     }
                 }
             } catch (Exception e) {
-                Logger.error("TEST", e.getMessage());
+                JsHelper.log("Error jsonLoad");
             }
         }
     }
@@ -168,6 +223,21 @@ public class Hook {
         public void setResult(Object result){
             setIsResult(ptr, true);
             Hook.setResult(ptr,getConvert(type,result));
+        }
+    }
+
+    public static void newHookCallback(String name, String returnType, Parameter[] args){
+        try{
+            Object[] args_callback = new Object[args.length];
+            
+            for(int i = 0;i < args.length;i++)
+                if(args[i] != null)
+                    args_callback[i] = args[i].getValue();
+            args_callback[0] = new Controller((long) args_callback[0], returnType);
+            HookManager.call(name, args_callback);
+        }catch(Exception e){
+            HookManager.setEnabledHook(name, false);
+            JsHelper.error(e);
         }
     }
 

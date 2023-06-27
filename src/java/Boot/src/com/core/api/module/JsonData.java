@@ -3,13 +3,16 @@ package com.core.api.module;
 public class JsonData {
     String symbol, callback, priority, returnType, lib;
     String[] args;
-    public JsonData(String symbol, String callback, String priority, String returnType, String[] args, String lib){
+    boolean legacyListener;
+    
+    public JsonData(String symbol, String callback, String priority, String returnType, String[] args, String lib, boolean legacyListener, int version){
         this.symbol = symbol;
         this.callback = callback;
         this.priority = priority;
         this.returnType = returnType;
         this.args = args;
         this.lib = lib;
+        this.legacyListener = legacyListener;
     }
 
     public String getCallback() {
@@ -34,6 +37,10 @@ public class JsonData {
 
     public String getLib() {
         return lib;
+    }
+
+    public boolean canLegacyListener(){
+        return legacyListener;
     }
 
     @Override

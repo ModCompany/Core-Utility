@@ -8,9 +8,9 @@ import org.mozilla.javascript.NativeJavaClass;
 import com.core.api.module.types.Parameter;
 import com.zhekasmirnov.apparatus.adapter.innercore.EngineConfig;
 import com.zhekasmirnov.horizon.runtime.logger.Logger;
-import com.zhekasmirnov.innercore.api.InnerCoreConfig;
 import com.zhekasmirnov.innercore.api.log.DialogHelper;
 import com.zhekasmirnov.innercore.api.log.ICLog;
+import com.zhekasmirnov.innercore.mod.executable.Compiler;
 
 public class JsHelper {
     public static Context context = Context.enter();
@@ -18,7 +18,16 @@ public class JsHelper {
     private static Scriptable that = context.newObject(scriptable);
 
     public static Object callFunction(Function function, Object[] args) {
-        return function.call(context, scriptable, that, args);
+        Scriptable parent = function.getParentScope();
+        return function.call(Compiler.assureContextForCurrentThread(), parent, parent, args);
+    }
+
+    public static void log(Exception e){
+        Logger.info("CoreUtility", ICLog.getStackTrace(e));
+    }
+
+    public static void log(String text){
+        Logger.info("CoreUtility", text);
     }
 
     public static void error(Exception e){

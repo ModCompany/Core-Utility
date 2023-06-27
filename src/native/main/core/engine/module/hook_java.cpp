@@ -12,7 +12,7 @@ jclass HookJava::HOOK;
 jclass HookJava::DATA;
 jclass HookJava::OBJECT;
 jclass HookJava::INIT;
-jmethodID HookJava::ID;
+jmethodID HookJava::ID, HookJava::ID_NEW;
 jmethodID HookJava::ID_INTAS;
 jmethodID HookJava::ID_FLOATAS;
 jmethodID HookJava::ID_LongAS;
@@ -74,6 +74,7 @@ std::vector<Hook*> HookJava::getHooks(JNIEnv* env){
     const jmethodID getReturn = env->GetMethodID(HookJava::DATA, "getReturn", "()Ljava/lang/String;");
     const jmethodID getLib = env->GetMethodID(HookJava::DATA, "getLib", "()Ljava/lang/String;");
     const jmethodID getArgs = env->GetMethodID(HookJava::DATA, "getArgs", "()[Ljava/lang/String;");
+    const jmethodID canLegacyListener = env->GetMethodID(HookJava::DATA, "canLegacyListener", "()Z");
 	const jobjectArray array = (jobjectArray) env->CallStaticObjectMethod(HookJava::HOOK, getJsons);
 
     std::vector<Hook*> hooks;
@@ -85,6 +86,7 @@ std::vector<Hook*> HookJava::getHooks(JNIEnv* env){
         jstring returnType = (jstring) env->CallObjectMethod(json, getReturn);
         jstring lib = (jstring) env->CallObjectMethod(json, getLib);
         jobjectArray arr = (jobjectArray) env->CallObjectMethod(json, getArgs);
+        jboolean legacyListener = env->CallBooleanMethod(json, canLegacyListener);
 
         std::vector<std::string> args;
         for(int j=0;j<env->GetArrayLength(arr);j++)
@@ -96,7 +98,8 @@ std::vector<Hook*> HookJava::getHooks(JNIEnv* env){
             JavaClass::toString(env, priority),
             JavaClass::toString(env, returnType),
             args,
-            JavaClass::toString(env, lib)
+            JavaClass::toString(env, lib),
+            legacyListener == JNI_TRUE
         ));
     }
     return hooks;
@@ -127,7 +130,7 @@ class Controller {
             isResultV = false;
         }
         void end(JNIEnv* env){
-            env->DeleteGlobalRef(result);
+            env->DeleteLocalRef(result);
         }
         void replace(){
             controller->replace();
@@ -220,16 +223,18 @@ inline void registerHook(JNIEnv* env, Hook* hook, std::function<T(JNIEnv*,Hook*,
     jstring callback = (jstring) env->NewGlobalRef(env->NewStringUTF(hook->callback.c_str()));
     jstring returnType = (jstring) env->NewGlobalRef(env->NewStringUTF(hook->returnType.c_str()));
 
+    jmethodID method = hook->legacyListener ? HookJava::ID : HookJava::ID_NEW;
+
     HookManager::addCallback(
         SYMBOL(hook->lib.c_str(),hook->symbol.c_str()), 
         LAMBDA((HookManager::CallbackController* controller, void* self, void* a, void* b, void* c, void* d, void* e, void* k, void* l, void* f, void* t, void* p),{
             if(CUHookManager::canEnabledHook(hook->callback)){
                 JNIEnv* env = HookJava::get_jni_env();
                 Controller ctr(controller);
-                jobjectArray array = HookJava::getParameters(env, hook->args, {(jlong) 0, (jlong) self}, a, b, c, d, e, k, l, f, t, p);
+                jobjectArray array = HookJava::getParameters(env, hook->args, {(jlong) &controller, (jlong) self}, a, b, c, d, e, k, l, f, t, p);
 
                 env->CallStaticVoidMethod(
-                    HookJava::HOOK, HookJava::ID, 
+                    HookJava::HOOK, method, 
                     callback, 
                     returnType, 
                     array
@@ -249,7 +254,7 @@ inline void registerHook(JNIEnv* env, Hook* hook, std::function<T(JNIEnv*,Hook*,
                     return result;
                 }
             }
-        },hook, func, callback, returnType
+        },hook, func, callback, returnType, method
     ), v);
     Logger::debug("CoreUtility", "End hook %s", hook->symbol.c_str());
 }
@@ -263,6 +268,7 @@ void HookJava::init(){
         HookJava::OBJECT = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("java/lang/Object")));
 
         HookJava::ID = env->GetStaticMethodID(HookJava::HOOK, "hookCallback", "(Ljava/lang/String;Ljava/lang/String;[Lcom/core/api/module/types/Parameter;)V");
+        HookJava::ID_NEW = env->GetStaticMethodID(HookJava::HOOK, "newHookCallback", "(Ljava/lang/String;Ljava/lang/String;[Lcom/core/api/module/types/Parameter;)V");
         jclass Double = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("java/lang/Double")));
         HookJava::ID_INTAS = env->GetMethodID(Double, "intValue", "()I");
         HookJava::ID_FLOATAS = env->GetMethodID(Double, "floatValue", "()F");
@@ -316,5 +322,5 @@ export(void,module_Hook_setIsResult, jlong ptr, jboolean v) {
 }
 
 export(void,module_Hook_setResult, jlong ptr, jobject v) {
-    ((Controller*) ptr)->setResult(env->NewGlobalRef(v));
+    ((Controller*) ptr)->setResult(v);
 }
