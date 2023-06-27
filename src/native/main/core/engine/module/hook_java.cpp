@@ -20,6 +20,24 @@ jobject HookJava::obj;
 std::unordered_map<std::string, jstring> HookJava::cache;
 std::unordered_map<std::thread::id, JNIEnv*> HookJava::env_map;
 
+std::unordered_map<std::string, bool> CUHookManager::enabled;
+
+void CUHookManager::setEnabledHook(std::string name, bool value){
+    enabled[name] = value;
+}
+
+bool CUHookManager::canEnabledHook(std::string name){
+    return enabled[name];
+}
+
+export(void,module_HookManager_nativeSetEnabledHook, jstring name, jboolean value){
+    CUHookManager::setEnabledHook(JavaClass::toString(env, name), value == JNI_TRUE);
+}
+
+export(jboolean,module_HookManager_nativeCanEnabledHook, jstring name){
+    return (jboolean) CUHookManager::canEnabledHook(JavaClass::toString(env, name));
+}
+
 
 const ArgsBufferBuilder HookJava::getParameters(JNIEnv* env, void* self, std::vector<std::string> types, jobjectArray array){
     ArgsBufferBuilder builder;
@@ -130,26 +148,43 @@ class Controller {
 
 inline void registerParameter(JNIEnv* env, void* paramter, jobjectArray& array, int i, std::string type){
     if(type == "ptr"){
-        env->SetObjectArrayElement(array, i, NativeAPI::createHookParameter(env, (jlong) paramter, HookJava::getJavaString(env, type)));
+        jobject elem = NativeAPI::createHookParameter(env, (jlong) paramter, HookJava::getJavaString(env, type));
+        env->SetObjectArrayElement(array, i, elem);
+        env->DeleteLocalRef(elem);
     }else if(type == "int"){
-        env->SetObjectArrayElement(array, i, NativeAPI::createHookParameter(env, (jint) ((int)paramter), HookJava::getJavaString(env, type)));
+        jobject elem = NativeAPI::createHookParameter(env, (jint) ((int)paramter), HookJava::getJavaString(env, type));
+        env->SetObjectArrayElement(array, i, elem);
+        env->DeleteLocalRef(elem);
     }else if(type == "bool"){
-        env->SetObjectArrayElement(array, i, NativeAPI::createHookParameter(env, (jint) ((int)((bool)paramter)), HookJava::getJavaString(env, type)));
+        jobject elem = NativeAPI::createHookParameter(env, (jint) ((int)((bool)paramter)), HookJava::getJavaString(env, type));
+        env->SetObjectArrayElement(array, i, elem);
+        env->DeleteLocalRef(elem);
     }else if(type == "float"){
-        env->SetObjectArrayElement(array, i, NativeAPI::createHookParameter(env, (jfloat) ((float&) paramter), HookJava::getJavaString(env, type)));
+        jobject elem = NativeAPI::createHookParameter(env, (jfloat) ((float&) paramter), HookJava::getJavaString(env, type));
+        env->SetObjectArrayElement(array, i, elem);
+        env->DeleteLocalRef(elem);
     }else if(type == "const char"){
-        env->SetObjectArrayElement(array, i, NativeAPI::createHookParameter(env, HookJava::getJavaString(env, ((const char*) paramter)), HookJava::getJavaString(env,type)));
+        jobject elem = NativeAPI::createHookParameter(env, HookJava::getJavaString(env, ((const char*) paramter)), HookJava::getJavaString(env,type));
+        env->SetObjectArrayElement(array, i, elem);
+        env->DeleteLocalRef(elem);
     }else if(type == "stl::string"){
-        env->SetObjectArrayElement(array, i, NativeAPI::createHookParameter(env, HookJava::getJavaString(env, ((const stl::string*) paramter)->c_str()), HookJava::getJavaString(env, type)));
+        jobject elem = NativeAPI::createHookParameter(env, HookJava::getJavaString(env, ((const stl::string*) paramter)->c_str()), HookJava::getJavaString(env, type));
+        env->SetObjectArrayElement(array, i, elem);
+        env->DeleteLocalRef(elem);
     }else{
-        env->SetObjectArrayElement(array, i, NativeAPI::createHookParameter(env, (jlong) paramter, HookJava::getJavaString(env, type)));
+        jobject elem = NativeAPI::createHookParameter(env, (jlong) paramter, HookJava::getJavaString(env, type));
+        env->SetObjectArrayElement(array, i, elem);
+        env->DeleteLocalRef(elem);
     }
 }
 
 inline jobjectArray HookJava::getParameters(JNIEnv* env, std::vector<std::string> types, std::vector<jlong> ptrs, void* a, void* b, void* c, void* d, void* e, void* k, void* l, void* f, void* t, void* p){
-    jobjectArray array = (jobjectArray) env->NewGlobalRef(env->NewObjectArray(types.size()+ptrs.size(), NativeAPI::PARAMETER, NULL));
-    for(int i = 0;i < ptrs.size();i++)
-        env->SetObjectArrayElement(array, i, NativeAPI::createHookParameter(env, ptrs[i], HookJava::getJavaString(env, "ptr")));
+    jobjectArray array = env->NewObjectArray(ptrs.size(), NativeAPI::PARAMETER, NULL);
+    for(int i = 0;i < ptrs.size();i++){
+        jobject elem = NativeAPI::createHookParameter(env, ptrs[i], HookJava::getJavaString(env, "ptr"));
+        env->SetObjectArrayElement(array, i, elem);
+        env->DeleteLocalRef(elem);
+    }
     for(int i = 0;i < types.size();i++){
         std::string type = types[i];
         if(i == 0)
@@ -178,47 +213,42 @@ inline jobjectArray HookJava::getParameters(JNIEnv* env, std::vector<std::string
 
 template<typename T>
 inline void registerHook(JNIEnv* env, Hook* hook, std::function<T(JNIEnv*,Hook*,Controller)> func, int v){
-    jstring callback = (jstring) env->NewGlobalRef(env->NewStringUTF(hook->callback.c_str()));
     Logger::debug("CoreUtility", "Start hook %s", hook->symbol.c_str());
+
+    CUHookManager::setEnabledHook(hook->callback, true);
+
+    jstring callback = (jstring) env->NewGlobalRef(env->NewStringUTF(hook->callback.c_str()));
     jstring returnType = (jstring) env->NewGlobalRef(env->NewStringUTF(hook->returnType.c_str()));
 
     HookManager::addCallback(
         SYMBOL(hook->lib.c_str(),hook->symbol.c_str()), 
         LAMBDA((HookManager::CallbackController* controller, void* self, void* a, void* b, void* c, void* d, void* e, void* k, void* l, void* f, void* t, void* p),{
-            JNIEnv* env = HookJava::get_jni_env();
-            //JNIEnv* env;
-            //ATTACH_JAVA(env, JNI_VERSION_1_6){
-            //if(env != NULL){
+            if(CUHookManager::canEnabledHook(hook->callback)){
+                JNIEnv* env = HookJava::get_jni_env();
                 Controller ctr(controller);
-                jobjectArray array = HookJava::getParameters(env, hook->args, {(jlong) &ctr, (jlong) self}, a, b, c, d, e, k, l, f, t, p);
+                jobjectArray array = HookJava::getParameters(env, hook->args, {(jlong) 0, (jlong) self}, a, b, c, d, e, k, l, f, t, p);
 
-                // env->CallStaticVoidMethod(
-                //     HookJava::HOOK, HookJava::ID, 
-                //     callback, 
-                //     returnType, 
-                //     array
-                // );
-                // JavaCallbacks::invokeControlledCallback(HookJava::HOOK, "hookCallback", "(Ljava/lang/String;Ljava/lang/String;[Lcom/core/api/module/types/Parameter;)V", controller, 0, 
-                //     callback, 
-                //     returnType, 
-                //     array
-                // );
-                
+                env->CallStaticVoidMethod(
+                    HookJava::HOOK, HookJava::ID, 
+                    callback, 
+                    returnType, 
+                    array
+                );
+
                 int size = (int) env->GetArrayLength(array);
                 for(int i = 0;i < size;i++){
-                    jobject element = env->GetObjectArrayElement(array, i);
+                    env->DeleteLocalRef(env->GetObjectArrayElement(array, i));
                     env->SetObjectArrayElement(array, i, NULL);
-                    env->DeleteLocalRef(element);
                 }
-                env->DeleteGlobalRef(array);
-                
+                env->DeleteLocalRef(array);
+                    
 
                 if(ctr.isResult()){
                     T result = func(env, hook, ctr);
                     ctr.end(env);
                     return result;
                 }
-           // }
+            }
         },hook, func, callback, returnType
     ), v);
     Logger::debug("CoreUtility", "End hook %s", hook->symbol.c_str());

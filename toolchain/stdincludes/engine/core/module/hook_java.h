@@ -23,6 +23,14 @@ class Init {
         Init(std::string name, std::string lib): name(name), lib(lib){}
 };
 
+class CUHookManager {
+    private:
+        static std::unordered_map<std::string, bool> enabled;
+    public:
+        static void setEnabledHook(std::string name, bool value);
+        static bool canEnabledHook(std::string name);
+};
+
 class HookJava {
     private:
         static std::unordered_map<std::string, jstring> cache;

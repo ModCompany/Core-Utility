@@ -25,6 +25,8 @@ let ImageElement = WRAP_JAVA("com.core.api.engine.ui.types.ImageElement");
 let TextElement = WRAP_JAVA("com.core.api.engine.ui.types.TextElement");
 let MeshElement = WRAP_JAVA("com.core.api.engine.ui.types.MeshElement");
 
+let HookManager = WRAP_JAVA("com.core.api.module.HookManager");
+
 if(__config__.getBool("membory_display") == true){
     let Membory = new UI.Window({
         drawing: [

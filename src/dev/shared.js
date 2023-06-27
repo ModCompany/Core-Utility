@@ -33,7 +33,8 @@ ModAPI.registerAPI("CoreUtility", {
     BlockUtils: BlockUtils,
     BlockRegistry: BlockRegistry,
     Scales: Scales,
-    version: 3,
+    HookManager: JsHelper.get(HookManager),
+    version: 4,
     requireGlobal(cmd){
         return eval(cmd);
     }

@@ -21,13 +21,11 @@ public class JsHelper {
         return function.call(context, scriptable, that, args);
     }
 
-    private static final boolean debug = EngineConfig.isDeveloperMode();
-
     public static void error(Exception e){
         String message = ICLog.getStackTrace(e);
         Logger.error("CoreUtility", message);
         
-        if(debug)
+        if(EngineConfig.isDeveloperMode())
             DialogHelper.openFormattedDialog(message, "CoreUtility");
     }
 

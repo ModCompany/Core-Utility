@@ -181,6 +181,7 @@ public class Hook {
             args_callback[0] = new Controller((long) args_callback[0], returnType);
             Callback.invokeCallback(name, args_callback);
         }catch(Exception e){
+            HookManager.setEnabledHook(name, false);
             JsHelper.error(e);
         }
     }
