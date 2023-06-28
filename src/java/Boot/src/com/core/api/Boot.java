@@ -4,16 +4,21 @@ import java.util.HashMap;
 
 import com.core.api.engine.NativeVar;
 import com.core.api.module.Hook;
-import com.zhekasmirnov.horizon.runtime.logger.Logger;
+import com.core.api.module.ModuleAPI;
+import com.zhekasmirnov.innercore.api.mod.preloader.PreloaderAPI.Callback;
 
-class Boot {
+public class Boot {
     public static final String LOOGER_PREFIX = "CoreUtility";
+    public static String dir;
+    public static boolean cache_module = true;
 
     public static void log(String message){
-        Logger.debug(message);
+        JsHelper.log(message);
     }
 
     public static void boot(HashMap<?, ?> data) {
+        Callback.invokeCallback("CoreUtilityBoot", null, null, null, null, null, null, null, null, null, null);
+        ModuleAPI.init(dir);
         Hook.jsonLoad();
         log("Java Loaded");
     }  

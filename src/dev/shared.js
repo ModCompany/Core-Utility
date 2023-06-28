@@ -1,6 +1,7 @@
 let JsHelper = WRAP_JAVA("com.core.api.JsHelper");
+let ModuleAPI = WRAP_JAVA("com.core.api.module.ModuleAPI");
 
-ModAPI.registerAPI("CoreUtility", {
+const CoreUtility = {
     ToolTip: JsHelper.get(ToolTip),
     ConversionType: ConversionType,
     NativeAPI: NativeAPI,
@@ -34,11 +35,25 @@ ModAPI.registerAPI("CoreUtility", {
     BlockRegistry: BlockRegistry,
     Scales: Scales,
     HookManager: JsHelper.get(HookManager),
+    Module: JsHelper.get(ModuleAPI),
     version: 4,
     requireGlobal(cmd){
         return eval(cmd);
     }
-});
+};
+
+JsHelper.log("Module count "+ModuleAPI.modules.size());
+for(let i = 0; i < ModuleAPI.modules.size();i++){
+    let api = ModuleAPI.modules.get(i).getApi();
+    api.start();
+    for(let key in api)
+        if(key != "start")
+            CoreUtility[key] = api[key];
+}
+
+
+
+ModAPI.registerAPI("CoreUtility", CoreUtility);
 
 //container.openAs(window);
 

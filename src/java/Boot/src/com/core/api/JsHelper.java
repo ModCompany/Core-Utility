@@ -1,5 +1,9 @@
 package com.core.api;
 
+import java.io.File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
@@ -8,9 +12,12 @@ import org.mozilla.javascript.NativeJavaClass;
 import com.core.api.module.types.Parameter;
 import com.zhekasmirnov.apparatus.adapter.innercore.EngineConfig;
 import com.zhekasmirnov.horizon.runtime.logger.Logger;
+import com.zhekasmirnov.horizon.util.FileUtils;
 import com.zhekasmirnov.innercore.api.log.DialogHelper;
 import com.zhekasmirnov.innercore.api.log.ICLog;
 import com.zhekasmirnov.innercore.mod.executable.Compiler;
+
+import org.json.JSONArray;
 
 public class JsHelper {
     public static Context context = Context.enter();
@@ -22,12 +29,54 @@ public class JsHelper {
         return function.call(Compiler.assureContextForCurrentThread(), parent, parent, args);
     }
 
+    public static String comment(String input) {
+        String[] RE_BLOCKS = new String[] {
+            "\\/(\\*)[^*]*\\*+(?:[^*\\/][^*]*\\*+)*\\/", // multiline comments
+            "\\/(\\/)[^\\n]*$", // single line comments
+            "\"(?:[^\"\\\\]*|\\\\[\\S\\s])*\"|'(?:[^'\\\\]*|\\\\[\\S\\s])*'|(?:[^`\\\\]*|\\\\[\\S\\s])*", // strings
+            "(?:[$\\w\\)\\]]|\\+\\+|--)\\s*\\/(?![*\\/])" // division operator
+        };
+        StringBuilder regexBuilder = new StringBuilder();
+        for (int i = 0; i < RE_BLOCKS.length; i++) {
+            regexBuilder.append(RE_BLOCKS[i]);
+            if (i != RE_BLOCKS.length - 1) {
+                regexBuilder.append("|");
+            }
+        }
+        String regex = regexBuilder.toString();
+        Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(input);
+        StringBuffer resultBuilder = new StringBuffer();
+        while (matcher.find()) {
+            if (matcher.group(1) != null) { // if it's a multiline comment
+                matcher.appendReplacement(resultBuilder, " ");
+            } else if (matcher.group(2) != null) { // if it's a single line comment
+                matcher.appendReplacement(resultBuilder, "");
+            } else { // if it's a string or regex literal
+                matcher.appendReplacement(resultBuilder, matcher.group());
+            }
+        }
+        matcher.appendTail(resultBuilder);
+        return resultBuilder.toString();
+    }
+    public static String readFile(String path) throws Exception {
+        File file = new File(path);
+        if(!file.exists()) return null;
+        return FileUtils.readFileText(file);
+    }
+
+    public static JSONArray loadFromPath(String path) throws Exception {
+        String file = readFile(path);
+        if(file == null) return null;
+        return new JSONArray(comment(file)); 
+    }
+
     public static void log(Exception e){
-        Logger.info("CoreUtility", ICLog.getStackTrace(e));
+        Logger.info(Boot.LOOGER_PREFIX, ICLog.getStackTrace(e));
     }
 
     public static void log(String text){
-        Logger.info("CoreUtility", text);
+        Logger.info(Boot.LOOGER_PREFIX, text);
     }
 
     public static void error(Exception e){

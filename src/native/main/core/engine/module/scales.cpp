@@ -178,7 +178,6 @@ void ScalesModule::blit(ScreenContext* ctx, float x, float y, float width, float
 	ctx->shaderColor->setColor(mce::Color { 1.0f, 1.0f, 1.0f, 1.0f });
 }
 void ScalesModule::initialize(){
-    DLHandleManager::initializeHandle("libminecraftpe.so", "mcpe");
 	HookManager::addCallback(
 		SYMBOL("mcpe", "_ZN17HudHungerRenderer6renderER24MinecraftUIRenderContextR15IClientInstanceR9UIControliR13RectangleArea"),
 		LAMBDA((HudHungerRenderer* renderer, MinecraftUIRenderContext& renderContext, ClientInstance& client, UIControl& control, int someInt, RectangleArea& area), {

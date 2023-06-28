@@ -72,6 +72,21 @@ class BlockTessellator {
 	char filler[256];
 	void tessellateLadderInWorld(Tessellator&, Block const&,BlockPos const&);
 };
+
+bool isUseModule(const char* module_name){
+ 	JNIEnv *env;
+ 	ATTACH_JAVA(env, JNI_VERSION_1_6){
+ 		jclass module_api =env->FindClass("com/core/api/module/ModuleAPI");
+ 		jstring arg = env->NewStringUTF(module_name);
+
+ 		jboolean result = env->CallStaticBooleanMethod(module_api, env->GetStaticMethodID(module_api, "canUseModule", "(Ljava/lang/String;)Z"), arg);
+
+ 		env->DeleteLocalRef(arg);
+ 		env->DeleteLocalRef(module_api);
+ 		return result == JNI_TRUE;
+ 	}
+ }
+
 class CoreUtility : public Module
 {
 public:
@@ -83,7 +98,6 @@ public:
 		Logger::debug("Core Utility", "Initialize core");
 		DLHandleManager::initializeHandle("libminecraftpe.so", "mcpe");
 		DLHandleManager::initializeHandle("libinnercore.so", "innercore");
-		Logger::flush();
 
 		JNIEnv *env;
 		ATTACH_JAVA(env, JNI_VERSION_1_6)
@@ -99,7 +113,11 @@ public:
 		BlockLegacyApi::init();
 		NativeVar::init();
 		RegisterDamageCause::init();
-		NativeUi::init();
+		if(isUseModule("NativeUI"))
+			NativeUi::init();
+
+		if(isUseModule("Scales"))
+			ScalesModule::initialize();
 		//BlockUtils::init();
 		//NativeSaver::init();
 
@@ -185,7 +203,7 @@ MAIN {
 	Module *main_module = new CoreUtility("core_utility");
 	///new CoreGeneration(main_module, "core_utility.generation");
 	new SoundModule(main_module, "core_utility.sound");
-	new ScalesModule();
+	//if(isUseModule("Scales"))
 }
 
 

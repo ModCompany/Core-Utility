@@ -18,7 +18,7 @@ import com.core.api.module.types.ReturnString;
 import com.core.api.module.types.ReturnVoid;
 import com.zhekasmirnov.apparatus.modloader.ApparatusMod;
 import com.zhekasmirnov.apparatus.modloader.ApparatusModLoader;
-import com.zhekasmirnov.horizon.runtime.logger.Logger;
+import com.zhekasmirnov.apparatus.modloader.LegacyInnerCoreMod;
 import com.zhekasmirnov.innercore.api.runtime.Callback;
 
 import org.json.JSONArray;
@@ -35,101 +35,58 @@ public class Hook {
     public static InitData[] getInits(){
         return inits.toArray(new InitData[inits.size()]);
     }
-    public static String comment(String input) {
-        String[] RE_BLOCKS = new String[] {
-            "\\/(\\*)[^*]*\\*+(?:[^*\\/][^*]*\\*+)*\\/", // multiline comments
-            "\\/(\\/)[^\\n]*$", // single line comments
-            "\"(?:[^\"\\\\]*|\\\\[\\S\\s])*\"|'(?:[^'\\\\]*|\\\\[\\S\\s])*'|(?:[^`\\\\]*|\\\\[\\S\\s])*", // strings
-            "(?:[$\\w\\)\\]]|\\+\\+|--)\\s*\\/(?![*\\/])" // division operator
-        };
-        StringBuilder regexBuilder = new StringBuilder();
-        for (int i = 0; i < RE_BLOCKS.length; i++) {
-            regexBuilder.append(RE_BLOCKS[i]);
-            if (i != RE_BLOCKS.length - 1) {
-                regexBuilder.append("|");
-            }
-        }
-        String regex = regexBuilder.toString();
-        Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
-        Matcher matcher = pattern.matcher(input);
-        StringBuffer resultBuilder = new StringBuffer();
-        while (matcher.find()) {
-            if (matcher.group(1) != null) { // if it's a multiline comment
-                matcher.appendReplacement(resultBuilder, " ");
-            } else if (matcher.group(2) != null) { // if it's a single line comment
-                matcher.appendReplacement(resultBuilder, "");
-            } else { // if it's a string or regex literal
-                matcher.appendReplacement(resultBuilder, matcher.group());
-            }
-        }
-        matcher.appendTail(resultBuilder);
-        return resultBuilder.toString();
-    }
-    public static String readFile(String path) throws IOException{
-        File file = new File(path);
-        if(file.exists()){
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            String json = "";
-            String line;
-            while((line = reader.readLine()) != null)
-                json+=line+"\n";
-            reader.close();
-            return json;
-        }
-        return null;
-    }
-    public static boolean isEnableMod(String path){
-        try {
-            JSONObject object = new JSONObject(readFile(path+"config.json"));
-            return object.getBoolean("enabled");
-        }catch(Exception e){}
-        return true;
-    }
-    private static void hookLoad(String path){
-        try{
-            String file = readFile(path);
-            if(file == null) return;
-            file = comment(file);
-            
-            JSONArray array = new JSONArray(file);
-            for(int j = 0;j < array.length();j++){
-                JSONObject object = array.getJSONObject(j);
-                String[] args;
-                if(!object.isNull("args")){
-                    JSONArray arr = object.getJSONArray("args");
-                    args = new String[arr.length()];
-                    for(int v = 0;v < arr.length();v++)
-                        args[v] = arr.getString(v);
-                }else
-                    args = new String[] {};
+
+    public static void hookJsonParse(String file) throws Exception{
+        JSONArray array = new JSONArray(file);
+        for(int j = 0;j < array.length();j++){
+            JSONObject object = array.getJSONObject(j);
+            String[] args;
+            if(!object.isNull("args")){
+                JSONArray arr = object.getJSONArray("args");
+                args = new String[arr.length()];
+                for(int v = 0;v < arr.length();v++)
+                    args[v] = arr.getString(v);
+            }else
+                args = new String[] {};
                             
-                jsons.add(new JsonData(
-                    object.getString("symbol"),
-                    object.getString("callback"),
-                    !object.isNull("priority") ? object.getString("priority") : "post", 
-                    !object.isNull("return") ? object.getString("return") : "void", 
-                    args, 
-                    !object.isNull("lib") ? object.getString("lib") : "mcpe",
-                    !object.isNull("legacyListener") ? object.getBoolean("legacyListener") : true,
-                    !object.isNull("version") ? object.getInt("version") : 1
-                ));
-            }
+            jsons.add(new JsonData(
+                object.getString("symbol"),
+                object.getString("callback"),
+                !object.isNull("priority") ? object.getString("priority") : "post", 
+                !object.isNull("return") ? object.getString("return") : "void", 
+                args, 
+                !object.isNull("lib") ? object.getString("lib") : "mcpe",
+                !object.isNull("legacyListener") ? object.getBoolean("legacyListener") : true,
+                !object.isNull("version") ? object.getInt("version") : 1
+            ));
+        }
+    }
+    
+    private static void hookLoad(String path){
+        try{    
+            String file = JsHelper.readFile(path);
+            if(file == null) return;
+            hookJsonParse(JsHelper.comment(file));
         }catch (Exception e) {
             JsHelper.log("Error loaded hooks");
             JsHelper.log(e);
         }
     }
+
+    public static void initLibraryParse(String file) throws Exception {
+        JSONArray array = new JSONArray(file);
+        for(int j = 0;j < array.length();j++){
+            JSONObject object = array.getJSONObject(j);
+            inits.add(new InitData(object.getString("name"), object.getString("lib")));
+        }
+    }
+
     public static void initLibrary(String path){
         try{
-            String file = readFile(path);
+            String file = JsHelper.readFile(path);
             if(file == null) return;
-            file = comment(file);
-
-            JSONArray array = new JSONArray(file);
-            for(int j = 0;j < array.length();j++){
-                JSONObject object = array.getJSONObject(j);
-                inits.add(new InitData(object.getString("name"), object.getString("lib")));
-            }
+            
+            initLibraryParse(JsHelper.comment(file));
         }catch (Exception e) {
             JsHelper.log("Error loaded inits");
             JsHelper.log(e);
@@ -139,10 +96,13 @@ public class Hook {
         List<ApparatusMod> mods = ApparatusModLoader.getSingleton().getAllMods();
         for(int i = 0;i < mods.size();i++){
             ApparatusMod mod = mods.get(i);
+            if(!(mod instanceof LegacyInnerCoreMod)) continue;
+            LegacyInnerCoreMod legacyInnerCoreMod = (LegacyInnerCoreMod) mod;
             String path = mod.getInfo().getProperty("directory_root", String.class, null);
+            
             try {
-                if(isEnableMod(path)){
-                    JSONObject object = new JSONObject(readFile(path+"build.config"));
+                if(legacyInnerCoreMod.getLegacyModInstance().config.getBool("enabled")){
+                    JSONObject object = new JSONObject(JsHelper.readFile(path+"build.config"));
                     if(!object.isNull("CoreUtility")){
                         JSONObject CoreUtility = object.getJSONObject("CoreUtility");
                         if(!CoreUtility.isNull("hooks")){
@@ -163,9 +123,19 @@ public class Hook {
                         }else{
                             initLibrary(path+file_name2);
                         }
+                        if(!CoreUtility.isNull("modules")){
+                            JSONArray array = CoreUtility.getJSONArray("modules");
+                            for (int j = 0; j < array.length(); j++) {
+                                JSONObject description = array.getJSONObject(j);
+                                ModuleAPI.loadJson(path, path+description.getString("path"));
+                            }
+                        }else{
+                            ModuleAPI.loadJson(path, path+"modules.json");
+                        }
                     }else{
                         hookLoad(path+file_name);
                         initLibrary(path+file_name2);
+                        ModuleAPI.loadJson(path, path+"modules.json");
                     }
                 }
             } catch (Exception e) {

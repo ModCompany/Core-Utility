@@ -182,7 +182,7 @@ inline void registerParameter(JNIEnv* env, void* paramter, jobjectArray& array, 
 }
 
 inline jobjectArray HookJava::getParameters(JNIEnv* env, std::vector<std::string> types, std::vector<jlong> ptrs, void* a, void* b, void* c, void* d, void* e, void* k, void* l, void* f, void* t, void* p){
-    jobjectArray array = env->NewObjectArray(ptrs.size(), NativeAPI::PARAMETER, NULL);
+    jobjectArray array = env->NewObjectArray(types.size()+ptrs.size(), NativeAPI::PARAMETER, NULL);
     for(int i = 0;i < ptrs.size();i++){
         jobject elem = NativeAPI::createHookParameter(env, ptrs[i], HookJava::getJavaString(env, "ptr"));
         env->SetObjectArrayElement(array, i, elem);
