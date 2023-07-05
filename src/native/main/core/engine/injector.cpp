@@ -29,7 +29,6 @@ void JniInjector::setArgsType(std::vector<std::string> types){
 template<typename T>
 T JniInjector::call(const char* symbol, ArgsBufferBuilder args, bool virt, const char* table){
     VtableHelper helper(this->table);
-    if(this->isDebug) Logger::debug("JniInjector-Debug", "Injector with: %p called symbol by address: %s is virtual: %b",this->pointer,symbol,virt);
     return helper.call<T>(symbol, args, virt, table, this->lib.c_str());
 }
 
@@ -49,14 +48,28 @@ export(jlong, Injector_init_1injector, long long ptr){
     return (jlong) new JniInjector(ptr);
 }
 
-export(jlong, Injector_constructor, jstring symbol, jstring lib, jobjectArray arr, jobjectArray args){
+export(jlong, Injector_nativeNewObject, jstring symbol, jobjectArray arr, jobjectArray args){
     std::vector<std::string> types;
     for(int i=0;i<env->GetArrayLength(arr);i++)
         types.push_back(JavaClass::toString(env,(jstring) env->GetObjectArrayElement(arr, i)));
-    
-    void* ptr = VtableHelper::_call<void*>(JavaClass::toString(env,symbol).data(), nullptr, HookJava::getParameters(env, nullptr, types, args), false, "", JavaClass::toString(env,lib).data());
-    return (jlong) new JniInjector((long long) ptr);
+    return (jlong) VtableHelper::_call<void*>(JavaClass::toString(env, symbol).c_str(), nullptr, HookJava::getParameters(env, (void*) 0, types, args), false, "", "mcpe");
 }
+
+export(jlong, Injector_nativeNewObjectAndLib, jstring lib, jstring symbol, jobjectArray arr, jobjectArray args){
+    std::vector<std::string> types;
+    for(int i=0;i<env->GetArrayLength(arr);i++)
+        types.push_back(JavaClass::toString(env,(jstring) env->GetObjectArrayElement(arr, i)));
+    return (jlong) VtableHelper::_call<void*>(JavaClass::toString(env, symbol).c_str(), nullptr, HookJava::getParameters(env, (void*) 0, types, args), false, "", JavaClass::toString(env,lib).c_str());
+}
+
+// export(jlong, Injector_constructor, jstring symbol, jstring lib, jobjectArray arr, jobjectArray args){
+//     std::vector<std::string> types;
+//     for(int i=0;i<env->GetArrayLength(arr);i++)
+//         types.push_back(JavaClass::toString(env,(jstring) env->GetObjectArrayElement(arr, i)));
+    
+//     void* ptr = VtableHelper::_call<void*>(JavaClass::toString(env,symbol).data(), nullptr, HookJava::getParameters(env, nullptr, types, args), false, "", JavaClass::toString(env,lib).data());
+//     return (jlong) new JniInjector((long long) ptr);
+// }
 
 export(jint, Injector_getIntResult, jlong ptr, jstring a, jobjectArray arr, jboolean virt, jstring table){
     return (jint) callInjector<int>(env, (JniInjector*) ptr, a, arr, (bool) (virt == JNI_TRUE), table);

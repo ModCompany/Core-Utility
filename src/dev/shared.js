@@ -36,7 +36,7 @@ const CoreUtility = {
     Scales: Scales,
     HookManager: JsHelper.get(HookManager),
     Module: JsHelper.get(ModuleAPI),
-    version: 4,
+    version: 310,
     requireGlobal(cmd){
         return eval(cmd);
     }
@@ -45,10 +45,10 @@ const CoreUtility = {
 JsHelper.log("Module count "+ModuleAPI.modules.size());
 for(let i = 0; i < ModuleAPI.modules.size();i++){
     let api = ModuleAPI.modules.get(i).getApi();
+    function EXPORT(name, value){
+        CoreUtility[name] = value;
+    }
     api.start();
-    for(let key in api)
-        if(key != "start")
-            CoreUtility[key] = api[key];
 }
 
 

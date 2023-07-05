@@ -99,6 +99,11 @@ public class DataOffset {
     public void free(){
         free(this.pointer);
     }
+
+    @Override
+    protected void finalize() throws Throwable {
+        free(pointer);
+    }
     
     public static native void free(long ptr);
     public static native void setOffset(long ptr,int offset);

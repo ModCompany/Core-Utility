@@ -74,6 +74,7 @@ Callback.addCallback("BeaconSetEffects", (self, int, ptr_int1, ptr_int2) => {
 
 /*
 Любопытной варваре нос аторвали
+И хуй тоже оторвут, если ещё раз сюда залезишь
 let BlockSource_ = BlockSource;
 BlockSource = new Warp("com.zhekasmirnov.apparatus.mcpe.NativeBlockSource");
 function createBlockSource(region){

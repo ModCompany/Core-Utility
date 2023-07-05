@@ -45,9 +45,8 @@ public class ModuleFolder extends ModuleAPI {
         }
 
         Context context = Context.getCurrentContext();
-        scriptable.put("InnerCore", scriptable, parent);
         try{
-            context.compileString(system.getFile(loaded_file_name), loaded_file_name, 1, null).exec(context, scriptable);
+            context.compileString(system.getFile(loaded_file_name), loaded_file_name, 1, null).exec(context, parent);
         }catch(Exception e){
             JsHelper.error(e);
         }

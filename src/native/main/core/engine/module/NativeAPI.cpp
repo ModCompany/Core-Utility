@@ -77,7 +77,7 @@ export(jint,module_NativeAPI_staticToDynamic, jint id, jint type) {
     return (jint) IdConversion::staticToDynamic((int) id, (IdConversion::Scope) ((int) type));
 }
 export(jlong,module_NativeAPI_getActorID, jlong ptr) {
-    return (jlong) ((Actor*) ptr)->getUniqueID().getId();
+    return ((Actor*) ptr)->getInnerCoreId();
 }
 export(jint,module_NativeAPI_getXBlockPos, jlong ptr) {
     return (jint) ((BlockPos*) ptr)->x;
@@ -89,5 +89,5 @@ export(jint,module_NativeAPI_getZBlockPos, jlong ptr) {
     return (jint) ((BlockPos*) ptr)->z;
 }
 export(jlong,module_NativeAPI_getActorById, jlong ptr) {
-    return (jlong) GlobalContext::getServerLevel()->fetchEntity((long long) ptr, true);
+    return (jlong) Actor::wrap((long long) ptr);
 }

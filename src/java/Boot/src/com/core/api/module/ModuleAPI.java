@@ -181,9 +181,7 @@ public class ModuleAPI {
     protected String name;
     protected int version;
 
-    protected Scriptable scriptable;
     protected Scriptable api;
-    protected Scriptable parent;
 
     protected ModuleAPI(){}
 
@@ -193,13 +191,6 @@ public class ModuleAPI {
 
     protected void init(String name, int version){
         this.name = name;
-
-        scriptable = new ScriptableObject(){
-            @Override
-            public String getClassName() {
-                return "Module";
-            }
-        };
 
         api = new ScriptableObject(){
             @Override
@@ -217,14 +208,6 @@ public class ModuleAPI {
                 return null;
             }
         });
-
-        scriptable.put("EXPORT", scriptable, new ScriptableFunctionImpl(){
-            @Override
-            public Object call(Context context, Scriptable scope, Scriptable self_, Object[] args) {
-                api.put((String) args[0], api, args[1]);
-                return null;
-            }
-        });
     }
 
     public String getName() {
@@ -236,7 +219,6 @@ public class ModuleAPI {
     }
 
     public void loadModule(Scriptable parent){
-        this.parent = parent;
     }
 
     public Scriptable getApi(){
