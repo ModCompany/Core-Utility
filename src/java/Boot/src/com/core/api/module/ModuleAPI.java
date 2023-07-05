@@ -57,6 +57,9 @@ public class ModuleAPI {
         List<File> directorys = getListDirs(path_to_cache);
         for(File file : directorys)
             cache_module.add(file.getName());
+
+        for(ModuleAPI module : modules)
+            module.preLoad();
     }
 
     public static void downloadFile(String path, String path_git, GitHubFileSystem git, String def) throws Exception {
@@ -81,6 +84,7 @@ public class ModuleAPI {
         new File(path+name).mkdir();
 
         downloadFile(path+name+"/", main, fileSystem, "");
+        downloadFile(path+name+"/", getToJson(main_file, "preloader", null), fileSystem, "");
         downloadFile(path+name+"/", getToJson(main_file, "code", "main.js"), fileSystem, "");
         downloadFile(path+name+"/", getToJson(main_file, "hooks", null), fileSystem, "[]");
         downloadFile(path+name+"/", getToJson(main_file, "inits", null), fileSystem, "[]");
@@ -216,6 +220,10 @@ public class ModuleAPI {
 
     public int getVersion() {
         return version;
+    }
+
+    public void preLoad(){
+
     }
 
     public void loadModule(Scriptable parent){

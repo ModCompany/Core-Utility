@@ -36,7 +36,7 @@ const CoreUtility = {
     Scales: Scales,
     HookManager: JsHelper.get(HookManager),
     Module: JsHelper.get(ModuleAPI),
-    version: 310,
+    version: 320,
     requireGlobal(cmd){
         return eval(cmd);
     }

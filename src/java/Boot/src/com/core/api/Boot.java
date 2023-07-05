@@ -18,8 +18,8 @@ public class Boot {
 
     public static void boot(HashMap<?, ?> data) {
         Callback.invokeCallback("CoreUtilityBoot", null, null, null, null, null, null, null, null, null, null);
-        ModuleAPI.init(dir);
         Hook.jsonLoad();
+        ModuleAPI.init(dir);
         log("Java Loaded");
     }  
 

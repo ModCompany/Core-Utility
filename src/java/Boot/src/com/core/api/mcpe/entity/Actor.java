@@ -4,14 +4,20 @@ import com.core.api.Injector;
 import com.core.api.engine.PointerClass;
 import com.core.api.mcpe.api.Random;
 import com.core.api.mcpe.api.Vec3;
+import com.core.api.module.NativeAPI;
 import com.core.api.module.types.Parameter;
 
 public class Actor extends PointerClass {
     public static final String table = "_ZTV5Actor";
     Injector injector;
+
     public Actor(long ptr){
         super(ptr);
         injector = new Injector(ptr);
+    }
+
+    public long getId(){
+        return NativeAPI.getActorID(pointer);
     }
 
     public boolean isBreakingObstruction(){
