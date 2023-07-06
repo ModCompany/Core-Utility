@@ -15,7 +15,8 @@ class Hook {
         std::string symbol, callback, priority, returnType, lib;
         std::vector<std::string> args;
         bool legacyListener;
-        Hook(std::string symbol, std::string callback, std::string priority, std::string returnType, std::vector<std::string> args, std::string lib, bool legacyListener): symbol(symbol), callback(callback), priority(priority), returnType(returnType), args(args), lib(lib), legacyListener(legacyListener){}
+        int version;
+        Hook(std::string symbol, std::string callback, std::string priority, std::string returnType, std::vector<std::string> args, std::string lib, bool legacyListener, int version): symbol(symbol), callback(callback), priority(priority), returnType(returnType), args(args), lib(lib), legacyListener(legacyListener), version(version){}
 };
 
 class Init {

@@ -136,25 +136,19 @@ void HookRegistry::hooksLoaded(JNIEnv* env){
 }
 
 void HookAPI::init(){
-    HookRegistry::addHook(
-        "mcpe",
-        "_ZN16BeaconBlockActor10_setEffectEiRiS0_", 
-        "BeaconSetEffects",
-        "pre",
-        "void",
-        {"self", "int", "ptr", "ptr"}
-    );      
-
-    // HookManager::addCallback(
-    //     SYMBOL("mcpe", "_ZN8BlockPosC1Efff"),
-    //     LAMBDA((void* self, float x, float y, float z), {
-    //         Logger::debug("CoreUtility", "%f %f %f", x, y, z);
-    //     }),
-    //     HookManager::CALL | HookManager::LISTENER
-    // );
-
     JNIEnv* env;
 	ATTACH_JAVA(env, JNI_VERSION_1_6){
+        std::vector<Hook*> hooks = HookJava::getHooks(env);
+        auto it = hooks.begin();
+        while(it != hooks.end()){
+            Hook* hook = *it;
+
+            if(hook->version == 2)
+                HookRegistry::addHook(hook->lib, hook->symbol, hook->callback, hook->priority, hook->returnType, hook->args);
+
+            it++;
+        }
+
         HookAPI::HookAPIClass = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/core/api/module/HookAPI")));
         HookAPI::hookId = env->GetStaticMethodID(HookAPI::HookAPIClass, "hook", "(Ljava/lang/String;[Lcom/core/api/engine/NativeVar;)V");
 

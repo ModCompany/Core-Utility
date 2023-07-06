@@ -4,6 +4,7 @@ public class JsonData {
     String symbol, callback, priority, returnType, lib;
     String[] args;
     boolean legacyListener;
+    int version;
     
     public JsonData(String symbol, String callback, String priority, String returnType, String[] args, String lib, boolean legacyListener, int version){
         this.symbol = symbol;
@@ -13,6 +14,11 @@ public class JsonData {
         this.args = args;
         this.lib = lib;
         this.legacyListener = legacyListener;
+        this.version = version;
+    }
+
+    public int getVersion() {
+        return version;
     }
 
     public String getCallback() {

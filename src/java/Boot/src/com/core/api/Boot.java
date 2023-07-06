@@ -5,6 +5,7 @@ import java.util.HashMap;
 import com.core.api.engine.NativeVar;
 import com.core.api.module.Hook;
 import com.core.api.module.ModuleAPI;
+import com.core.api.module.moduleapi.ModuleFolder;
 import com.zhekasmirnov.innercore.api.mod.preloader.PreloaderAPI.Callback;
 
 public class Boot {
@@ -18,6 +19,7 @@ public class Boot {
 
     public static void boot(HashMap<?, ?> data) {
         Callback.invokeCallback("CoreUtilityBoot", null, null, null, null, null, null, null, null, null, null);
+        ModuleFolder.init();
         Hook.jsonLoad();
         ModuleAPI.init(dir);
         log("Java Loaded");

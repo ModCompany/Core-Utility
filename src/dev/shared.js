@@ -43,12 +43,18 @@ const CoreUtility = {
 };
 
 JsHelper.log("Module count "+ModuleAPI.modules.size());
-for(let i = 0; i < ModuleAPI.modules.size();i++){
-    let api = ModuleAPI.modules.get(i).getApi();
-    function EXPORT(name, value){
-        CoreUtility[name] = value;
+
+for(let key in ModuleAPI.object)
+    CoreUtility[key] = ModuleAPI.object[key];
+
+with(ModuleAPI.object){
+    for(let i = 0; i < ModuleAPI.modules.size();i++){
+        let api = ModuleAPI.modules.get(i).getApi();
+        function EXPORT(name, value){
+            CoreUtility[name] = value;
+        }
+        api.start();
     }
-    api.start();
 }
 
 

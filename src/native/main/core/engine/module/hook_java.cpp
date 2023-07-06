@@ -75,6 +75,7 @@ std::vector<Hook*> HookJava::getHooks(JNIEnv* env){
     const jmethodID getLib = env->GetMethodID(HookJava::DATA, "getLib", "()Ljava/lang/String;");
     const jmethodID getArgs = env->GetMethodID(HookJava::DATA, "getArgs", "()[Ljava/lang/String;");
     const jmethodID canLegacyListener = env->GetMethodID(HookJava::DATA, "canLegacyListener", "()Z");
+    const jmethodID getVersion = env->GetMethodID(HookJava::DATA, "getVersion", "()I");
 	const jobjectArray array = (jobjectArray) env->CallStaticObjectMethod(HookJava::HOOK, getJsons);
 
     std::vector<Hook*> hooks;
@@ -87,6 +88,7 @@ std::vector<Hook*> HookJava::getHooks(JNIEnv* env){
         jstring lib = (jstring) env->CallObjectMethod(json, getLib);
         jobjectArray arr = (jobjectArray) env->CallObjectMethod(json, getArgs);
         jboolean legacyListener = env->CallBooleanMethod(json, canLegacyListener);
+        jint version = env->CallIntMethod(json, getVersion);
 
         std::vector<std::string> args;
         for(int j=0;j<env->GetArrayLength(arr);j++)
@@ -99,7 +101,9 @@ std::vector<Hook*> HookJava::getHooks(JNIEnv* env){
             JavaClass::toString(env, returnType),
             args,
             JavaClass::toString(env, lib),
-            legacyListener == JNI_TRUE
+            legacyListener == JNI_TRUE,
+            (int) version
+
         ));
     }
     return hooks;
@@ -283,6 +287,8 @@ void HookJava::init(){
         std::vector<Hook*> hooks = HookJava::getHooks(env);
         for(int i = 0;i < hooks.size();i++){
             Hook* hook = hooks[i];
+
+            if(hook->version != 1) continue;
 
             int v = HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER;
             if(hook->priority == "post")

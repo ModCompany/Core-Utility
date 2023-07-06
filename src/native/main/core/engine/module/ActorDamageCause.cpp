@@ -13,16 +13,20 @@ std::map<int,jobject> RegisterDamageCause::types;
 jclass RegisterDamageCause::JavaClass;
 jmethodID RegisterDamageCause::DeadMessage;
 
-std::__ndk1::pair<std::__ndk1::string, std::__ndk1::vector<std::__ndk1::string>> getDeadMessage(ActorDamageSource* source, std::__ndk1::string text, Actor* actor){
+#define stl std::__ndk1
+
+stl::pair<stl::string, stl::vector<stl::string>> getDeadMessage(ActorDamageSource* source, stl::string text, Actor* actor){
     JNIEnv* env;
 	ATTACH_JAVA(env, JNI_VERSION_1_6){
+        jstring arg = JavaClass::toString(env, text);
         jstring str = (jstring) env->CallObjectMethod(
             RegisterDamageCause::types.find((int) source->getCause())->second, RegisterDamageCause::DeadMessage,
-            (jlong) source, JavaClass::toString(env, std::string(text.c_str())), (jlong) actor
+            (jlong) source, arg, (jlong) actor
         );
-        std::__ndk1::string result = JavaClass::toStlString(env, str);
+        stl::string result = JavaClass::toStlString(env, str);
+        env->DeleteLocalRef(arg);
         env->DeleteLocalRef(str);
-        return std::__ndk1::pair<std::__ndk1::string, std::__ndk1::vector<std::__ndk1::string>>(result, std::__ndk1::vector<std::__ndk1::string>({text}));
+        return stl::pair<stl::string, stl::vector<stl::string>>(result, stl::vector<stl::string>({text}));
     }
 }
 

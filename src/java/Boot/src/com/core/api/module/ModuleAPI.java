@@ -21,6 +21,13 @@ import com.zhekasmirnov.innercore.utils.FileTools;
 
 public class ModuleAPI {
     public static ArrayList<ModuleAPI> modules = new ArrayList<>();
+    public static ScriptableObject object = new ScriptableObject() {
+        @Override
+        public String getClassName() {
+            return "object";
+        }
+      
+    };
 
     public static void addModule(ModuleAPI module){
         ModuleAPI _module_install = ModuleAPI.getModule(module.getName());
@@ -58,8 +65,10 @@ public class ModuleAPI {
         for(File file : directorys)
             cache_module.add(file.getName());
 
+        ArrayList<ModuleAPI> modules_post = new ArrayList<>();
         for(ModuleAPI module : modules)
-            module.preLoad();
+            module.preLoad(modules_post);
+        modules = modules_post;
     }
 
     public static void downloadFile(String path, String path_git, GitHubFileSystem git, String def) throws Exception {
@@ -123,33 +132,33 @@ public class ModuleAPI {
         }
     }
 
+    public static ModuleAPI createForModule(String path_to_mod, Object value) throws Exception {
+        if(value instanceof String)
+            return (new ModuleAPI((String) value, 1));
+        else if(value instanceof JSONObject){
+            JSONObject object = (JSONObject) value;
+            String type = object.isNull("type") ? "builtin" : object.getString("type");
+            switch(type){
+                case "builtin":
+                    return (new ModuleAPI(object.getString("name"), 1));
+                case "local":
+                    return (new ModuleFolder(new LocalFileSystem(path_to_mod+object.getString("directory")), object.isNull("main") ? "main.json" : object.getString("main")));
+                case "github":
+                    String directory = object.getString("directory");
+                    return (createModuleForGit(new GitHubFileSystem(object.getString("user"), object.getString("repository"), directory), object.isNull("main") ? "main.json" : object.getString("main"), object.isNull("name") ? directory : object.getString("name")));
+                default:
+                    JsHelper.log("Not type "+type);
+            }
+        }
+        return null;
+    }
+
     public static void loadJson(String path_to_mod, String path){
         try {
             JSONArray array = JsHelper.loadFromPath(path);
             if(array == null) return;
-            for(int i = 0;i < array.length();i++){
-                Object value = array.opt(i);
-                if(value instanceof String)
-                    modules.add(new ModuleAPI((String) value, 1));
-                else if(value instanceof JSONObject){
-                    JSONObject object = (JSONObject) value;
-                    String type = object.isNull("type") ? "builtin" : object.getString("type");
-                    switch(type){
-                        case "builtin":
-                            addModule(new ModuleAPI(object.getString("name"), 1));
-                        break;
-                        case "local":
-                            addModule(new ModuleFolder(new LocalFileSystem(path_to_mod+object.getString("directory")), object.isNull("main") ? "main.json" : object.getString("main")));
-                        break;
-                        case "github":
-                            String directory = object.getString("directory");
-                            addModule(createModuleForGit(new GitHubFileSystem(object.getString("user"), object.getString("repository"), directory), object.isNull("main") ? "main.json" : object.getString("main"), object.isNull("name") ? directory : object.getString("name")));
-                        break;
-                        default:
-                            JsHelper.log("Not type "+type);
-                    }
-                }
-            }
+            for(int i = 0;i < array.length();i++)
+                addModule(createForModule(path_to_mod, array.opt(i)));
         } catch (Exception e) {
             JsHelper.log("Error loaded module");
             JsHelper.log(e);
@@ -222,8 +231,8 @@ public class ModuleAPI {
         return version;
     }
 
-    public void preLoad(){
-
+    public void preLoad(ArrayList<ModuleAPI> modules){
+        modules.add(this);
     }
 
     public void loadModule(Scriptable parent){
