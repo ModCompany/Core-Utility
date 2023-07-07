@@ -63,14 +63,26 @@ if(__config__.getBool("membory_display") == true){
 
 let Helper = WRAP_NATIVE("HelperCoreUtility");
 
-Callback.addCallback("BeaconSetEffects", (self, int, ptr_int1, ptr_int2) => {
-    let int1 =  NativeVar.createForPointer(ptr_int1, "int");
-    let int2 =  NativeVar.createForPointer(ptr_int2, "int");
-
-    alert(int.get()+ "  "+int1.get()+" "+int2.get());
-    int1.set(Native.PotionEffect.bad_omen);
-    alert(int.get()+ "  "+int1.get()+" "+int2.get());
-});
+// let ui = new NativeUi([
+//     new TextElement({
+//         x: 100,
+//         y: 100,
+//         text: "Белевич где двери"
+//     })
+// ]);
+// let size = 0;
+// ui.setListener({
+//     update(ui, value){
+//         size += size + (5 * value);
+//         if(size >= 1000)
+//             size = 100;
+//         ui.getElements()[0].size = size;
+//     },
+//     touch(){
+//         return true;
+//     }
+// });
+// ui.open();
 
 /*
 Любопытной варваре нос аторвали

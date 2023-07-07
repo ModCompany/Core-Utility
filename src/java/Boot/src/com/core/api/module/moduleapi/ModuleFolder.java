@@ -2,12 +2,14 @@ package com.core.api.module.moduleapi;
 
 import java.util.ArrayList;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeJavaClass;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
+import com.core.api.Boot;
 import com.core.api.Injector;
 import com.core.api.JsHelper;
 import com.core.api.module.Hook;
@@ -47,7 +49,12 @@ public class ModuleFolder extends ModuleAPI {
 
     @Override
     public void preLoad(ArrayList<ModuleAPI> modules){
-        super.preLoad(modules);
+        try {
+            if(main.isNull("min_api_version") || Boot.API_VERSION >= main.getInt("min_api_version"))
+                modules.add(this);
+        } catch (JSONException e) {
+            JsHelper.log(e);
+        }
         JsHelper.log("Loaded preloader "+this.getName());
 
         try {
@@ -67,7 +74,7 @@ public class ModuleFolder extends ModuleAPI {
         }
         
         try {
-            if(!main.isNull("builtin_modules")){
+            if(!main.isNull("modules")){
                 JSONArray array = main.getJSONArray("modules");
                 for (int i = 0; i < array.length(); i++) 
                     modules.add(ModuleAPI.createForModule(null, array.opt(i)));
@@ -84,7 +91,7 @@ public class ModuleFolder extends ModuleAPI {
         Object[] keys = input.getAllIds();
         for(Object key : keys)
             object.put(key.toString(), object, input.get(key));
-            
+
         try {
             object.defineProperty("HookManager", new NativeJavaClass(object, HookManager.class, false), ScriptableObject.DONTENUM);
             object.defineProperty("Injector", new NativeJavaClass(object, Injector.class, false), ScriptableObject.DONTENUM);

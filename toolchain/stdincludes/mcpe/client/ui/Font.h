@@ -21,5 +21,6 @@ class FontRepository {
 
 class FontHandle {
     public:
-    Font* getFont() const;
+        FontHandle();
+        Font* getFont() const;
 };

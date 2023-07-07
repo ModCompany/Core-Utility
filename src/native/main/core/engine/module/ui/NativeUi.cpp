@@ -8,6 +8,7 @@
 #include <core/scales.h>
 #include <logger.h>
 #include <client/ui/ResourceLocation.h>
+#include <core/module/ui/NameTag.hpp>
 
 std::vector<NativeUi*> NativeUi::opens;
 jclass NativeUi::JavaElement, NativeUi::JavaImageElement, NativeUi::JavaTextElement, NativeUi::JavaNativeUi, NativeUi::JavaMeshElement;
@@ -18,9 +19,11 @@ void ElementImage::render(ScreenContext& ctx){
     ScalesModule::blit(&ctx, x, y, w, h, texture, t_w, t_h, 1, material);
 }
 
+
 void ElementFont::render(ScreenContext& ctx){
     //mce::MaterialPtr material = mce::RenderMaterialGroup::common.getMaterial(HashedString(this->material.c_str()));
     ctx.shaderColor->setColor(mce::Color { 1.0f, 1.0f, 1.0f, 1.0f });
+    //Font* font = FontHandle().getFont();
     Font* font;
     if(font_type < NativeUi::fonts.size())
         font = NativeUi::fonts[font_type];
@@ -174,6 +177,7 @@ void NativeUi::init(){
         HookManager::addCallback(
             SYMBOL("mcpe", "_ZN3mce11RenderGraph6renderER13ScreenContextRK17FrameRenderObject"), 
             LAMBDA((void* self, ScreenContext& ctx), {
+                //NameTagAPI::render(ctx);
                 NativeUi::render(ctx);
             }, ), HookManager::RETURN | HookManager::LISTENER
         );
@@ -192,6 +196,7 @@ void NativeUi::init(){
             }, ), HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER
         );
     }
+    //NameTagAPI::init();
 }
 
 std::vector<Element*> getElements(JNIEnv* env, jobjectArray arr){

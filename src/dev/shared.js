@@ -28,6 +28,7 @@ const CoreUtility = {
     NativeUi: JsHelper.get(NativeUi),
     ImageElement: JsHelper.get(ImageElement),
     TextElement: JsHelper.get(TextElement),
+    MeshElement: JsHelper.get(MeshElement),
 
     ActorDamageCause: JsHelper.get(ActorDamageCause),
 
@@ -36,7 +37,7 @@ const CoreUtility = {
     Scales: Scales,
     HookManager: JsHelper.get(HookManager),
     Module: JsHelper.get(ModuleAPI),
-    version: 320,
+    version: Number(com.core.api.Boot.API_VERSION),
     requireGlobal(cmd){
         return eval(cmd);
     }

@@ -12,11 +12,7 @@ class ShaderColor {
     void setColor(mce::Color const&);
 };
 
-class Tessellator {
-    public:
-    void begin(int, bool);
-    void vertexUV(float, float, float, float, float);
-};
+#include <ui/Tessellator.h>
 
 class ScreenContext {
     public:

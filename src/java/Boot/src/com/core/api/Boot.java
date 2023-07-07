@@ -2,7 +2,6 @@ package com.core.api;
 
 import java.util.HashMap;
 
-import com.core.api.engine.NativeVar;
 import com.core.api.module.Hook;
 import com.core.api.module.ModuleAPI;
 import com.core.api.module.moduleapi.ModuleFolder;
@@ -10,6 +9,8 @@ import com.zhekasmirnov.innercore.api.mod.preloader.PreloaderAPI.Callback;
 
 public class Boot {
     public static final String LOOGER_PREFIX = "CoreUtility";
+    public static final int API_VERSION = 320;
+
     public static String dir;
     public static boolean cache_module = true;
 
