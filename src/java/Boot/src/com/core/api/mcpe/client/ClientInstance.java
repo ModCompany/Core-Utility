@@ -18,6 +18,11 @@ public class ClientInstance extends PointerClass {
     public void renderDestroyBlock(int x,int y,int z,double speed){
         renderDestroyBlock(pointer, x, y, z,(float) speed);
     }
+
+    public void renderDestroyBlock(int x,int y,int z,float speed){
+        renderDestroyBlock(pointer, x, y, z, speed);
+    }
+
     public Options getOptions(){
         return new Options(getOptionsPointer(pointer));
     }
