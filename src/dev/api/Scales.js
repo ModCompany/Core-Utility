@@ -1,4 +1,7 @@
-let ScalesJava = WRAP_JAVA("com.core.api.module.Scales");
+if(Game.isDedicatedServer())
+	var ScalesJava = WRAP_JAVA("com.core.api.module_server.Scales")
+else
+	var ScalesJava = WRAP_JAVA("com.core.api.module.Scales");
 
 Network.addClientPacket("scalees.setValue", function(data){
 	ScalesJava.getScaleByPlayer(Player.get(), data.name).setValue(data.v);

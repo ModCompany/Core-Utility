@@ -21,12 +21,14 @@ public class GitHubFileSystem extends LocalFileSystem {
     private String autor, repository;
 
     public static boolean isConnection(){
-        Activity context = UIUtils.getContext();
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager != null) {
-            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-            return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-        }
+        try{
+            Activity context = UIUtils.getContext();
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (connectivityManager != null) {
+                NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+                return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+            }
+        }catch(Exception e){}
         return false;
     }
 

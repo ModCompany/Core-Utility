@@ -15,6 +15,8 @@ import com.core.api.Boot;
 import com.core.api.module.moduleapi.ModuleFolder;
 import com.core.api.module.moduleapi.filesytem.GitHubFileSystem;
 import com.core.api.module.moduleapi.filesytem.LocalFileSystem;
+import com.zhekasmirnov.horizon.runtime.logger.Logger;
+import com.zhekasmirnov.horizon.util.FileUtils;
 import com.zhekasmirnov.innercore.api.log.DialogHelper;
 import com.zhekasmirnov.innercore.api.mod.util.ScriptableFunctionImpl;
 import com.zhekasmirnov.innercore.utils.FileTools;
@@ -39,7 +41,7 @@ public class ModuleAPI {
         modules.add(module);
     }
 
-    public static ArrayList<String> cache_module = new ArrayList<>();
+    public static List<String> cache_module = new ArrayList<>();
     //private
 
     public static ArrayList<File> getListDirs(String path){
@@ -110,7 +112,7 @@ public class ModuleAPI {
             if(cache_module.indexOf(name) != -1 && !GitHubFileSystem.isConnection()){
                 return new ModuleFolder(local, main);
             }else if(cache_module.indexOf(name) == -1 && !GitHubFileSystem.isConnection()){
-                DialogHelper.openFormattedDialog("No internet connection", "Error loaded module "+name);
+                DialogHelper.openFormattedDialog("No internet connection", "Error loaded module "+name+"\nmodules cache:"+cache_module.toString());
                 while(true){}
             }
 
@@ -155,6 +157,7 @@ public class ModuleAPI {
 
     public static void loadJson(String path_to_mod, String path){
         try {
+            cache_module = FileUtils.getAllRelativePaths(new File(Boot.dir+cache_directory), true);
             JSONArray array = JsHelper.loadFromPath(path);
             if(array == null) return;
             for(int i = 0;i < array.length();i++)
