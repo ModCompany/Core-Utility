@@ -4,7 +4,9 @@ import com.zhekasmirnov.innercore.api.NativeAPI;
 
 import org.mozilla.javascript.ScriptableObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class Scales {
     public static interface IScaleDescription {
@@ -44,6 +46,28 @@ public class Scales {
 
     private static final HashMap<String, HashMap<String, ScalePlayer>> players = new HashMap<>();
     private static final HashMap<String, Scales> scales = new HashMap<>();
+
+    public static String[] getPlayers(){
+        final ArrayList<String> keys = new ArrayList<>();
+        final Iterator<String> it = players.keySet().iterator();
+
+        while (it.hasNext()) {
+            keys.add(it.next());
+        }
+
+        return keys.toArray(new String[0]);
+    }
+
+    public static String[] getScales(){
+        final ArrayList<String> keys = new ArrayList<>();
+        final Iterator<String> it = scales.keySet().iterator();
+
+        while (it.hasNext()) {
+            keys.add(it.next());
+        }
+
+        return keys.toArray(new String[0]);
+    }
 
     public static Scales getScaleByName(String name){
         return scales.get(name);
