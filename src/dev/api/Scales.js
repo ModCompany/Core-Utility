@@ -66,9 +66,8 @@ let Scales = {
 		return new PlayerActor(player).getGameMode() == 0;
 	}
 };
-
-Saver.addSavesScope("lib.scales",
-    function read(scope){
+Saver.registerObjectSaver("lib.scales", {
+    read(scope){
         let players = Object.keys(scope.players);
 		for(let i in players){
 			let player = players[i];
@@ -79,8 +78,8 @@ Saver.addSavesScope("lib.scales",
 			}
 		}
     },
-    function save(){
-		let obj = {};
+    save(){
+        let obj = {};
 		let players = ScalesJava.getPlayers();
 		for(let i in players){
 			let player = players[i];
@@ -94,5 +93,21 @@ Saver.addSavesScope("lib.scales",
         return {
             players: obj,
         }
+    },
+
+    //Возвращает этот объект, если при чтение произошла ошибка, к примеру при первом входе(требуется b116)
+    getDefaultSaves(){
+        return {
+			players: {}
+        };
+    }
+});
+
+Saver.addSavesScope("",
+    function read(scope){
+        
+    },
+    function save(){
+		
     }
 );

@@ -105,10 +105,11 @@ public class ModuleAPI {
     public static ModuleAPI createModuleForGit(GitHubFileSystem fileSystem, String main, String name){
         if(!Boot.cache_module)
             return new ModuleFolder(fileSystem, main);
-            
+
+        final String path = Boot.dir+cache_directory+"/";
+        final LocalFileSystem local = new LocalFileSystem(path+name);
+
         try {
-            String path = Boot.dir+cache_directory+"/";
-            LocalFileSystem local = new LocalFileSystem(path+name);
             if(cache_module.indexOf(name) != -1 && !GitHubFileSystem.isConnection()){
                 return new ModuleFolder(local, main);
             }else if(cache_module.indexOf(name) == -1 && !GitHubFileSystem.isConnection()){
@@ -125,10 +126,13 @@ public class ModuleAPI {
             }else{
                 loadFromGit(fileSystem, main, name, path);
                 local_main = local.parseJSONObject(main);
-            }
+            }    
 
             return new ModuleFolder(local, main);
         } catch (Exception e) {
+            if(cache_module.indexOf(name) != -1)
+                return new ModuleFolder(local, main);
+        
             JsHelper.error(e);
             while(true){}
         }
@@ -163,7 +167,7 @@ public class ModuleAPI {
             for(int i = 0;i < array.length();i++)
                 addModule(createForModule(path_to_mod, array.opt(i)));
         } catch (Exception e) {
-            JsHelper.log("Error loaded module");
+            JsHelper.log("Error loaded, module modules cache:"+cache_module.toString());
             JsHelper.log(e);
         }
         

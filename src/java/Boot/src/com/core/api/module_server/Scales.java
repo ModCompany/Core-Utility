@@ -21,7 +21,7 @@ public class Scales {
 
     public static class ScalePlayer {
         Scales pointer;
-        int value;
+        int value = 20;
 
         public ScalePlayer(Scales pointer){
             this.pointer = pointer;
@@ -75,7 +75,6 @@ public class Scales {
 
     public static ScalePlayer getScaleByPlayer(long player, String name){
         return getScaleByPlayer(NativeAPI.getNameTag(player), name);
-        //return new ScalePlayer(getScalePlayer(NativeAPI.getNameTag(player), name));
     }
 
     public static ScalePlayer getScaleByPlayer(String player, String name){
