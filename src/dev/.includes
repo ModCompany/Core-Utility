@@ -9,5 +9,5 @@ api/BlockUtils.js
 api/ItemRegistry.js
 api/BlockRegistry.js
 api/World.js
-api/Scales.js
+api/Scales.ts
 shared.js

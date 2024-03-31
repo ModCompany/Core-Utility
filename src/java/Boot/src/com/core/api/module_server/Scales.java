@@ -101,12 +101,16 @@ public class Scales {
         self.name = name;
         self.isLeft = left;
         self.isReset = reset;
-        self.isDisplay = display;
+        self.canDisplay = display;
         scales.put(name, self);
     }
 
+    public static void setServerMode(boolean mode){
+        throw new RuntimeException("Use client method");
+    }
+
     private String name;
-    private boolean isLeft, isReset, isDisplay;
+    private boolean isLeft, isReset, canDisplay;
 
     public Scales(IScaleDescription description){
         registerScale(
@@ -162,11 +166,11 @@ public class Scales {
     }
 
     public boolean isDisplay(){
-        return isDisplay;
+        return canDisplay;
     }
 
     public void setDisplay(boolean v){
-       isDisplay = v;
+        canDisplay = v;
     }
 
     public IScaleDescription getScaleDescription(){

@@ -83,6 +83,8 @@ public class Scales {
         return new Scales(description);
     }
 
+    native public static void setServerMode(boolean mode);
+
     public long pointer;
     public Scales(long pointer){
         this.pointer = pointer;
@@ -140,7 +142,7 @@ public class Scales {
     }
 
     public boolean isLeft(){
-        return isReset(pointer) == 1;
+        return isLeft(pointer) == 1;
     }
 
     public boolean isReset(){

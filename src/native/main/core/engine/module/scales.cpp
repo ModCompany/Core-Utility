@@ -74,6 +74,8 @@ class Scales {
 		bool reset;
 		bool display;
 	public:
+		static bool server_mode;
+
 		Scales(std::string _name, std::string _full, std::string _helf, std::string _empty, bool _left, bool _reset, bool _display){
 			scales.emplace(_name, this);
 			name = _name;
@@ -163,6 +165,7 @@ class Scales {
 
 std::map<std::string, ScalePlayer*> Scales::scales_player;
 std::map<std::string, Scales*> Scales::scales;
+bool Scales::server_mode = false;
 
 void ScalesModule::blit(ScreenContext* ctx, float x, float y, float width, float height, std::string texture, float textureWidth, float textureHeight, float alpha, std::string m){
 	mce::MaterialPtr material = mce::RenderMaterialGroup::common.getMaterial(HashedString(m.c_str()));
@@ -177,6 +180,7 @@ void ScalesModule::blit(ScreenContext* ctx, float x, float y, float width, float
 	RenderMesh::endTessellationAndRenderImmediately(*ctx, *ctx->tessellator, &material, texture);
 	ctx->shaderColor->setColor(mce::Color { 1.0f, 1.0f, 1.0f, 1.0f });
 }
+
 void ScalesModule::initialize(){
 	HookManager::addCallback(
 		SYMBOL("mcpe", "_ZN17HudHungerRenderer6renderER24MinecraftUIRenderContextR15IClientInstanceR9UIControliR13RectangleArea"),
@@ -187,22 +191,27 @@ void ScalesModule::initialize(){
 			int y_left = 0;
 			int y_right = 0;
 			LocalPlayer* player = GlobalContext::getLocalPlayer();
-			if(player->getAirSupply() != 300 && player->getAirSupply() >= 0)
+
+			if((player->getAirSupply() != (Scales::server_mode ? 400 : 300)) && player->getAirSupply() >= 0)
 				if(options->getUIProfile() != 0)
 					y_right+=SCALE_SIZE+2;
 				else
 					y_right-=SCALE_SIZE+2;
+
 			if(player->getCountArmor() > 0)
 				if(options->getUIProfile() != 0)
 					y_left+=SCALE_SIZE+2;
 				else
 					y_left-=SCALE_SIZE+2;
+
 			for(int i = 0;i < keys.size();i++){
 				std::string key = keys[i];
 				ScalesData* data = Scales::getPlayerScale(player->getNameTagVTABLE(), key);
 				Scales* scale = data->getScale();
+
 				if(!scale->isDisplay())
 					continue;
+
 				int x_bonus = 0;
 				int y = pos->y-SCALE_SIZE+y_right;
 				if(options->getUIProfile() != 0)
@@ -222,10 +231,12 @@ void ScalesModule::initialize(){
 					}
 						
 				}
+
 				int v = data->getValue();
 				int fill = 0;
 				if(scale->isLeft())
 					fill = SCALE_MAX;
+
 				for(int j = 0;j < 10;j++){
 					std::string texture = scale->getFull();
 					if(scale->isLeft()){
@@ -233,17 +244,18 @@ void ScalesModule::initialize(){
 							texture = scale->getHelf();
 						else if(fill - 2 >= v)
 							texture	= scale->getEmpty();
-						fill-=2;
+						fill -= 2;
 					}else{
 						if(fill + 1 == v)
 							texture = scale->getHelf();
-						else if(fill + 2> v)
+						else if(fill + 2 > v)
 							texture	= scale->getEmpty();
-						fill+=2;
+						fill += 2;
 					}
 						
 					ScalesModule::blit(renderContext.getScreenContext(), x + x_bonus - SCALE_SIZE*j, y, SCALE_SIZE, SCALE_SIZE, texture, SCALE_SIZE, SCALE_SIZE, options->getInterfaceOpacity(), "ui_textured_and_glcolor");
 				}
+
 				if(options->getUIProfile() == 0){
 					if(scale->isLeft())
 						y_left-=SCALE_SIZE;
@@ -273,78 +285,102 @@ extern "C" {
 			(bool)(display == JNI_TRUE)
 		);
 	}
+
+	JNIEXPORT void JNICALL Java_com_core_api_module_Scales_setServerMode
+	(JNIEnv* env, jclass, jboolean server_mode) {
+		Scales::server_mode = server_mode == JNI_TRUE;
+	}
+
 	JNIEXPORT jlong JNICALL Java_com_core_api_module_Scales_getScale
 	(JNIEnv* env, jclass, jstring name) {
 		return (jlong) Scales::getScaleByName(JavaClass::toString(env, name));
 	}
+
 	JNIEXPORT jint JNICALL Java_com_core_api_module_Scales_isScale
 	(JNIEnv* env, jclass, jstring name) {
 		return (jint) ((int) Scales::isScale(JavaClass::toString(env, name)));
 	}
+
 	JNIEXPORT jstring JNICALL Java_com_core_api_module_Scales_getFull
 	(JNIEnv* env, jclass, jlong scale) {
 		return JavaClass::toString(env, ((Scales*) scale)->getFull());
 	}
+
 	JNIEXPORT void JNICALL Java_com_core_api_module_Scales_setFull
 	(JNIEnv* env, jclass, jlong scale, jstring name) {
 		((Scales*) scale)->setFull(JavaClass::toString(env, name));
 	}
+
 	JNIEXPORT jstring JNICALL Java_com_core_api_module_Scales_getHelf
 	(JNIEnv* env, jclass, jlong scale) {
 		return JavaClass::toString(env, ((Scales*) scale)->getHelf());
 	}
+
 	JNIEXPORT void JNICALL Java_com_core_api_module_Scales_setHelf
 	(JNIEnv* env, jclass, jlong scale, jstring name) {
 		((Scales*) scale)->setHelf(JavaClass::toString(env, name));
 	}
+
 	JNIEXPORT jstring JNICALL Java_com_core_api_module_Scales_getEmpty
 	(JNIEnv* env, jclass, jlong scale) {
 		return JavaClass::toString(env, ((Scales*) scale)->getEmpty());
 	}
+
 	JNIEXPORT jint JNICALL Java_com_core_api_module_Scales_isLeft
 	(JNIEnv* env, jclass, jlong scale) {
 		return (jint) ((int) ((Scales*) scale)->isLeft());
 	}
+
 	JNIEXPORT jint JNICALL Java_com_core_api_module_Scales_isReset
 	(JNIEnv* env, jclass, jlong scale) {
 		return (jint) ((int) ((Scales*) scale)->isReset());
 	}
+
 	JNIEXPORT jint JNICALL Java_com_core_api_module_Scales_isDisplay
 	(JNIEnv* env, jclass, jlong scale) {
 		return (jint) ((int) ((Scales*) scale)->isDisplay());
 	}
+
 	JNIEXPORT void JNICALL Java_com_core_api_module_Scales_setDisplay
 	(JNIEnv* env, jclass, jlong scale, jboolean v) {
 		((Scales*) scale)->setDisplay(v == JNI_TRUE);
 	}
+
 	JNIEXPORT jstring JNICALL Java_com_core_api_module_Scales_getName
 	(JNIEnv* env, jclass, jlong scale) {
 		return JavaClass::toString(env, ((Scales*) scale)->getName());
 	}
+
 	JNIEXPORT void JNICALL Java_com_core_api_module_Scales_setEmpty
 	(JNIEnv* env, jclass, jlong scale, jstring name) {
 		((Scales*) scale)->setEmpty(JavaClass::toString(env, name));
 	}
+
 	JNIEXPORT jlong JNICALL Java_com_core_api_module_Scales_getScalePlayer
 	(JNIEnv* env, jclass, jstring ent, jstring name) {
 		return (jlong) Scales::getPlayerScale(JavaClass::toString(env, ent), JavaClass::toString(env, name));
 	}
+
 	JNIEXPORT void JNICALL Java_com_core_api_module_Scales_setValuePlayer
 	(JNIEnv* env, jclass, jlong scale, jint value) {
 		((ScalesData*) scale)->setValue((int) value);
 	}
+
 	JNIEXPORT jint JNICALL Java_com_core_api_module_Scales_getValuePlayer
 	(JNIEnv* env, jclass, jlong scale) {
 		return (jint) (((ScalesData*) scale)->getValue());
 	}
+
 	JNIEXPORT jlong JNICALL Java_com_core_api_module_Scales_getScaleType
 	(JNIEnv* env, jclass, jlong scale) {
 		return (jlong) (((ScalesData*) scale)->getScale());
 	}
+
 	JNIEXPORT void JNICALL Java_com_core_api_module_Scales_resetScale
 	(JNIEnv* env, jclass, jlong scale) {
 		((ScalesData*) scale)->reset();
 	}
+
 	JNIEXPORT jobjectArray JNICALL Java_com_core_api_module_Scales_getScales
 	(JNIEnv* env, jclass) {
 		std::vector<std::string> scales = Scales::getScales();
@@ -353,6 +389,7 @@ extern "C" {
 			env->SetObjectArrayElement(array,i,env->NewStringUTF(scales[i].c_str()));  
 		return array;
 	}
+
 	JNIEXPORT jobjectArray JNICALL Java_com_core_api_module_Scales_getPlayers
 	(JNIEnv* env, jclass) {
 		std::vector<std::string> scales = Scales::getAllPlayers();
