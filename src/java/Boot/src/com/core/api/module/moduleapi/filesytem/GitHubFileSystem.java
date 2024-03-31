@@ -32,7 +32,7 @@ public class GitHubFileSystem extends LocalFileSystem {
         return false;
     }
 
-    public static String sendHttp(String http){
+    public static String sendHttp(String http, boolean enableLogger){
         String result = "";
         HttpURLConnection urlConnection = null;
         try {
@@ -47,13 +47,12 @@ public class GitHubFileSystem extends LocalFileSystem {
             return result;
         } catch (Exception e) {
             JsHelper.log("error getFile Github");
-            JsHelper.error(e);
+            if(enableLogger) JsHelper.error(e);
         }
         if (urlConnection != null) {
             urlConnection.disconnect();
         }
         return null;
-        
     }
 
     public static String parseBase64String(String text){
@@ -77,9 +76,15 @@ public class GitHubFileSystem extends LocalFileSystem {
         this.directory = directory;
     }
 
+    private boolean enableLogger = true;
+
+    public void setLogger(boolean enable){
+        this.enableLogger = enable;
+    }
+
     @Override
     public String getFile(String path) {
-        String file = sendHttp("https://api.github.com/repos/"+autor+"/"+repository+"/contents/"+(directory == null ? path : directory + "/" + path)+"?ref=main");
+        String file = sendHttp("https://api.github.com/repos/"+autor+"/"+repository+"/contents/"+(directory == null ? path : directory + "/" + path)+"?ref=main", enableLogger);
         if(file == null) return null;
         try {
             JSONObject json = new JSONObject(file);
@@ -87,7 +92,7 @@ public class GitHubFileSystem extends LocalFileSystem {
             return parseBase64String(json.getString("content"));
         } catch (Exception e) {
             JsHelper.log("error getFile Github");
-            JsHelper.error(e);
+            if(enableLogger) JsHelper.error(e);
         }
         return null;
     }

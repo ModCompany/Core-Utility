@@ -183,7 +183,6 @@ Saver.addSavesScope("lib.scales", (scope: SaveScope) => {
 		}
 	}
 
-	alert(JSON.stringify(obj))
     return {
         players: obj,
     }

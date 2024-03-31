@@ -18,6 +18,7 @@ import com.core.api.module.moduleapi.filesytem.LocalFileSystem;
 import com.zhekasmirnov.horizon.runtime.logger.Logger;
 import com.zhekasmirnov.horizon.util.FileUtils;
 import com.zhekasmirnov.innercore.api.log.DialogHelper;
+import com.zhekasmirnov.innercore.api.log.ICLog;
 import com.zhekasmirnov.innercore.api.mod.util.ScriptableFunctionImpl;
 import com.zhekasmirnov.innercore.utils.FileTools;
 
@@ -116,6 +117,8 @@ public class ModuleAPI {
                 DialogHelper.openFormattedDialog("No internet connection", "Error loaded module "+name+"\nmodules cache:"+cache_module.toString());
                 while(true){}
             }
+            
+            fileSystem.setLogger(false);
 
             JSONObject local_main;
             if(cache_module.indexOf(name) != -1 && GitHubFileSystem.isConnection()){
@@ -126,14 +129,17 @@ public class ModuleAPI {
             }else{
                 loadFromGit(fileSystem, main, name, path);
                 local_main = local.parseJSONObject(main);
-            }    
+            }
+            
+            fileSystem.setLogger(true);
 
             return new ModuleFolder(local, main);
         } catch (Exception e) {
             if(cache_module.indexOf(name) != -1)
                 return new ModuleFolder(local, main);
+            
         
-            JsHelper.error(e);
+            DialogHelper.openFormattedDialog(Boot.LOOGER_PREFIX, "Error loaded module "+name+"\nmodules cache:"+cache_module.toString()+"\n"+ICLog.getStackTrace(e));
             while(true){}
         }
     }
