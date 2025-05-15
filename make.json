@@ -19,7 +19,7 @@
             "nativejs"
         ],
         "excludeFromRelease": [],
-        "pushTo": "storage/emulated/0/games/horizon/packs/Inner_Core_Test/innercore/mods/toolchain_mod",
+        "pushTo": "/storage/emulated/0/Android/media/com.zheka.horizon64/packs/Inner_Core__ARM64_/modpacks/client/mods/CoreUtility",
         "ndkPath": null
     },
     "resources": [
@@ -62,7 +62,7 @@
             "targetDir": "."
         },
         {
-            "source": "src/dependecy-config.json",
+            "source": "src/dependency-config.json",
             "targetDir": "."
         },
         {
