@@ -14,7 +14,9 @@ namespace VTableManager {
 
     void __override_virtual(void*, void*, const char*);
 
-    void* get_method(void*, int);
+    inline void* get_method(void* target, int index) {
+        return  (*(char**) target + index * sizeof(void*));
+    }
 };
 
 

@@ -6,6 +6,16 @@
 #define HORIZON_SYMBOL_H
 
 #include "definitions.h"
+#include <dlfcn.h>
+
+void hz_set_lib_handle(const char* name, void* handle, bool auto_close);
+void* hz_init_lib_handle(const char* name, const char* lib, int flags, bool auto_close);
+void hz_shutdown_lib_handle(const char* name);
+void* hz_open_lib_handle(const char* name, int flags);
+int hz_close_lib_handle(void* handle);
+void* hz_get_lib_handle(const char* name);
+void* hz_get_symbol(void* handle, const char* name, bool can_fail);
+void* hz_get_symbol_from_named_handle(const char* handle_name, const char* name, bool can_fail);
 
 /*
  * represents dynamic library handle
@@ -37,16 +47,21 @@ namespace DLHandleManager {
      * flags - flags, that are passed to dlopen, RTLD_LAZY by default
      * support_elf, if dlsym fails, tries internal method, based on ELF format, true by default
      * */
-    DLHandle* initializeHandle(const char* name, const char* key, int flags, bool support_elf);
-    DLHandle* initializeHandle(const char* name, int flags, bool support_elf);
-    DLHandle* initializeHandle(const char* name, const char* key, int flags);
-    DLHandle* initializeHandle(const char* name, int flags);
-    DLHandle* initializeHandle(const char* name, const char* key);
-    DLHandle* initializeHandle(const char* name);
+    inline void* initializeHandle(const char* name, const char* key, int flags) {
+		return hz_init_lib_handle(name, key, flags, false);
+	}
 
-    // used in macros
-    void* _symbol(DLHandle* handle, const char* symbol);
-    void* _symbol(const char* dlname, const char* symbol);
+    inline void* initializeHandle(const char* name, int flags) {
+		return hz_init_lib_handle(name, name, flags, false);
+	}
+
+    inline void* initializeHandle(const char* name, const char* key) {
+		return hz_init_lib_handle(name, key, RTLD_NOW, false);
+	}
+
+    inline void* initializeHandle(const char* name) {
+		return hz_init_lib_handle(name, name, RTLD_NOW, false);
+	}
 }
 
 // converts any type to (void*)
@@ -54,8 +69,9 @@ namespace DLHandleManager {
 
 // returns symbol address, if search failed, returns NULL and writes error to log
 // HANDLE - DLHandle* or string, representing dynamic library to search ("mcpe" represents minecraft pe library)
-// NAME - symbol name
-#define SYMBOL(HANDLE, NAME) (DLHandleManager::_symbol(HANDLE, NAME))
+// NAME - symbol name#define HZ_SYMBOL_OPT(A, B) (hz_get_symbol_from_named_handle(A, B, true))
+#define HZ_SYMBOL(A, B) (hz_get_symbol_from_named_handle(A, B, false))
+#define SYMBOL HZ_SYMBOL
 
 // converts function pointer to (void*)
 #define FUNCTION(X) ((void*) ((unsigned long long) &(X)))

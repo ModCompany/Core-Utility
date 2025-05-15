@@ -27,7 +27,7 @@ public:
 	virtual void onBlockCreated();  // called when block is created, by default creates states and registers block item for default state
 	virtual void onBlockItemCreated(); // used for item setup from default onBlockCreated
 	virtual void onAddToCreative();  
-	virtual void onGraphicsInit(BlockGraphics& graphics);  // by default sets missing texture to all sides
+	//virtual void onGraphicsInit(BlockGraphics& graphics);  // by default sets missing texture to all sides
 	virtual void setupBlock(); // used for block setup from default onBlockCreated
 	virtual void patchVtable(void** vtable); // used for block vtable patching from default onBlockCreated
 	virtual void patchItemVtable(void** vtable); // used for block item vtable patching from default onBlockItemCreated & onBlockCreated

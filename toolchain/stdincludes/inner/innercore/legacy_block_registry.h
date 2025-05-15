@@ -11,7 +11,7 @@ struct FaceTextureData {
 
         public:
         FaceTextureData();
-        ~FaceTextureData();
+        ~FaceTextureData() = default;
         FaceTextureData(FaceTextureData const& other);
         FaceTextureData(std::string name, int id);
         FaceTextureData(std::string* names, int* ids, int count);
@@ -125,7 +125,7 @@ namespace LegacyBlockRegistry {
         virtual void setupBlock();
         virtual void patchVtable(void** vtable);
         virtual void onAddToCreative();
-        virtual void onGraphicsInit(BlockGraphics& graphics);
+        //virtual void onGraphicsInit(BlockGraphics& graphics);
         
         virtual TextureUVCoordinateSet* getCustomWorldTexture(BlockPos& pos, int side, int variant);
         virtual TextureUVCoordinateSet* getCustomCarriedTexture(int side, int variant);

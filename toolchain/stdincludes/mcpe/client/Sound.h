@@ -61,7 +61,7 @@ class SoundModule : public Module {
 
     virtual void initialize(){
 
-        HookManager::addCallback(SYMBOL("mcpe","_ZN4FMOD6System18createChannelGroupEPKcPPNS_12ChannelGroupE"),LAMBDA((HookManager::CallbackController* controller,FMOD::System* b,char* name,void* a),{
+        HookManager::addCallback(SYMBOL("mcpe","_ZN4FMOD6System18createChannelGroupEPKcPPNS_12ChannelGroupE"),LAMBDA((HookManager::CallbackController* controller,FMOD::System* b, const char* name,void* a),{
         Logger::debug("SoundModule", "%s", name);
         Logger::flush();
         system = b;

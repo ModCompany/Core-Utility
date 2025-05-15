@@ -2,6 +2,7 @@
 
 #include <string>
 #define stl std
+#include <jni.h>
 
 class Attribute;
 class ActorUniqueID;
@@ -38,7 +39,7 @@ class Actor {
     BlockSource* getRegion() const;
     Vec3 getPos() const;
     void setPos(Vec3 const&);
-    static Actor* wrap(long long);
+    static Actor* wrap(jlong);
     void setPosVTABLE(Vec3&);
 };
 

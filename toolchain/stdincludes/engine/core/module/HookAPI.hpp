@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <jni.h>
+#include <java.h>
 
 class HookRegistry {
     public:

@@ -5,6 +5,7 @@
 #include <stdarg.h>
 #include <jni.h>
 #include <list>
+#include <java.h>
 
 
 #ifndef CALLBACKS_SYSTEM_CALLBACKS_H

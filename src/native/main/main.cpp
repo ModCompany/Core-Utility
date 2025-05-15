@@ -31,7 +31,6 @@ typedef int content_id_t;
 #include <client/ui/Container.h>
 #include <client/Sound.h>
 #include <core/scales.h>
-#include <core/module/NativeVar.hpp>
 #include <core/module/ActorDamageCause.h>
 #include <core/module/BlockUtils.h>
 #include <core/module/ui/NativeUi.h>
@@ -111,7 +110,7 @@ public:
 		ToolTip::init();
 		NativeAPI::init();
 		BlockLegacyApi::init();
-		NativeVar::init();
+
 		RegisterDamageCause::init();
 		if(isUseModule("NativeUI"))
 			NativeUi::init();

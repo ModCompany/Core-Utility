@@ -1,6 +1,7 @@
 #include <string>
 #include <jni.h>
 #include <map>
+#include <vector>
 
 class NativeVar;
 
