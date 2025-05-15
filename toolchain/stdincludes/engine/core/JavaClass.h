@@ -3,8 +3,8 @@
 #include <jni.h>
 #include <string.h>
 
-#include <stl/string>
-#define stl std::__ndk1
+#include <string>
+#define stl std
 
 class JavaClass {
     public:
@@ -24,9 +24,6 @@ class JavaClass {
     static std::string toString(JNIEnv* env,jstring);
     static stl::string toStlString(JNIEnv* env,jstring);
     static jstring toString(JNIEnv* env, const std::string& nativeString) {
-        return env->NewStringUTF(nativeString.c_str());
-    }
-    static jstring toString(JNIEnv* env, const stl::string& nativeString) {
         return env->NewStringUTF(nativeString.c_str());
     }
     static void init();

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <stl/string.h>
-#define stl std::__ndk1
+#include <string.h>
+#define stl std
 class Bounds;
 class Dimension;
 class BlockPos;

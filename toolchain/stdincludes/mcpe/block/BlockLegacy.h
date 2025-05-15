@@ -1,8 +1,8 @@
 #pragma once
 
 #include <api/HashedString.h>
-#include <stl/string>
-#define stl std::__ndk1
+#include <string>
+#define stl std
 
 class BlockSource;
 class BlockPos;

@@ -2,8 +2,8 @@
 
 #include <type/Json.h>
 
-#include <stl/string.h>
-#define stl std::__ndk1
+#include <string.h>
+#define stl std
 
 class BossbarManager {
     public:

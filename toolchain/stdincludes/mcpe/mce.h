@@ -1,8 +1,8 @@
 #pragma once
 
-#include <stl/string>
+#include <string>
 #include <api/HashedString.h>
-#define stl std::__ndk1
+#define stl std
 
 namespace mce {
     class UUID {

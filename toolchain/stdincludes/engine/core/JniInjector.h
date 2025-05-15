@@ -2,14 +2,14 @@
 #include <cstdint>
 #include <cassert>
 
-#include <stl/string>
-#include <stl/vector>
-#include <stl/map>
+#include <string>
+#include <vector>
+#include <map>
 #include <functional>
 #include <typeinfo>
 #include <core/VtableHelper.h>
 
-#define stl std::__ndk1
+#define stl std
 
 class JniInjector {
     public:

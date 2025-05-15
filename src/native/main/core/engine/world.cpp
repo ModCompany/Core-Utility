@@ -6,8 +6,8 @@
 #include <client/controller/PlayScreenController.h>
 #include <core/Global.h>
 #include <core/JavaClass.h>
-#include <stl/string>
-#define stl std::__ndk1
+#include <string>
+#define stl std
 
 
 export(void, mcpe_World_addWorldToCache,jstring world){

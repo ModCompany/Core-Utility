@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 
-#include <stl/string>
+#include <string>
 #include <logger.h>
 #include <hook.h>
 #include <symbol.h>

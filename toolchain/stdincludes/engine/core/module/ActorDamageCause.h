@@ -1,7 +1,7 @@
 #pragma once
 #include <jni.h>
 #include <map>
-#include <stl/string>
+#include <string>
 
 
 enum ActorDamageCause {};

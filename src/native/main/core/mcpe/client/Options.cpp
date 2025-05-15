@@ -2,8 +2,8 @@
 #include <java.h>
 #include <nativejs.h>
 
-#include <stl/string>
-#define stl std::__ndk1
+#include <string>
+#define stl std
 
 #include <client/ClientIntance.h>
 #include <client/Options.h>

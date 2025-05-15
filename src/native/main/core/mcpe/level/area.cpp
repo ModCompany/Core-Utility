@@ -8,8 +8,8 @@
 
 #include <java.h>
 
-#include <stl/string>
-#define stl std::__ndk1
+#include <string>
+#define stl std
 
 #include <level/dimension/Dimension.h>
 #include <level/Level.h>

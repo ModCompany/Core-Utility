@@ -2,7 +2,7 @@
 #include <string>
 #include <logger.h>
 #include <core/JavaClass.h>
-#include <stl/string>
+#include <string>
 jclass JavaClass::JsHelper;
 jmethodID JavaClass::callFunction;
 #include <innercore_callbacks.h>

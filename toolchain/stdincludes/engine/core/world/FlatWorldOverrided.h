@@ -1,10 +1,9 @@
 #pragma once
 
 #include <type/Json.h>
-#include <stl/string>
+#include <string>
 
-#define stl std::__ndk1
-
+#define stl std
 class FlatWorldOverrided {
     public:
     Json::Value value;

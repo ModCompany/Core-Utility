@@ -1,8 +1,8 @@
 #pragma once
 
-#include <stl/string.h>
+#include <string.h>
 #include <horizon/types.h>
-#define stl std::__ndk1
+#define stl std
 
 class GuiData {
 public:

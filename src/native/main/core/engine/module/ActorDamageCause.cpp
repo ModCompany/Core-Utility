@@ -7,13 +7,13 @@
 #include <logger.h>
 #include <core/VtableHelper.h>
 #include <core/JavaClass.h>
-#include <stl/vector>
+#include <vector>
 
 std::map<int,jobject> RegisterDamageCause::types;
 jclass RegisterDamageCause::JavaClass;
 jmethodID RegisterDamageCause::DeadMessage;
 
-#define stl std::__ndk1
+#define stl std
 
 stl::pair<stl::string, stl::vector<stl::string>> getDeadMessage(ActorDamageSource* source, stl::string text, Actor* actor){
     JNIEnv* env;

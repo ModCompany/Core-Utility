@@ -45,7 +45,7 @@ void HookRegistry::addHook(std::string lib, std::string symbol, std::string call
 // void setArgToJava(JNIEnv* env, int i, jobjectArray array, ArgsReader args, std::string type){
 //     env->SetObjectArrayElement(array, i, newNativeVar(void*, env, args.read<T>(), type));
 // }
-#include <stl/string>
+#include <string>
 inline jobjectArray getParameters(JNIEnv* env, std::vector<std::string> types, ArgsReader args){
     jobjectArray array = (jobjectArray) env->NewObjectArray(types.size(), NativeVar::NativeVarClass, NULL);
 

@@ -142,7 +142,7 @@ void NativeUi::close(NativeUi* ui){
 #include <client/ClientIntance.h>
 #include <client/gui/GuiData.h>
 #include <type/Json_new.h>
-#include <stl/vector>
+#include <vector>
 void NativeUi::init(){
     JNIEnv* env;
 	ATTACH_JAVA(env, JNI_VERSION_1_6){

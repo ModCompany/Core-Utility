@@ -7,8 +7,8 @@
 #include <nativejs.h>
 #include <vtable.h>
 #include <java.h>
-#include <stl/string>
-#define stl std::__ndk1
+#include <string>
+#define stl std
 
 #include <type/Json.h>
 #include <horizon/types.h>
@@ -217,7 +217,7 @@ void FishingFactory::registerItem()
 		ItemRegistry::registerCustomItem<FishingRodItem>(new FishingProvider(this), IdConversion::staticToDynamic(id, IdConversion::ITEM), nameId);
 	}
 }
-#include <stl/vector>
+#include <vector>
 
 class MobEffectInstance
 {

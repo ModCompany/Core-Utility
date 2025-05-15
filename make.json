@@ -1,0 +1,73 @@
+{
+    "global": {
+        "info": {
+            "name": "Toolchain Mod",
+            "author": "Toolchain",
+            "version": "version",
+            "description": "..."
+        },
+        "api": "CoreEngine"
+    },
+    "make": {
+        "debugAbi": "arm64-v8a",
+        "abis": [
+            "armeabi-v8a"
+        ],
+        "linkNative": [
+            "minecraftpe",
+            "innercore",
+            "nativejs"
+        ],
+        "excludeFromRelease": [],
+        "pushTo": "storage/emulated/0/games/horizon/packs/Inner_Core_Test/innercore/mods/toolchain_mod",
+        "ndkPath": null
+    },
+    "resources": [
+        {
+            "path": "src/assets",
+            "type": "resource_directory"
+        }
+    ],
+    "sources": [
+        {
+            "source": "src/dev",
+            "target": "main.js",
+            "type": "main",
+            "language": "typescript"
+        },
+        {
+            "source": "src/launcher.js",
+            "type": "launcher",
+            "language": "javascript"
+        },
+        {
+            "source": "src/preloader.js",
+            "type": "preloader",
+            "language": "javascript"
+        }
+    ],
+    "compile": [
+        {
+            "source": "src/native/*",
+            "type": "native"
+        },
+        {
+            "source": "src/java/*",
+            "type":"java"
+        }
+    ],
+    "additional": [
+        {
+            "source": "src/hooks.json",
+            "targetDir": "."
+        },
+        {
+            "source": "src/dependecy-config.json",
+            "targetDir": "."
+        },
+        {
+            "source": "src/config.json",
+            "targetDir": "."
+        }
+    ]
+}

@@ -2,11 +2,11 @@
 #include <logger.h>
 #include <hook.h>
 #include <symbol.h>
-#include <stl/string>
+#include <string>
 #include <functional>
 #include <horizon/types.h>
 #include <core/module/NativeAPI.h>
-#define stl std::__ndk1
+#define stl std
 
 jclass HookJava::HOOK;
 jclass HookJava::DATA;
@@ -159,7 +159,7 @@ inline void registerParameter(JNIEnv* env, void* paramter, jobjectArray& array, 
         env->SetObjectArrayElement(array, i, elem);
         env->DeleteLocalRef(elem);
     }else if(type == "int"){
-        jobject elem = NativeAPI::createHookParameter(env, (jint) ((int)paramter), HookJava::getJavaString(env, type));
+        jobject elem = NativeAPI::createHookParameter(env, (jint) ((long)paramter), HookJava::getJavaString(env, type));
         env->SetObjectArrayElement(array, i, elem);
         env->DeleteLocalRef(elem);
     }else if(type == "bool"){

@@ -1,8 +1,8 @@
 #pragma once
 
 #include <string>
-#include <stl/string>
-#include <stl/vector>
+#include <string>
+#include <vector>
 
 
 // std::__ndk1::string

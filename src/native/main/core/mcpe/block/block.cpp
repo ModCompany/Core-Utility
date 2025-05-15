@@ -7,9 +7,9 @@
 #include <nativejs.h>
 #include <vtable.h>
 #include <java.h>
-#include <stl/string>
+#include <string>
 
-#define stl std::__ndk1
+#define stl std
 #include <type/Json.h>
 
 #include <horizon/types.h>

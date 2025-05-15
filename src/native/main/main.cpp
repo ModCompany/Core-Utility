@@ -6,8 +6,8 @@
 #include <innercore_callbacks.h>
 #include <nativejs.h>
 #include <vtable.h>
-#include <stl/string>
-#define stl std::__ndk1
+#include <string>
+#define stl std
 
 #include <type/Json.h>
 #include <horizon/types.h>

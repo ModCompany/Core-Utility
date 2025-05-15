@@ -22,7 +22,7 @@ export(void, mcpe_client_ClientInstance_setCameraEntity, jlong pointer, jlong en
 	return ((ClientInstance*) pointer)->setCameraEntity(Actor::wrap(entity));
 }
 
-export(void, mcpe_client_ClientInstance_renderDestroyBlock,jlong pointer,jint x,jint y,jint z,jfloat speed){
-	((ClientInstance*) pointer)->getLevelRenderer()->getLevelRendererPlayer()->addDestroyBlock({(float)x,(float)y,(float)z},speed);
+export(void, mcpe_client_ClientInstance_renderDestroyBlock,jlong pointer, jint x,jint y,jint z,jfloat speed){
+	((ClientInstance*) pointer)->getLevelRenderer()->getLevelRendererPlayer()->addDestroyBlock({(int)x,(int)y,(int)z},speed);
 	((ClientInstance*) pointer)->getLevelRenderer()->getLevelRendererPlayer()->updateDestroyProgress();
 }

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <stl/string>
+#include <string>
 
-#define stl std::__ndk1
+#define stl std
 namespace Core {
     class Random {
         public:

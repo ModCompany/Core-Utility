@@ -1,8 +1,8 @@
 #pragma once
 
-#include <stl/string>
-#include <stl/memory>
-#define stl std::__ndk1
+#include <string>
+#include <memory>
+#define stl std
 
 class Actor;
 class Vec2;

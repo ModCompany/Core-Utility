@@ -5,9 +5,9 @@
 #include <innercore_callbacks.h>
 #include <nativejs.h>
 #include <vtable.h>
-#include <stl/string>
+#include <string>
 
-#define stl std::__ndk1
+#define stl std
 
 
 class LocalizationModule : public Module {

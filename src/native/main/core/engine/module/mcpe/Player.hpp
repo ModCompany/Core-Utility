@@ -1,8 +1,8 @@
 #pragma once
 
 #include <vtable.h>
-#include "stl/string"
-#include "stl/vector"
+#include <string>
+#include <vector>
 
 class ActorUniqueID {
     public:

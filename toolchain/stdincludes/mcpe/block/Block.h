@@ -1,7 +1,7 @@
 #pragma once
 
-#include <stl/string>
-#define stl std::__ndk1
+#include <string>
+#define stl std
 #include <innercore/legacy_block_registry.h>
 class BlockLegacy;
 

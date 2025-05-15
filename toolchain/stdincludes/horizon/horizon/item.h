@@ -7,9 +7,9 @@
 #include <mce.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stl/vector>
-#include <stl/string>
-#define stl std::__ndk1
+#include <vector>
+#include <string>
+#define stl std
 template<typename _Tp>
 using stl_vector = std::__ndk1::vector<_Tp>; 
 class Actor;

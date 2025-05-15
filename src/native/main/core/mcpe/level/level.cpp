@@ -12,10 +12,10 @@
 
 #include <entity/ActorDefinitionIdentifier.h>
 
-#include <stl/string>
-#include <stl/memory>
+#include <string>
+#include <memory>
 
-#define stl std::__ndk1
+#define stl std
 
 
 export(jlong,mcpe_level_Level_getRandomPointer,jlong pointer) {

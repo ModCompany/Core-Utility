@@ -1,6 +1,6 @@
 #pragma once
  
-#include <stl/string>
+#include <string>
 #include <mce.h>
 
 class ScreenContext;

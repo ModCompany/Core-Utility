@@ -1,8 +1,8 @@
 #pragma once
-#include <stl/string>
-#include <stl/vector>
-#include <stl/unordered_map>
-#define stl std::__ndk1
+#include <string>
+#include <vector>
+#include <unordered_map>
+#define stl std
 
 class MobEffect {
     public:

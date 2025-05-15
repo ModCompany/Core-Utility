@@ -85,7 +85,7 @@ void test(int x,int y,int z,int i){
     ServerLevel* level = GlobalContext::getServerLevel();
     Spawner* spawn = level->getSpawner();
 
-    spawn->spawnMob(*GlobalContext::getRegion(),ActorDefinitionIdentifier((ActorType) i),nullptr, {x,y,z},false,true,false);
+    //spawn->spawnMob(*GlobalContext::getRegion(),ActorDefinitionIdentifier((ActorType) i),nullptr, {x,y,z},false,true,false);
 }
 // JS_MODULE_VERSION(Spawner,1);
 // JS_EXPORT(Spawner, test, "V(IIII)", (JNIEnv* env, int x,int y,int z,int i){

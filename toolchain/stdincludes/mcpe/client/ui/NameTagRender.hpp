@@ -1,12 +1,12 @@
 #pragma once
 
-#include <stl/string>
+#include <string>
 #include <horizon/types.h>
 #include <mce.h>
 #include <ui/Tessellator.h>
 #include <client/ui/ScreenContext.h>
 
-#define stl std::__ndk1
+#define stl std
 //ItemFrameRenderer::extractText
 /*
 class BaseActorRenderer {

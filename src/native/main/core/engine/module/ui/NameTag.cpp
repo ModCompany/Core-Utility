@@ -4,7 +4,7 @@
 #include <symbol.h>
 #include <logger.h>
 #include <nativejs.h>
-#include <stl/vector>
+#include <vector>
 
 float _x = 0, _y = 0, _z = 0;
 void* _hz;

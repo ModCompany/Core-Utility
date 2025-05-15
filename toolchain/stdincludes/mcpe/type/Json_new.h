@@ -1,6 +1,6 @@
 #pragma once
-#include <stl/string>
-#define stl std::__ndk1
+#include <string>
+#define stl std
 
 namespace Json {
     class Reader;
