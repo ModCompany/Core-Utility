@@ -60,13 +60,19 @@ void CustomEntity::init(){
         CustomEntity::customEntity = reinterpret_cast<jclass>(env->NewGlobalRef(localClass));
     }
 
-    HookManager::addCallback(
+    Logger::flush();
+
+    //TODO: ARM64
+    /*HookManager::addCallback(
         SYMBOL("mcpe","_ZN5Actor4tickER11BlockSource"), 
         LAMBDA((HookManager::CallbackController* controller, Actor* thas, BlockSource& region),{
             if(CustomEntity::isTick(std::string(thas->getActorIdentifier()->getFullName().c_str())))
                 JavaCallbacks::invokeControlledCallback(CustomEntity::customEntity, "tickEntity", "(J)V", controller, 0, (jlong) thas->getInnerCoreId());
 	    },
-    ), HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
+    ), HookManager::CALL | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);*/
+
+    Logger::debug("TEST", "test");
+    Logger::flush();
 }
 
 export(void,entity_CustomEntity_setTick,jstring name, jboolean value) {

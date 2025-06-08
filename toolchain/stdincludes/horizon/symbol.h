@@ -56,8 +56,9 @@ namespace DLHandleManager {
 	}
 
     inline void* initializeHandle(const char* name, const char* key) {
-		return hz_init_lib_handle(name, key, RTLD_NOW, false);
-	}
+      //hz_init_lib_handle("mcpe", "libminecraftpe.so", RTLD_NOW, false);
+      return hz_init_lib_handle(key, name, RTLD_NOW, false);
+    }
 
     inline void* initializeHandle(const char* name) {
 		return hz_init_lib_handle(name, name, RTLD_NOW, false);

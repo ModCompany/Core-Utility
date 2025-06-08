@@ -74,42 +74,28 @@ inline jobjectArray getParameters(JNIEnv* env, std::vector<std::string> types, A
 template<typename T>
 inline void registerHook(JNIEnv* env, HookRegistry* hook, std::function<T(JNIEnv*,HookRegistry*)> func, int v){
     Logger::debug("CoreUtility", "Start hook %s", hook->symbol.c_str());
-    HookManager::addCallback(
-        SYMBOL(hook->lib.c_str(), hook->symbol.c_str()), 
-        LAMBDA((HookManager::CallbackController* controller, Buff<512> buff),{
-            JNIEnv* env;
-	        ATTACH_JAVA(env, JNI_VERSION_1_6){
-                std::vector<std::string> types = hook->args_types;
-                jobjectArray array = getParameters(env, types, ArgsReader((unsigned char*) &buff));
+    auto* closureWrap = ClosureFnWrap<void* (HookManager::CallbackController*,  Buff<512>)>::create([hook, func](HookManager::CallbackController* controller, Buff<512> buff) {
+        JNIEnv* env;
+        ATTACH_JAVA(env, JNI_VERSION_1_6){
+            std::vector<std::string> types = hook->args_types;
+            jobjectArray array = getParameters(env, types, ArgsReader((unsigned char*) &buff));
 
-                env->CallStaticVoidMethod(
-                    HookAPI::HookAPIClass, HookAPI::hookId,  
-                    HookJava::getJavaString(env, hook->callback), 
-                    array
-                );
+            env->CallStaticVoidMethod(
+                HookAPI::HookAPIClass, HookAPI::hookId,  
+                HookJava::getJavaString(env, hook->callback), 
+                array
+            );
 
-                int size = (int) env->GetArrayLength(array);
-                for(int i = 0;i < size;i++)
-                    env->DeleteLocalRef(env->GetObjectArrayElement(array, i));
+            int size = (int) env->GetArrayLength(array);
+            for(int i = 0;i < size;i++)
+                env->DeleteLocalRef(env->GetObjectArrayElement(array, i));
 
-                env->DeleteLocalRef(array);
-                /*Controller ctr(controller);
-                jobjectArray array = HookJava::getParameters(env, hook->args, {(jlong) &ctr, (jlong) self}, a, b, c, d, e, k, l, f, t, p);
-                env->CallStaticVoidMethod(
-                    HookJava::HOOK, HookJava::ID, 
-                    HookJava::getJavaString(env, hook->callback), 
-                    HookJava::getJavaString(env, hook->returnType), 
-                    array
-                );
-                env->DeleteGlobalRef(array);
-                if(ctr.isResult()){
-                    T result = func(env, hook, ctr);
-                    ctr.end(env);
-                    return result;
-                }*/
-            }
-        },hook, func
-    ), v);
+            env->DeleteLocalRef(array);
+            return nullptr;
+        }
+    });
+
+    HookManager::addCallback(SYMBOL(hook->lib.c_str(), hook->symbol.c_str()), (void*) closureWrap->getFn(), v);
     Logger::debug("CoreUtility", "End hook %s", hook->symbol.c_str());
 }
 

@@ -268,7 +268,7 @@ void ScalesModule::initialize(){
 						y_right+=SCALE_SIZE;
 				}
 			}
-		}, ), HookManager::RETURN | HookManager::LISTENER
+		},), HookManager::RETURN | HookManager::LISTENER
 	);
 }
 

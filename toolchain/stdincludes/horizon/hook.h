@@ -142,11 +142,88 @@ struct CallbackController : internal::CbControlBase
 };
 
     bool addCallback(void* addr, void* func, uint16_t flags, int priority = 0);
-    inline bool addCallback(void* addr, int64_t func, uint16_t flags, int priority = 0) {
-        addCallback(addr, (void*) func, flags, priority);
-    }
 }
 
-// base define for lambda wrap
+#define __LAMBDA(ARGS, CODE, ...) (reinterpret_cast<void*>(+([] ARGS { \
+    CODE \
+}))) \
 
-#define LAMBDA(ARGS, CODE, VALUES...) ((int64_t) new std::function<void ARGS>([VALUES] ARGS CODE))
+
+
+// base define for lambda wrap
+#define LAMBDA(ARGS, CODE, VALUES, ...) __LAMBDA(ARGS, {CODE}, VALUES, ...)
+
+
+#pragma once
+
+#include <cstdint>
+#include <cstdlib>
+#include <type_traits>
+
+#include "hook_impl.h"
+
+
+struct ClosureFnWrapBase
+{
+    HookWithUserPtr caller;
+    void (*destroyFnPtr)(void*) = nullptr;
+protected:
+    ClosureFnWrapBase() = default;
+public:
+    ClosureFnWrapBase(const ClosureFnWrapBase&) = delete;
+    ClosureFnWrapBase(ClosureFnWrapBase&&) = delete;
+    ClosureFnWrapBase& operator=(const ClosureFnWrapBase&) = delete;
+    ClosureFnWrapBase& operator=(ClosureFnWrapBase&&) = delete;
+
+    void* getFnPtr() const { return (void*) &caller; }
+    ~ClosureFnWrapBase()
+    {
+        if (destroyFnPtr)
+            destroyFnPtr(this);
+    }
+};
+
+
+// usage:
+//    auto* closureWrap = ClosureFnWrap<ResultT(Arg1, Arg2, ...)>::create(<closure>);
+//    auto* fnPtr = closureWrap->getFn();
+//    // fnPtr is a raw function pointer, that will call closure with all captured data
+//
+//    ClosureFnWrapBase* closureWrapTypeless = closureWrap; // typeless version
+//    delete closureWrapTypeless; // destruction, can be done on typed or typeless version, will invalidate fnPtr
+template<typename R, typename ...Args>
+struct ClosureFnWrap;
+
+template<typename R, typename ...Args>
+struct ClosureFnWrap<R(Args...)> : ClosureFnWrapBase
+{
+    ClosureFnWrap() = default;
+    ~ClosureFnWrap() = default; // implemented in parent
+
+    using FnPtrType = R(*)(Args...);
+    FnPtrType getFn() const { return reinterpret_cast<FnPtrType>(getFnPtr()); }
+    R call(Args... args) { return getFn(args...); }
+
+    template<typename Fn>
+    static ClosureFnWrap* create(Fn &&fn)
+    {
+        static_assert(offsetof(ClosureFnWrapBase, caller) == 0, "");
+        static_assert(sizeof(ClosureFnWrapBase) == sizeof(ClosureFnWrap<R(Args...)>), "");
+        struct Wrap : ClosureFnWrap
+        {
+            std::remove_cv_t<std::remove_reference_t<Fn>> fn;
+            Wrap(Fn &&fn) : fn(std::forward<Fn>(fn))
+            {
+                this->destroyFnPtr = &destroyFn;
+                this->caller.init((void*) &staticCall, this);
+            }
+            static R staticCall(Args... args)
+            {
+                HOOK_STORE_CALL_STATE
+                return static_cast<Wrap*>(HOOK_USER_PTR)->fn(args...);
+            }
+            static void destroyFn(void *ptr) { static_cast<Wrap*>(ptr)->fn.~Fn(); }
+        };
+        return new Wrap(std::forward<Fn>(fn));
+    }
+};

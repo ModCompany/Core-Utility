@@ -122,7 +122,7 @@ def build_native_dir(directory, output_dir, cache_dir, abis, std_includes_path, 
 		print(f"{'=' * (48 - len(printed_compilation_title) // 2)} {printed_compilation_title} {'=' * (48 - (1 + len(printed_compilation_title)) // 2)}")
 
 		executable = executables[abi]
-		gcc = [executable, "-std=c++11"]
+		gcc = [executable, "-std=c++17"]
 		includes = []
 		for std_includes_dir in std_includes:
 			includes.append(f'-I{std_includes_dir}')

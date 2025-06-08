@@ -90,26 +90,42 @@ class CoreUtility : public Module
 {
 public:
 	CoreUtility(const char *id) : Module(id){};
-	static jclass callback_class;
 
-	virtual void initialize()
+	virtual void initialize() override
 	{
 		Logger::debug("Core Utility", "Initialize core");
+		Logger::flush();
+
 		DLHandleManager::initializeHandle("libminecraftpe.so", "mcpe");
 		DLHandleManager::initializeHandle("libinnercore.so", "innercore");
 
-		JNIEnv *env;
-		ATTACH_JAVA(env, JNI_VERSION_1_6)
-		{
-			jclass a = env->FindClass("com/core/api/NativeCallback");
-			CoreUtility::callback_class = reinterpret_cast<jclass>(env->NewGlobalRef(a));
-		}
+		Logger::debug("Core Utility", "end init libs");
+		Logger::flush();
 
 		JavaClass::init();
+
+		Logger::debug("Core Utility", "end init JavaClass");
+		Logger::flush();
+
 		CustomEntity::init();
+
+		Logger::debug("Core Utility", "end init CustomEntity");
+		Logger::flush();
+
 		ToolTip::init();
+
+		Logger::debug("Core Utility", "end init ToolTip");
+		Logger::flush();
+
 		NativeAPI::init();
+
+		Logger::debug("Core Utility", "end init NativeAPI");
+		Logger::flush();
+
 		BlockLegacyApi::init();
+
+		Logger::debug("Core Utility", "end init BlockLegacyApi");
+		Logger::flush();
 
 		RegisterDamageCause::init();
 		if(isUseModule("NativeUI"))
@@ -119,15 +135,6 @@ public:
 			ScalesModule::initialize();
 		//BlockUtils::init();
 		//NativeSaver::init();
-
-		HookManager::addCallback(
-			SYMBOL("mcpe", "_ZN36EnchantingContainerManagerController13enchantResultEi"), 
-			LAMBDA((HookManager::CallbackController * controller, EnchantingContainerManagerController * a, int b), {
-				int id = IdConversion::dynamicToStatic(a->_getItem0(ContainerEnumName::Enchant).getId(), IdConversion::ITEM);
-				JavaCallbacks::invokeControlledCallback(CoreUtility::callback_class, "onEnchant", "(I)V", controller, 0, id);
-				return controller->call<void>(a, b);
-			}, 
-		), HookManager::CALL | HookManager::REPLACE | HookManager::LISTENER | HookManager::CONTROLLER | HookManager::RESULT);
 
 		HookManager::addCallback(SYMBOL("mcpe", "_ZN20PlayScreenControllerC2ENSt6__ndk110shared_ptrI15PlayScreenModelEE20PlayScreenDefaultTabRKNS0_12basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE"), LAMBDA((HookManager::CallbackController * controller, PlayScreenController * a, void *b, void *c), {
 			Global::_world_controller = a;
@@ -145,6 +152,8 @@ public:
 		HookJava::init();
 		Logger::debug("Core Utility", "Loaded custom hook...");
 		HookAPI::init();
+		
+		JNIEnv* env;
 		ATTACH_JAVA(env, JNI_VERSION_1_6){
 			jclass bootClass = env->FindClass("com/core/api/Boot");
 			env->CallStaticVoidMethod(bootClass, env->GetStaticMethodID(bootClass, "nativeFullLoaded", "()V"));
@@ -152,7 +161,6 @@ public:
 	}
 };
 
-jclass CoreUtility::callback_class;
 
 
 #include <level/Generator.h>
@@ -198,8 +206,11 @@ public:
 	}
 };
 
+Module *main_module = new CoreUtility("core_utility");
+
 MAIN {
-	Module *main_module = new CoreUtility("core_utility");
+	Logger::debug("CoreUtility", "Init main.cpp");
+	
 	///new CoreGeneration(main_module, "core_utility.generation");
 	new SoundModule(main_module, "core_utility.sound");
 	//if(isUseModule("Scales"))

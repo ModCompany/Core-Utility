@@ -229,37 +229,36 @@ inline void registerHook(JNIEnv* env, Hook* hook, std::function<T(JNIEnv*,Hook*,
 
     jmethodID method = hook->legacyListener ? HookJava::ID : HookJava::ID_NEW;
 
-    HookManager::addCallback(
-        SYMBOL(hook->lib.c_str(),hook->symbol.c_str()), 
-        LAMBDA((HookManager::CallbackController* controller, void* self, void* a, void* b, void* c, void* d, void* e, void* k, void* l, void* f, void* t, void* p),{
-            if(CUHookManager::canEnabledHook(hook->callback)){
-                JNIEnv* env = HookJava::get_jni_env();
-                Controller ctr(controller);
-                jobjectArray array = HookJava::getParameters(env, hook->args, {(jlong) &controller, (jlong) self}, a, b, c, d, e, k, l, f, t, p);
+    auto* closureWrap = ClosureFnWrap<T (HookManager::CallbackController*, void*, void*, void*, void*, void*, void*, void*, void*, void*, void*, void*)>::create([hook, func, callback, returnType, method](HookManager::CallbackController* controller, void* self, void* a, void* b, void* c, void* d, void* e, void* k, void* l, void* f, void* t, void* p) {
+        if(CUHookManager::canEnabledHook(hook->callback)){
+            JNIEnv* env = HookJava::get_jni_env();
+            Controller ctr(controller);
+            jobjectArray array = HookJava::getParameters(env, hook->args, {(jlong) &controller, (jlong) self}, a, b, c, d, e, k, l, f, t, p);
 
-                env->CallStaticVoidMethod(
-                    HookJava::HOOK, method, 
-                    callback, 
-                    returnType, 
-                    array
-                );
+            env->CallStaticVoidMethod(
+                HookJava::HOOK, method, 
+                callback, 
+                returnType, 
+                array
+            );
 
-                int size = (int) env->GetArrayLength(array);
-                for(int i = 0;i < size;i++){
-                    env->DeleteLocalRef(env->GetObjectArrayElement(array, i));
-                    env->SetObjectArrayElement(array, i, NULL);
-                }
-                env->DeleteLocalRef(array);
-                    
-
-                if(ctr.isResult()){
-                    T result = func(env, hook, ctr);
-                    ctr.end(env);
-                    return result;
-                }
+            int size = (int) env->GetArrayLength(array);
+            for(int i = 0;i < size;i++){
+                env->DeleteLocalRef(env->GetObjectArrayElement(array, i));
+                env->SetObjectArrayElement(array, i, NULL);
             }
-        },hook, func, callback, returnType, method
-    ), v);
+            env->DeleteLocalRef(array);
+                
+            if(ctr.isResult()){
+                T result = func(env, hook, ctr);
+                ctr.end(env);
+                return result;
+            }
+        }
+    });
+
+
+    HookManager::addCallback(SYMBOL(hook->lib.c_str(),hook->symbol.c_str()), (void*) closureWrap->getFn(), v);
     Logger::debug("CoreUtility", "End hook %s", hook->symbol.c_str());
 }
 
