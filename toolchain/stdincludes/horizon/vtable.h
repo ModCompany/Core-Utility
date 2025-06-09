@@ -103,7 +103,7 @@ EXAMPLE:
 
 template <typename R, typename... ARGS>
 R VTABLE_CALL(int index, void* target, ARGS... args) {
-    return (*(R (**) (void*, ARGS...)) (*(char**) target + index * 4))(target, args...);
+    return ((R (*) (void*, ARGS...)) (*(void***) target)[index])(target, args...);
 };
 
 

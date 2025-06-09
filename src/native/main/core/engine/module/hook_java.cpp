@@ -256,7 +256,7 @@ inline void registerHook(JNIEnv* env, Hook* hook, std::function<T(JNIEnv*,Hook*,
             }
         }
     });
-
+    
 
     HookManager::addCallback(SYMBOL(hook->lib.c_str(),hook->symbol.c_str()), (void*) closureWrap->getFn(), v);
     Logger::debug("CoreUtility", "End hook %s", hook->symbol.c_str());

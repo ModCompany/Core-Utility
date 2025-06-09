@@ -71,7 +71,7 @@ void ElementMesh::render(ScreenContext& context){
     this->mesh->rebuildNormals();
     this->mesh->prepareForRender();
     context.shaderColor->setColor(mce::Color { 1.0f, 1.0f, 1.0f, 1.0f });
-    this->mesh->renderImmediatelyNoCache(context, *context.tessellator, &mat, texture, {0,0,0}, mce::Color{1, 1, 1, 1}, false, false, true);
+    this->mesh->renderImmediatelyNoCache(context, *(context.getTessellator()), &mat, texture, {0,0,0}, mce::Color{1, 1, 1, 1}, false, false, true);
     this->mesh->translate(-x, y, -z);
 }
 

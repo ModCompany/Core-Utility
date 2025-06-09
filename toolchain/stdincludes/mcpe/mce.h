@@ -24,15 +24,25 @@ namespace mce {
             stl::string const& toHexString() const;         
     };
 
+    enum class PrimitiveMode : uint8_t {
+	};
+
+    class RenderMaterialGroupBase {
+
+    };
+
     class MaterialPtr {
         public:
-            char filler[8];
+            char filler[512];
+            MaterialPtr(RenderMaterialGroupBase&, HashedString const&);
             HashedString& getHashKey() const;
             HashedString& getHashedName() const;
     };
 
-    class RenderMaterialGroup {
+    class RenderMaterialGroup : public RenderMaterialGroupBase {
         public:
+            char filer[16];
+            RenderMaterialGroupBase* base;
             static RenderMaterialGroup common;
             static RenderMaterialGroup switchable;
             mce::MaterialPtr getMaterial(HashedString const&);

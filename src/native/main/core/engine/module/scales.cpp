@@ -167,21 +167,38 @@ std::map<std::string, ScalePlayer*> Scales::scales_player;
 std::map<std::string, Scales*> Scales::scales;
 bool Scales::server_mode = false;
 
+mce::RenderMaterialGroupBase* MATERIAL_GROUP_BASE;
+
 void ScalesModule::blit(ScreenContext* ctx, float x, float y, float width, float height, std::string texture, float textureWidth, float textureHeight, float alpha, std::string m){
-	mce::MaterialPtr material = mce::RenderMaterialGroup::common.getMaterial(HashedString(m.c_str()));
 	float maxU = width / textureWidth;
 	float maxV = height / textureHeight;
-	ctx->tessellator->begin(4, false);
-	ctx->tessellator->vertexUV(x, y + height, 0.0f, 0.0f, maxV);
-	ctx->tessellator->vertexUV(x + width, y + height, 0.0f, maxU, maxV);
-	ctx->tessellator->vertexUV(x + width, y, 0.0f, maxU, 0.0f);
-	ctx->tessellator->vertexUV(x, y, 0.0f, 0.0f, 0.0f);
+
+	Tessellator* tessellator = ctx->getTessellator();
+	tessellator->begin(4, false);
+
+	tessellator->vertexUV(x, y + height, 0.0f, 0.0f, maxV);
+	tessellator->vertexUV(x + width, y + height, 0.0f, maxU, maxV);
+	tessellator->vertexUV(x + width, y, 0.0f, maxU, 0.0f);
+	tessellator->vertexUV(x, y, 0.0f, 0.0f, 0.0f);
 	ctx->shaderColor->setColor(mce::Color { 1.0f, 1.0f, 1.0f, alpha });
-	RenderMesh::endTessellationAndRenderImmediately(*ctx, *ctx->tessellator, &material, texture);
+
+	RenderMesh::endTessellationAndRenderImmediately(*ctx, *tessellator, (void*) new mce::MaterialPtr(
+		*MATERIAL_GROUP_BASE, 
+		HashedString(m.c_str())
+	), texture);
 	ctx->shaderColor->setColor(mce::Color { 1.0f, 1.0f, 1.0f, 1.0f });
 }
 
 void ScalesModule::initialize(){
+	HookManager::addCallback(
+		SYMBOL("mcpe", "_ZN3mce11MaterialPtrC2ERNS_23RenderMaterialGroupBaseERK12HashedString"),
+		LAMBDA((mce::MaterialPtr* self, mce::RenderMaterialGroupBase* group, HashedString const& str), {
+			if(str.getString() == "ui_textured_and_glcolor_sprite")
+				MATERIAL_GROUP_BASE = group;
+		},),
+		HookManager::RETURN | HookManager::LISTENER
+	);
+
 	HookManager::addCallback(
 		SYMBOL("mcpe", "_ZN17HudHungerRenderer6renderER24MinecraftUIRenderContextR15IClientInstanceR9UIControliR13RectangleArea"),
 		LAMBDA((HudHungerRenderer* renderer, MinecraftUIRenderContext& renderContext, ClientInstance& client, UIControl& control, int someInt, RectangleArea& area), {

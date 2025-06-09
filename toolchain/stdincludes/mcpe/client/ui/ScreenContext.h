@@ -16,10 +16,12 @@ class ShaderColor {
 
 class ScreenContext {
     public:
-        char filler1[28]; // 28
-        ShaderColor* shaderColor; // 32
-        char filler2[72]; // 104
-        Tessellator* tessellator; // 108
+        char filler1[48];
+        ShaderColor* shaderColor;
+
+        inline Tessellator* getTessellator() {
+            return (*(Tessellator**)((unsigned char *) (this) + 176));
+        }
 };
 
 class RenderMesh {

@@ -12,7 +12,7 @@ class Options {
 };
 class ClientInstance : public IClientInstance {
     public:
-        Options* getOptionsVTABLE(){
+        inline Options* getOptionsVTABLE(){
             VTABLE_FIND_OFFSET(ClientInstance_getOptions, _ZTV14ClientInstance, _ZNK14ClientInstance10getOptionsEv);
             return VTABLE_CALL<Options*>(ClientInstance_getOptions, this);
         }
