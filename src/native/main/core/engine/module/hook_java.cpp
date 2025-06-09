@@ -41,7 +41,7 @@ export(jboolean,module_HookManager_nativeCanEnabledHook, jstring name){
 
 const ArgsBufferBuilder HookJava::getParameters(JNIEnv* env, void* self, std::vector<std::string> types, jobjectArray array){
     ArgsBufferBuilder builder;
-    if((long long) self != 0)
+    if(self != nullptr)
         builder.add<void*>(self);
     for (int i = 0;i < types.size();i++){
         jobject object = env->GetObjectArrayElement(array, i);

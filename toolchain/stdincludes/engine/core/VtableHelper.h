@@ -44,11 +44,12 @@ class VtableHelper {
 		void patch(const char*, const char*, const char*, void*);
 
     public:
-		template<typename A, unsigned N >
+		template<typename A>
 		static A callWithArgsBufferN(void* func, const unsigned char* buffer) {
-			auto* f = (A (*) (ArgsBuffer<N>)) func;
-			return f(*(ArgsBuffer<N>*) buffer);
+			auto* f = (A (*) (ArgsBuffer<512>)) func;
+			return f(*(ArgsBuffer<512>*) buffer);
 		}
+		
 		template<typename A>
 		static A _call(const char* symbol, void* self, ArgsBufferBuilder buff, bool virt, const char* vtableName, const char* lib){
 			void* func;
@@ -57,18 +58,8 @@ class VtableHelper {
 			else
 				func = SYMBOL(lib, symbol);
 				//func = dlsym(dlopen("libminecraftpe.so", RTLD_LAZY), symbol);
-			auto size = buff.size();
-			if (size <= 8) {
-				return callWithArgsBufferN<A, 8>(func, buff.data());
-			} else if (size <= 32) {
-				return callWithArgsBufferN<A, 32>(func, buff.data());
-			} else if (size <= 128) {
-				return callWithArgsBufferN<A, 128>(func, buff.data());
-			} else if (size <= 512) {
-				return callWithArgsBufferN<A, 512>(func, buff.data());
-			} else if (size <= 2048) {
-				return callWithArgsBufferN<A, 1024>(func, buff.data());
-			}
+			
+			return callWithArgsBufferN<A>(func, buff.data());
 			//auto a = (A(*)(void*,B&&...)) dlsym(handle, symbol);
 			//return a(this->original,std::forward<B>(args)...);
 		};

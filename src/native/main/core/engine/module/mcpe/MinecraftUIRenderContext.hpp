@@ -6,6 +6,8 @@
 
 class UIScene {};
 
+// Тут все пиздешь по оффсетам, покрайне мере для arm64
+
 class MinecraftUIMeasureStrategy {
     public:
     void** vtable; // 4
